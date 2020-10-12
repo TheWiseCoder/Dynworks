@@ -26,13 +26,13 @@ Please, find a comprehensive tutorial on using dynarrays in the folder *dynarray
 
 In the folder *dynvector-benchmark* we present a beginner's tutorial on using dynvectors, and demonstrate the enormous performance gains they provide when used as replacements for standard Prolog lists.
 
-**3. PERSISTANCE**
+**3. PERSISTENCE**
 
 The implementation includes modules providing persistance for instances of both *dynarrays* and *dynvectors*, using the Berkeley DB library. The tutorial in the folder *dynarray-tutorial* illustrates persisting and restoring *dynarrays*.
 
 **4. INCLUDED PROJECT**
 
-This project includes as sub-module *Goldies*, a small collection of useful Prolog utilities. Please, visit <>
+This project includes as sub-module *Goldies*, a small collection of useful Prolog utilities. Please, visit https://github.com/TheWiseCoder/Goldies
 
 **5. REQUIREMENTS**
 
