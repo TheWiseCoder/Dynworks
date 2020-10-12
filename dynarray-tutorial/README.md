@@ -30,7 +30,7 @@ The predicate `tutorial_prepare/0` creates the *dynarray*, invokes `input_data/2
 
 **2) RUN THE TUTORIAL**
 
-Before you start, follow the instructions in https://github.com/TheWiseCoder/Goldies to prepare your installation to persist/restore data using Prolog and Berkeley DB. Make sure the Prolog engine can find the file *artists.csv* in this folder (line 149), or move it to a more convenient location.
+Before you start, follow the instructions in https://github.com/TheWiseCoder/Goldies/tree/main/src/bdb to prepare your installation to persist/restore data using Prolog and Berkeley DB. Make sure the Prolog engine can find the file *artists.csv* in this folder (line 149), or move it to a more convenient location.
 
 To run the tutorial, load and compile *tutorial.pl* in this folder, and then execute  
 `tutorial_prepare.`  
