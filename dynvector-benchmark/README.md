@@ -104,8 +104,7 @@ Equipment used:
 
 1) Base/Search size: 100000 - Values range: 1..1000000
 
-                            **Benchmark Type**						**SWI-Prolog**				**SICStus**
-|N|    iteration     |     search       |(MS Win)|(Ubuntu)|(MS Win)|(Ubuntu)|
+|N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
 |-|------------------|------------------|--------|--------|--------|--------|
 |1|dynvector-counter |dynvector_find    |     390|     572|  250284|  235160|
 |2|dynvector-maplist |dynvector_find    |     141|     262|  249693|  337610|
@@ -117,10 +116,10 @@ Equipment used:
 |8|list-recursion    |memberchk-unsorted|  212149|  316104|   70065|  102154|
 |9|list-recursion    |memberchk-sorted  |  223043|  316777|  134461|  132836|
 
+
 2) Base/Search size: 500000 - Values range: 1..5000000
 
-|             Benchmark Type            |    SWI-Prolog   |     SICStus     |
-|N|    iteration     |     search       |(MS Win)|(Ubuntu)|(MS Win)|(Ubuntu)|
+|N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
 |-|------------------|------------------|--------|--------|--------|--------|
 |1|dynvector-counter |dynvector_find    |    2062|    2913| 5979917| 6893043|
 |2|dynvector-maplist |dynvector_find    |     813|    1279| 5973836| 6423391|
@@ -133,11 +132,9 @@ Equipment used:
 |9|list-recursion    |memberchk-sorted  |12765616|21331819| 5309165|14673131|
 
 
-
 3) Base/Search size: 2000000 - Values range: 1..10000000
 
-|             Benchmark Type            |    SWI-Prolog   |     SICStus     |
-|N|    iteration     |     search       |(MS Win)|(Ubuntu)|(Ms Win)|(Ubuntu)|
+|N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
 |-|------------------|------------------|--------|--------|--------|--------|
 |1|dynvector-counter |dynvector_find    |    8626|   12275|   **   |   **   |
 |2|dynvector-maplist |dynvector_find    |    3219|    5322|   **   |   **   |
@@ -149,6 +146,11 @@ Equipment used:
 |8|list-recursion    |memberchk-unsorted|   **   |   **   |   **   |   **   |
 |9|list-recursion    |memberchk-sorted  |   **   |   **   |   **   |   **   |
 
+Legends:
+(a) SWI-Prolog / MS Windows
+(b) SWI-Prolog / Ubuntu
+(c) SICStus / MS Windows
+(d) SICStus / Ubuntu
 ** It is not feasible to compute the time to complete the benchmark.
 
 
