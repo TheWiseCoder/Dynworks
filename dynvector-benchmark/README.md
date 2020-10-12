@@ -52,7 +52,7 @@ Alternatively, a counter may be used:
 
 `counter_create/2` creates a counter with 0 as its initial value, counter_value/2, retrieves the value of the `counter, dynvector_value/3` retrieves/set *Value* at *Index*, and `counter_inc/2` increments the counter and fails if its resulting value is not *Count*.
 
-Another possibility is to use maplist/2:  
+Another possibility is to use `maplist/2`:  
 `. . .`  
 `numlist(0, Last, Indices),`  
 `maplist(my_pred(DynvectorId), Indices),`  
