@@ -103,7 +103,7 @@ Equipment used:
      Notebook Intel Core i7-3537U CPU 2.00 GHz x 4, 7.7 GB RAM
 
 1) Base/Search size: 100000 - Values range: 1..1000000
-| |                  |                  |  SWI   |  SWI   |SICStus |SICStus |
+| |    iteration     |     search       |  SWI   |  SWI   |SICStus |SICStus |
 |-|------------------|------------------|--------|--------|--------|--------|
 |N|    iteration     |     search       |(MS Win)|(Ubuntu)|(MS Win)|(Ubuntu)|
 |1|dynvector-counter |dynvector_find    |     390|     572|  250284|  235160|
