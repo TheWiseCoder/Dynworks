@@ -14,7 +14,7 @@ or simply
 `dynarray_create(artists, [100,7]),`  
 since `dynarray_destroy/1` fails silently when there is nothing to destroy.
 
-The parameter *[100,7]* specifies a 2-dimension *dynarray* with a maximum of 100 rows and 7 columns. Although the *artists.csv* file contains only 50 rows, it is a good practice to specify a greater number of rows, if expansion is foreseen. This incurs no storage or performance costs, as *dynarrays* take storage dynamically as needed, and sizes impact performance only when storage is actually allocated up to near or beyond the running platform's limits (for a discussion of performance *vis-à-vis* resources used, see the accompanying *dynvector tutorial* in this package).
+The parameter *[100,7]* specifies a 2-dimension *dynarray* with a maximum of 100 rows and 7 columns. Although the *artists.csv* file contains only 50 rows, it is a good practice to specify a greater number of rows, if expansion is foreseen. This incurs no storage or performance costs, as *dynarrays* take storage dynamically as needed, and sizes impact performance only when storage is actually allocated up to near or beyond the running platform's limits (for a discussion of performance *vis-à-vis* resources used, see the accompanying *dynvector-tutorial* in this package).
 
 *Dynarrays* allows for labels to be used as indices for column identification, a much more intuitive and safer way than using integers. The code fragment (lines 140-146) is  
 `dynarray_label(artists, name, 0),`  
@@ -30,7 +30,7 @@ The predicate `tutorial_prepare/0` creates the *dynarray*, invokes `input_data/2
 
 **2) RUN THE TUTORIAL**
 
-Before you start, follow the instructions in Goldies/... to prepare your installation to persist/restore data using Prolog and Berkeley DB. Make sure the Prolog engine can find the file *artists.csv* in this folder (line 149), or move it to a more convenient location.
+Before you start, follow the instructions in https://github.com/TheWiseCoder/Goldies/tree/3a91f212ed985b01b05ece07519afd8d1dda03c0/src/bdb to prepare your installation to persist/restore data using Prolog and Berkeley DB. Make sure the Prolog engine can find the file *artists.csv* in this folder (line 149), or move it to a more convenient location.
 
 To run the tutorial, load and compile *tutorial.pl* in this folder, and then execute  
 `tutorial_prepare.`  

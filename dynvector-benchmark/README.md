@@ -12,11 +12,11 @@ or simply
 `dynvector_create(Id),`  
 since `dynvector_destroy/1` fails silently when there is nothing to destroy. Note that the *dynvector*'s size (or the maximum number of cells it may contain) is not specified, as it grows and shrinks dynamically as needed.
 
-A *dynvector* may also be created indirectly with `dynvector_list/2`, which causes the content of *List* to be loaded onto the *dynvector*, creating it anew or, if it already exists, replacing its contents.
+A *dynvector* may also be created indirectly with `dynvector_list(+Id, +List)`, which causes the content of *List* to be loaded onto the *dynvector*, creating it anew or, if it already exists, replacing its contents.
 
-One possible use of *dynvectors*, and one we will pursue throughout this benchmark, is to replace standard Prolog lists when they are large and there is a need to search them. We will create two lists with 100000 random integers in the interval 0..1000000. One of them will be our base set, the other our search set. We will iterate over the elements of the search set and try to determine if they are in the base set, counting the hits and misses.
+One possible use of *dynvectors*, and one we will pursue throughout this benchmark, is to replace standard Prolog lists when they are large and there is a need to search them. We will create two large lists with randomly generated integers, from an even larger interval. One of them will be our base set, the other our search set. We will iterate over the elements of the search set and try to determine if they are in the base set, counting the hits and misses.
 
-Clearly, the expected rate of hits to misses will be around 1:9, varying slightly every time the benchmark runs with these numbers as parameters.
+Clearly, if we use 100000 out of 1000000, the expected rate of hits to misses will be around 1:9, varying slightly every time the benchmark runs with these numbers as parameters.
 
 There are many ways to iterate over *dynvectors*, one of them being to use its built-in iterator implementation:  
 `. . .`  
@@ -33,7 +33,7 @@ There are many ways to iterate over *dynvectors*, one of them being to use its b
 `dynvector_iterator_destroy(DynvectorId),`  
 `. . .`  
 
-`dynvector_iterator_create/1` creates an iterator with a range equals to the entire contents of the *dynvector*, `dynvector_iterator_current/2` retrieves or sets the value at the current position, and `dynvector_iterator_next/2` increments the iterator pointer, failing when it reaches the end of the iterator.
+`dynvector_iterator_create/1` creates an iterator with a range equals to the entire contents of the *dynvector*, `dynvector_iterator_current/2` retrieves the value at the current position, and `dynvector_iterator_next/2` increments the iterator pointer, failing when it reaches the end of the iterator.
 
 Alternatively, a counter may be used:  
 `% create counter 'loop', and initialize it to 0`  
@@ -50,7 +50,7 @@ Alternatively, a counter may be used:
 `% destroy counter`  
 `counter_destroy(loop),`  
 
-`counter_create/2` creates a counter with 0 as its initial value, counter_value/2, retrieves the value of the `counter, dynvector_value/3` retrieves/set *Value* at *Index*, and `counter_inc/2` increments the counter and fails if its resulting value is not *Count*.
+`counter_create/1` creates a counter with 0 as its initial value, counter_value/2, retrieves the value of the `counter, dynvector_value/3` retrieves/set *Value* at *Index*, and `counter_inc/2` increments the counter and fails if its resulting value is not *Count*.
 
 Another possibility is to use `maplist/2`:  
 `. . .`  
@@ -171,7 +171,7 @@ Legends:
 
 3. On the subject of searching very large sets, SWI-Prolog shines when its native database hash mechanism is used. As a matter of fact, it shows consistent performance gains of thousands of times (i.e., around three orders of magnitude) over SICStus + its  native hash mechanism, and a little less over SICStus + lists and `memberchk/2`.
 
-4. On moderately-size datasets (less than a few hundred thousand items), SICStus performs around two times better than SWI-Prolog when the search is done with `memberchk/2` over lists, and curiously, even substantially better when the list is unsorted. Taken individually, SICStus performs better when searching with `memberchk/2` than when it uses its native database hash mechanism, whereas the opposite is true for SWI-Prolog.
+4. On moderately-sized datasets (less than a few hundred thousand items), SICStus performs around two times better than SWI-Prolog when the search is done with `memberchk/2` over lists, and curiously, even substantially better when the list is unsorted. Taken individually, SICStus performs better when searching with `memberchk/2` than when it uses its native database hash mechanism, whereas the opposite is true for SWI-Prolog.
 
 5. If one must deal with very large data sets (i.e., data sets holding from hundreds of thousands to many millions of items), the only viable alternative among the ones attempted here is searching on *dynvectors*, using `dynvector_find/3` and SWI-Prolog. As shown on table 3, performance can be as high as 1 million searches per second on a 2 million item data set, using run-of-the-mill PCs. We took the challenge up to searches on data sets containing 10 million items, and SWI-Prolog kept its high marks throughout. This is absolutely impressive in the Prolog world.
 
