@@ -38,7 +38,7 @@
 
 :- if(current_prolog_flag(dialect, sicstus)).   % SICStus ----------------------
 
-:- use_module('../../goldies/src/bdb/sicstus-bdb',
+:- use_module('../Goldies/src/bdb/sicstus-bdb',
     [
         bdb_erase/2,
         bdb_retrieve/3,
@@ -47,7 +47,7 @@
 
 :- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------
 
-:- use_module('../../goldies/src/bdb/swi-bdb',
+:- use_module('../Goldies/src/bdb/swi-bdb',
     [
         bdb_erase/2,
         bdb_retrieve/3,

@@ -36,7 +36,7 @@
         maplist/2
     ]).
 
-:- use_module('../../goldies/src/counter/sicstus-counter',
+:- use_module('../Goldies/src/counter/sicstus-counter',
     [
         counter_create/1,
         counter_inc/1,
@@ -44,7 +44,7 @@
         counter_value/2
     ]).
 
-:- use_module('../../goldies/src/marks/sicstus-marks',
+:- use_module('../Goldies/src/marks/sicstus-marks',
     [
         get_flag/2,
         set_flag/2,

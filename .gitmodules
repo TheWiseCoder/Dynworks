@@ -1,0 +1,3 @@
+[submodule "Goldies"]
+	path = Goldies
+	url = https://github.com/TheWiseCoder/Goldies.git
