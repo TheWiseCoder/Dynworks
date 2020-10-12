@@ -184,7 +184,7 @@ Legends:
 
 - `dynvector_create(+Id)` - Create dynvector *Id*.  
 
-- `dynvector_destroy(+Id)` - Destroy dynvector *Id*, , releasing all the storage space taken.  
+- `dynvector_destroy(+Id)` - Destroy dynvector *Id*, releasing all the storage space taken.  
 
 - `dynvector_value(+Id, +Index, ?Value)` - Unify *Value* with the value stored at *Index*.  
 
@@ -196,7 +196,7 @@ Legends:
 
 - `dynvector_fill(+Id, +Value)` - Load all *Id*'s cells with *Value*.  
 
-- `dynvector_list(+Id, ?List)` - Unify *List* with all the cells in the *dynarray*.  
+- `dynvector_list(+Id, ?List)` - Unify *List* with all the cells in the *dynvector*.  
 
 - `dynvector_insert(+Id, +Index, +Value)` - Insert *Value* at 0-based position *Index*.  
 
@@ -204,7 +204,7 @@ Legends:
 
 - `dynvector_top(+Id, -Top)` - Unify *Top* with the highest inserted index, even if it has subsequently been deleted.  
 
-- `is_dynvector(+Id)` - Succeed if *Id* identifies a *dynvwctor*.  
+- `is_dynvector(+Id)` - Succeed if *Id* identifies a *dynvector*.  
 
 - `dynvector_iterator_create(+Id)` - Create an iterator over all the contents of *Id*.  
 
