@@ -96,11 +96,11 @@ Invoking the benchmark with `benchmark` is the same as invoking it with `benchma
 
 The tables below illustrate the results obtained with all nine options, running SICStus e SWI-Prolog, in three size/range situations. Under each Prolog/OS platform, we show the time it took to complete each run, in milliseconds.
 
-Equipment used:
-  A) Microsoft Windows 10 Enterprise, 64-bit
-     Desktop Intel Core i7-4770K CPU 3.50 GHz x 4, 16.0 GB RAM
-  B) Ubuntu 20.04.01 LTS, 64-bit
-     Notebook Intel Core i7-3537U CPU 2.00 GHz x 4, 7.7 GB RAM
+Equipment used: 
+  A) Microsoft Windows 10 Enterprise, 64-bit 
+     Desktop Intel Core i7-4770K CPU 3.50 GHz x 4, 16.0 GB RAM 
+  B) Ubuntu 20.04.01 LTS, 64-bit 
+     Notebook Intel Core i7-3537U CPU 2.00 GHz x 4, 7.7 GB RAM 
   
   
 1) Base/Search size: 100000 - Values range: 1..1000000  
