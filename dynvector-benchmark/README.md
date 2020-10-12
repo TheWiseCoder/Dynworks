@@ -103,7 +103,7 @@ Equipment used:
      Notebook Intel Core i7-3537U CPU 2.00 GHz x 4, 7.7 GB RAM
   
   
-1) Base/Search size: 100000 - Values range: 1..1000000
+1) Base/Search size: 100000 - Values range: 1..1000000  
 
 |N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
 |-|:-----------------|:-----------------|-------:|-------:|-------:|-------:|
@@ -118,7 +118,7 @@ Equipment used:
 |9|list-recursion    |memberchk-sorted  |  223043|  316777|  134461|  132836|
   
   
-2) Base/Search size: 500000 - Values range: 1..5000000
+2) Base/Search size: 500000 - Values range: 1..5000000  
 
 |N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
 |-|:-----------------|:-----------------|-------:|-------:|-------:|-------:|
@@ -133,10 +133,10 @@ Equipment used:
 |9|list-recursion    |memberchk-sorted  |12765616|21331819| 5309165|14673131|
   
   
-3) Base/Search size: 2000000 - Values range: 1..10000000
+3) Base/Search size: 2000000 - Values range: 1..10000000  
 
 |N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
-|-|:-----------------|:-----------------|---:----|---:----|---:----|---:----|
+|-|------------------|------------------|--------|--------|--------|--------|
 |1|dynvector-counter |dynvector_find    |    8626|   12275|   **   |   **   |
 |2|dynvector-maplist |dynvector_find    |    3219|    5322|   **   |   **   |
 |3|dynvector-iterator|dynvector_find    |    9484|   19525|   **   |   **   |
