@@ -155,8 +155,7 @@ Legends:
 ** It is not feasible to compute the time to complete the benchmark.  
 
 
-RESULTS
-=======
+**RESULTS**  
 
 1. The differences found running the benchmark with the same parameters on the same Prolog environment, but different operating systems (Windows and Ubuntu), may be fully explained by the differences in the hardware capabilities (CPU and RAM) of the two host machines.
 
