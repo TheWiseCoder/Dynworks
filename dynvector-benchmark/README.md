@@ -106,7 +106,6 @@ Equipment used:
 
 |N|    iteration     |     search       |  SWI   |  SWI   |SICStus |SICStus |
 |o|       type       |      type        |(MS Win)|(Ubuntu)|(MS Win)|(Ubuntu)|
-|-|------------------|------------------|--------|--------|--------|--------|
 |1|dynvector-counter |dynvector_find    |     390|     572|  250284|  235160|
 |2|dynvector-maplist |dynvector_find    |     141|     262|  249693|  337610|
 |3|dynvector-iterator|dynvector_find    |     453|     954|  245763|  339518|
