@@ -2,14 +2,14 @@
 
 This benchmark is also a beginner's tutorial on how to use *dynvectors*. It will go through some significant features of the package, but make sure to complement it by perusing the documentation in the source code files. To leverage this work, some utilities from another project, **Prolog Goldies**, are used, as specified in the appropriate `use_module` clauses.
 
-Creating a *dynvector* is straight forward:
-`dynvector_create(Id),`
-where Id is an atom identifying the *dynvector*. It will fail if a *dynvector* with the same id already exists. If necessary, use
-`(\+ is_dynvector(Id) ; dynvector_destroy(Id)),`
-`dynvector_create(Id),`
-or simply
-`dynvector_destroy(Id),`
-`dynvector_create(Id),`
+Creating a *dynvector* is straight forward:  
+`dynvector_create(Id),`  
+where Id is an atom identifying the *dynvector*. It will fail if a *dynvector* with the same id already exists. If necessary, use  
+`(\+ is_dynvector(Id) ; dynvector_destroy(Id)),`  
+`dynvector_create(Id),`  
+or simply  
+`dynvector_destroy(Id),`  
+`dynvector_create(Id),`  
 since `dynvector_destroy/1` fails silently when there is nothing to destroy. Note that the *dynvector*'s size (or the maximum number of cells it may contain) is not specified, as it grows and shrinks dynamically as needed.
 
 A *dynvector* may also be created indirectly with `dynvector_list/2`, which causes the content of *List* to be loaded onto the *dynvector*, creating it anew or, if it already exists, replacing its contents.
@@ -20,66 +20,66 @@ Clearly, the expected rate of hits to misses will be around 1:9, varying slightl
 
 There are many ways to iterate over *dynvectors*, one of them being to use its iterator built-in implementation:
 `. . .`
-`% create an iterator over the contents of *DynvectorId*`
-`dynvector_iterator_create(DynvectorId),`
-`repeat,`
-    `dynvector_iterator_current(DynvectorId, Value),`
-    `. . . (do something with *Value*)`
-    `% fail point`
-    `\+ dynvector_iterator_next(DynvectorId, _Value),`
-`!,`
-`dynvector_iterator_destroy(DynvectorId),`
-`. . .`
+`% create an iterator over the contents of *DynvectorId*`  
+`dynvector_iterator_create(DynvectorId),`  
+`repeat,`  
+        `dynvector_iterator_current(DynvectorId, Value),`  
+        `. . . (do something with *Value*)`  
+        `% fail point`  
+        `\+ dynvector_iterator_next(DynvectorId, _Value),`  
+`!,`  
+`dynvector_iterator_destroy(DynvectorId),`  
+`. . .`  
 
 `dynvector_iterator_create/1` creates an iterator with a range equals to the entire contents of the *dynvector*, `dynvector_iterator_current/2` retrieves or sets the value at the current position, and `dynvector_iterator_next/2` increments the iterator pointer, failing when it reaches the end of the iterator.
 
-Alternatively, a counter may be used:
-`counter_create(loop),`
-`repeat,`
-    `counter_value(loop, Index)`
-    `dynvector_value(DynvectorId, Index, Value),`
-    `. . . (do something with *Value*)`
-    `% fail point`
-    `counter_inc(loop, Count),`
-`!,`
-`counter_destroy(loop),`
+Alternatively, a counter may be used:  
+`counter_create(loop),`  
+`repeat,`  
+        `counter_value(loop, Index)`  
+        `dynvector_value(DynvectorId, Index, Value),`  
+        `. . . (do something with *Value*)`  
+        `% fail point`  
+        `counter_inc(loop, Count),`  
+`!,`  
+`counter_destroy(loop),`  
 
 `counter_create/2` creates a counter with 0 as its initial value, counter_value/2, retrieves the value of the `counter, dynvector_value/3` retrieves/set *Value* at *Index*, and `counter_inc/2` increments the counter and fails if its resulting value is not *Count*.
 
-Another possibility is to use maplist/2:
-`. . .`
-`numlist(0, Last, Indices),`
-`maplist(my_pred(DynvectorId), Index), Indices),`
-`. . .`
-`my_pred(DynectorId, Index) :-`
-    `dynvector_value(DynvectorId, Index, Value),`
-    `. . . (do something with Value).`
+Another possibility is to use maplist/2:  
+`. . .`  
+`numlist(0, Last, Indices),`  
+`maplist(my_pred(DynvectorId), Index), Indices),`  
+`. . .`  
+`my_pred(DynectorId, Index) :-`  
+        `dynvector_value(DynvectorId, Index, Value),`  
+        `. . . (do something with Value).`  
 
-Finally, recursivity may be used:
-`my_pred(VectorId, 0, Count),`
-`. . .`
+Finally, recursivity may be used:  
+`my_pred(VectorId, 0, Count),`  
+`. . .`  
 
-`my_pred(_DynvectorId, Count, Count).`
-`my_pred(DynvectorId, Index, Count) :-`
-    `dynvector_value(DynvectorId, Index, Value),`
-    `. . . (do something with *Value*)`
-    `IndexNext is Index + 1,`
-    `my_pred(DynvectorId, IndexNext, Count).`
+`my_pred(_DynvectorId, Count, Count).`  
+`my_pred(DynvectorId, Index, Count) :-`  
+        `dynvector_value(DynvectorId, Index, Value),`  
+        `. . . (do something with *Value*)`  
+        `IndexNext is Index + 1,`  
+        `my_pred(DynvectorId, IndexNext, Count).`  
 
-To search a *dynvector*, that is, to locate a given value within the *dynvector*, use
-`dynvector_find(+Id, +Value, -Index)`
+To search a *dynvector*, that is, to locate a given value within the *dynvector*, use  
+`dynvector_find(+Id, +Value, -Index)`  
 *Index* will be unified with the index of *Value*, or the invocation will fail if *Value* does not exist. This is the main purpose of this benchmark: to compare searching a *dynvector* with searching a list in the traditional way, using `memberchk/2`.
 
-To invoke the benchmark, use
-`benchmark.`
-`benchmark(+Benchmarks).`
-`benchmark(+Benchmarks, +SearchCount, +RangeCount).`,
+To invoke the benchmark, use  
+`benchmark.`  
+`benchmark(+Benchmarks).`  
+`benchmark(+Benchmarks, +SearchCount, +RangeCount).`,  
 where *Benchmarks* is a list with the benchmark type(s) desired (default: [1,2,3,4]), *SearchCount* is the number of random integers in the search and base sets, and *RangeCount* is the range to use when generating the two sets of random integers. Note that in SICStus, the number of random integers generated is not exact, but a close approximation, due to the behavior of the predicate used. This, however, in no way affects the benchmark results.
 
-Alternatively, use one of the command files *benchmarkN.cmd*
-`sicstus < benchmarkN.cmd`
-`swipl < benchmarkN.cmd`
-on either Windows or Ubuntu.
+Alternatively, use one of the command files *benchmarkN.cmd*  
+`sicstus < benchmarkN.cmd`  
+`swipl < benchmarkN.cmd`  
+on either Windows or Ubuntu.  
 
 These are the types of benchmark to choose from:
 
