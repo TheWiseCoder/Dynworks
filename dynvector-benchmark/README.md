@@ -104,8 +104,8 @@ Equipment used:
 
 1) Base/Search size: 100000 - Values range: 1..1000000
 
-| |                  |                  |  SWI   |  SWI   |SICStus |SICStus |
-|N|    iteration     |     search       |(MS Win)|(Ubuntu)|(MS Win)|(Ubuntu)|
+|N|    iteration     |     search       |  SWI   |  SWI   |SICStus |SICStus |
+|o|       type       |      type        |(MS Win)|(Ubuntu)|(MS Win)|(Ubuntu)|
 |-|------------------|------------------|--------|--------|--------|--------|
 |1|dynvector-counter |dynvector_find    |     390|     572|  250284|  235160|
 |2|dynvector-maplist |dynvector_find    |     141|     262|  249693|  337610|
