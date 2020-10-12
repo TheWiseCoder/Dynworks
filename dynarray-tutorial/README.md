@@ -9,7 +9,7 @@ The dataset in organized in *records* and *fields*, which will be mapped to *row
 To create a *dynarray*, it is a good idea to make sure it does not exist yet, as the operation will fail if it already exists. If necessary (not really the situation here), use  
 `(\+ is_dynarray(artists) ; dynarray_destroy(artists)),`  
 `dynarray_create(artists, [100,7]),`  
-or simply
+or simply  
 `dynarray_destroy(artists),`  
 `dynarray_create(artists, [100,7]),`  
 since `dynarray_destroy/1` fails silently when there is nothing to destroy.
