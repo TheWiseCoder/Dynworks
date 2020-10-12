@@ -105,7 +105,7 @@ B) Ubuntu 20.04.01 LTS, 64-bit
   
 1) Base/Search size: 100000 - Values range: 1..1000000  
 
-|N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
+|N|    Iteration     |     Search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
 |-|:-----------------|:-----------------|-------:|-------:|-------:|-------:|
 |1|dynvector-counter |dynvector_find    |     390|     572|  250284|  235160|
 |2|dynvector-maplist |dynvector_find    |     141|     262|  249693|  337610|
@@ -120,7 +120,7 @@ B) Ubuntu 20.04.01 LTS, 64-bit
   
 2) Base/Search size: 500000 - Values range: 1..5000000  
 
-|N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
+|N|    Iteration     |     Search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
 |-|:-----------------|:-----------------|-------:|-------:|-------:|-------:|
 |1|dynvector-counter |dynvector_find    |    2062|    2913| 5979917| 6893043|
 |2|dynvector-maplist |dynvector_find    |     813|    1279| 5973836| 6423391|
@@ -135,7 +135,7 @@ B) Ubuntu 20.04.01 LTS, 64-bit
   
 3) Base/Search size: 2000000 - Values range: 1..10000000  
 
-|N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
+|N|    Iteration     |     Search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
 |-|:-----------------|:-----------------|:------:|:------:|:------:|:------:|
 |1|dynvector-counter |dynvector_find    |    8626|   12275|   **   |   **   |
 |2|dynvector-maplist |dynvector_find    |    3219|    5322|   **   |   **   |
@@ -148,10 +148,10 @@ B) Ubuntu 20.04.01 LTS, 64-bit
 |9|list-recursion    |memberchk-sorted  |   **   |   **   |   **   |   **   |
   
 Legends:  
-**(a)** SWI-Prolog / MS Windows  
-**(b)** SWI-Prolog / Ubuntu  
-**(c)** SICStus / MS Windows  
-**(d)** SICStus / Ubuntu  
+**(a)** SWI-Prolog / MS Windows 10  
+**(b)** SWI-Prolog / Ubuntu 20.04  
+**(c)** SICStus / MS Windows 10  
+**(d)** SICStus / Ubuntu 20.04  
 ** It is not feasible to compute the time to complete the benchmark.  
 
 
