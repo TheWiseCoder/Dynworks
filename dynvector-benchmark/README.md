@@ -41,7 +41,7 @@ Alternatively, a counter may be used:
 `repeat,`  
         `% retrieve Value from counter`  
         `counter_value(loop, Index)`  
-        `% retrieve Value from dynarray at Index`  
+        `% retrieve Value from DynvectorId at Index`  
         `dynvector_value(DynvectorId, Index, Value),`  
         `. . . (do something with Value)`  
         `% increment counter up to Count`  
@@ -58,7 +58,7 @@ Another possibility is to use maplist/2:
 `maplist(my_pred(DynvectorId), Indices),`  
 `. . .`  
 `my_pred(DynectorId, Index) :-`  
-        `% retrieve Value from dynarray at Index`  
+        `% retrieve Value from DynvectorId at Index`  
         `dynvector_value(DynvectorId, Index, Value),`  
         `. . . (do something with Value).`  
 
@@ -67,7 +67,7 @@ Finally, recursivity may be used:
 `. . .`  
 `my_pred(_DynvectorId, Count, Count).`  
 `my_pred(DynvectorId, Index, Count) :-`  
-        `% retrieve Value from dynarray at Index`  
+        `% retrieve Value from DynvectorId at Index`  
         `dynvector_value(DynvectorId, Index, Value),`  
         `. . . (do something with Value)`  
         `IndexNext is Index + 1,`  
@@ -77,11 +77,11 @@ To search a *dynvector*, that is, to locate a given value within the *dynvector*
 `dynvector_find(+Id, +Value, -Index)`  
 *Index* will be unified with the index of *Value*, or the invocation will fail if *Value* does not exist. This is the main purpose of this benchmark: to compare searching a *dynvector* with searching a list in the traditional way, using `memberchk/2`.
 
-To invoke the benchmark, use  
+To invoke the benchmark, use one of  
 `benchmark.`  
 `benchmark(+Benchmarks).`  
 `benchmark(+Benchmarks, +SearchCount, +RangeCount).`  
-where *Benchmarks* is a list with the benchmark type(s) desired (default: [1,2,3,4]), *SearchCount* is the number of random integers in the search and base sets, and *RangeCount* is the range to use when generating the two sets of random integers. Note that in SICStus, the number of random integers generated is not exact, but a close approximation, due to the behavior of the predicate used. This, however, in no way affects the benchmark results.
+where *Benchmarks* is a list with the benchmark type(s) desired (default: [1,2,3,4]), *SearchCount* is the number of random integers in the search and base sets(default: 100000), and *RangeCount* is the range to use (default: 1000000) when generating the two sets of random integers. Note that in SICStus, the number of random integers generated is not exact, but a close approximation, due to the behavior of the predicate used. This, however, in no way affects the benchmark results.
 
 Alternatively, use one of the command files *benchmarkN.cmd*  
 `sicstus < benchmarkN.cmd`  
