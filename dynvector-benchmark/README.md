@@ -136,7 +136,7 @@ Equipment used:
 3) Base/Search size: 2000000 - Values range: 1..10000000  
 
 |N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
-|-|------------------|------------------|--------|--------|--------|--------|
+|-|:-----------------|:-----------------| --:--- | --:--- | --:--- | --:--- |
 |1|dynvector-counter |dynvector_find    |    8626|   12275|   **   |   **   |
 |2|dynvector-maplist |dynvector_find    |    3219|    5322|   **   |   **   |
 |3|dynvector-iterator|dynvector_find    |    9484|   19525|   **   |   **   |
