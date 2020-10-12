@@ -18,13 +18,13 @@ One possible use of *dynvectors*, and one we will pursue throughout this benchma
 
 Clearly, the expected rate of hits to misses will be around 1:9, varying slightly every time the benchmark runs with these numbers as parameters.
 
-There are many ways to iterate over *dynvectors*, one of them being to use its iterator built-in implementation:  
+There are many ways to iterate over *dynvectors*, one of them being to use its built-in iterator implementation:  
 `. . .`  
-`% create an iterator over the contents of *DynvectorId*`  
+`% create an iterator over the contents of DynvectorId`  
 `dynvector_iterator_create(DynvectorId),`  
 `repeat,`  
         `dynvector_iterator_current(DynvectorId, Value),`  
-        `. . . (do something with *Value*)`  
+        `. . . (do something with Value)`  
         `% fail point`  
         `\+ dynvector_iterator_next(DynvectorId, _Value),`  
 `!,`  
@@ -38,7 +38,7 @@ Alternatively, a counter may be used:
 `repeat,`  
         `counter_value(loop, Index)`  
         `dynvector_value(DynvectorId, Index, Value),`  
-        `. . . (do something with *Value*)`  
+        `. . . (do something with Value)`  
         `% fail point`  
         `counter_inc(loop, Count),`  
 `!,`  
@@ -61,7 +61,7 @@ Finally, recursivity may be used:
 `my_pred(_DynvectorId, Count, Count).`  
 `my_pred(DynvectorId, Index, Count) :-`  
         `dynvector_value(DynvectorId, Index, Value),`  
-        `. . . (do something with *Value*)`  
+        `. . . (do something with Value)`  
         `IndexNext is Index + 1,`  
         `my_pred(DynvectorId, IndexNext, Count).`  
 
@@ -72,7 +72,7 @@ To search a *dynvector*, that is, to locate a given value within the *dynvector*
 To invoke the benchmark, use  
 `benchmark.`  
 `benchmark(+Benchmarks).`  
-`benchmark(+Benchmarks, +SearchCount, +RangeCount).`,  
+`benchmark(+Benchmarks, +SearchCount, +RangeCount).`  
 where *Benchmarks* is a list with the benchmark type(s) desired (default: [1,2,3,4]), *SearchCount* is the number of random integers in the search and base sets, and *RangeCount* is the range to use when generating the two sets of random integers. Note that in SICStus, the number of random integers generated is not exact, but a close approximation, due to the behavior of the predicate used. This, however, in no way affects the benchmark results.
 
 Alternatively, use one of the command files *benchmarkN.cmd*  
@@ -106,7 +106,7 @@ Equipment used:
 1) Base/Search size: 100000 - Values range: 1..1000000
 
 |N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
-|-|------------------|------------------|--------|--------|--------|--------|
+|-|:-----------------|:-----------------|-------:|-------:|-------:|-------:|
 |1|dynvector-counter |dynvector_find    |     390|     572|  250284|  235160|
 |2|dynvector-maplist |dynvector_find    |     141|     262|  249693|  337610|
 |3|dynvector-iterator|dynvector_find    |     453|     954|  245763|  339518|
@@ -121,7 +121,7 @@ Equipment used:
 2) Base/Search size: 500000 - Values range: 1..5000000
 
 |N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
-|-|------------------|------------------|--------|--------|--------|--------|
+|-|:-----------------|:-----------------|-------:|-------:|-------:|-------:|
 |1|dynvector-counter |dynvector_find    |    2062|    2913| 5979917| 6893043|
 |2|dynvector-maplist |dynvector_find    |     813|    1279| 5973836| 6423391|
 |3|dynvector-iterator|dynvector_find    |    2343|    4759| 5979535| 5959181|
@@ -136,7 +136,7 @@ Equipment used:
 3) Base/Search size: 2000000 - Values range: 1..10000000
 
 |N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
-|-|------------------|------------------|--------|--------|--------|--------|
+|-|:-----------------|:-----------------|---:----|---:----|---:----|---:----|
 |1|dynvector-counter |dynvector_find    |    8626|   12275|   **   |   **   |
 |2|dynvector-maplist |dynvector_find    |    3219|    5322|   **   |   **   |
 |3|dynvector-iterator|dynvector_find    |    9484|   19525|   **   |   **   |
@@ -146,13 +146,13 @@ Equipment used:
 |7|dynvector-iterator|memberchk         |   **   |   **   |   **   |   **   |
 |8|list-recursion    |memberchk-unsorted|   **   |   **   |   **   |   **   |
 |9|list-recursion    |memberchk-sorted  |   **   |   **   |   **   |   **   |
-
+  
 Legends:  
 **(a)** SWI-Prolog / MS Windows  
 **(b)** SWI-Prolog / Ubuntu  
 **(c)** SICStus / MS Windows  
 **(d)** SICStus / Ubuntu  
-**** It is not feasible to compute the time to complete the benchmark.  
+** It is not feasible to compute the time to complete the benchmark.  
 
 
 RESULTS
