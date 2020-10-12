@@ -23,6 +23,7 @@ There are many ways to iterate over *dynvectors*, one of them being to use its b
 `% create an iterator over the contents of DynvectorId`  
 `dynvector_iterator_create(DynvectorId),`  
 `repeat,`  
+        `% retrieve Value at iterator's current position`  
         `dynvector_iterator_current(DynvectorId, Value),`  
         `. . . (do something with Value)`  
         `% increment iterator up to its upper bound`  
@@ -38,7 +39,7 @@ Alternatively, a counter may be used:
 `% create counter 'loop', and initialize it to 0`  
 `counter_create(loop),`  
 `repeat,`  
-        `% retrieve Value from counter loop`  
+        `% retrieve Value from counter`  
         `counter_value(loop, Index)`  
         `% retrieve Value from dynarray at Index`  
         `dynvector_value(DynvectorId, Index, Value),`  
