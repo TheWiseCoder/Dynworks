@@ -104,7 +104,7 @@ Equipment used:
 
 1) Base/Search size: 100000 - Values range: 1..1000000
 
-|           **Benchmark Type**          |  **SWI-Prolog** |   **SICStus**   |
+|           **Benchmark Type**          |  **SWI-Prolog** |   **SICStus**   |
 |N|    iteration     |     search       |(MS Win)|(Ubuntu)|(MS Win)|(Ubuntu)|
 |-|------------------|------------------|--------|--------|--------|--------|
 |1|dynvector-counter |dynvector_find    |     390|     572|  250284|  235160|
@@ -166,101 +166,70 @@ RESULTS
 5. If one must deal with very large data sets (i.e., data sets holding from hundreds of thousands to many millions of items), the only viable alternative among the ones attempted here is searching on *dynvectors*, using `dynvector_find/3` and SWI-Prolog. As shown on table 3, performance can be as high as 1 million searches per second on a 2 million item data set, using run-of-the-mill PCs. We took the challenge up to searches on data sets containing 10 million items, and SWI-Prolog kept its high marks throughout. This is absolutely impressive in the Prolog world.
 
 
-**2) SUMMARY OF PUBLIC PREDICATES**
+**2) SUMMARY OF PUBLIC PREDICATES**  
 
 
-**2.1) `dynvector-core.pl`**
+**2.1) `dynvector-core.pl`**  
 
 
-- `dynvector_create(+Id)`
-Create dynvector *Id*.
+- `dynvector_create(+Id)` - Create dynvector *Id*.  
 
-- `dynvector_destroy(+Id)`
-Destroy dynvector *Id*, , releasing all the storage space taken.
+- `dynvector_destroy(+Id)` - Destroy dynvector *Id*, , releasing all the storage space taken.  
 
-- `dynvector_value(+Id, +Index, ?Value)`
-Unify *Value* with the value stored at *Index*
+- `dynvector_value(+Id, +Index, ?Value)` - Unify *Value* with the value stored at *Index*.  
 
-- `dynvector_append(+Id, +Value, -Index)`
-Append *Value*, and unify *Index* with the resulting index.
+- `dynvector_append(+Id, +Value, -Index)` - Append *Value*, and unify *Index* with the resulting index.  
 
-- `dynvector_delete(+Id, +Index)`
-Erase the cell at *Index*, releasing the storage space taken.
+- `dynvector_delete(+Id, +Index)` - Erase the cell at *Index*, releasing the storage space taken.  
 
-- `dynvector_find(+Id, ?Value, ?Index)`
-Unify *Value* or *Index* with an occurrence of *Value* or *Index*, respectively.
+- `dynvector_find(+Id, ?Value, ?Index)` - Unify *Value* or *Index* with an occurrence of *Value* or *Index*, respectively.  
 
-- `dynvector_fill(+Id, +Value)`
-Load all *Id*'s cells with *Value*.
+- `dynvector_fill(+Id, +Value)` - Load all *Id*'s cells with *Value*.  
 
-- `dynvector_list(+Id, ?List)`
-Unify *List* with all the cells in the *dynarray*.
+- `dynvector_list(+Id, ?List)` - Unify *List* with all the cells in the *dynarray*.  
 
-- `dynvector_insert(+Id, +Index, +Value)`
-Insert *Value* at 0-based position *Index*.
+- `dynvector_insert(+Id, +Index, +Value)` - Insert *Value* at 0-based position *Index*.  
 
-- `dynvector_label(+Id, +Label, ?Value)`
-Unify *Label* with *Value*.
+- `dynvector_label(+Id, +Label, ?Value)` - Unify *Label* with *Value*.  
 
-- `dynvector_top(+Id, -Top)`
-Unify *Top* with the highest inserted index, even if it has subsequently been deleted.
+- `dynvector_top(+Id, -Top)` - Unify *Top* with the highest inserted index, even if it has subsequently been deleted.  
 
-- `is_dynvector(+Id)`
-Succeed if *Id* identifies a *dynvwctor*.
+- `is_dynvector(+Id)` - Succeed if *Id* identifies a *dynvwctor*.  
 
-- `dynvector_iterator_create(+Id)`
-Create an iterator over all the contents of *Id*.
+- `dynvector_iterator_create(+Id)` - Create an iterator over all the contents of *Id*.  
 
-- `dynvector_iterator_create(+Id, +From)`
-Create an iterator over the contents from *Top* to *Id*'s last element.
+- `dynvector_iterator_create(+Id, +From)` - Create an iterator over the contents from *Top* to *Id*'s last element.  
+- `dynvector_iterator_create(+Id, +From, +To)` - Create an iterator over the contents from *Top* to *To*.  
 
-- `dynvector_iterator_create(+Id, +From, +To)`
-Create an iterator over the contents from *Top* to *To*.
+- `dynvector_iterator_destroy(+Id)` - Destroy the iterator over *Id*'s contents.  
 
-- `dynvector_iterator_destroy(+Id)`
-Destroy the iterator over *Id*'s contents.
+- `dynvector_iterator_delete(+Id)` - Erase the cell at the iterator's current position, releasing the storage space taken.  
 
-- `dynvector_iterator_delete(+Id)`
-Erase the cell at the iterator's current position, releasing the storage space taken.
+- `dynvector_iterator_append(+Id, -Value)` - Append *Value* to the iterator's upper bound.  
 
-- `dynvector_iterator_append(+Id, -Value)`
-Append *Value* to the iterator's upper bound.
+- `dynvector_iterator_current(+Id, ?Value)` - Unify *Value* with the value at the iterator's current position.  
 
-- `dynvector_iterator_current(+Id, ?Value)`
-Unify *Value* with the value at the iterator's current position.
+- `dynvector_iterator_first(+Id, ?Value)` - Unify *Value* with the value at the iterator's lower bound.  
 
-- `dynvector_iterator_first(+Id, ?Value)`
-Unify *Value* with the value at the iterator's lower bound.
+- `dynvector_iterator_last(+Id, ?Value)` - Unify *Value* with the value at the iterator's upper bound.  
 
-- `dynvector_iterator_last(+Id, ?Value)`
-Unify *Value* with the value at the iterator's upper bound.
+- `dynvector_iterator_index(+Id, -Index)` - Unify *Index* with the iterator's current position.  
 
-- `dynvector_iterator_index(+Id, -Index)`
-Unify *Index* with the iterator's current position.
+- `dynvector_iterator_insert(+Id, -Value)` - Insert *Value* at the iterator's current position.  
 
-- `dynvector_iterator_insert(+Id, -Value)`
-Insert *Value* at the iterator's current position.
+- `dynvector_iterator_next(+Id, ?Value)` - Move the iterator up one position, and unify *Value* with the value therein.  
 
-- `dynvector_iterator_next(+Id, ?Value)`
-Move the iterator up one position, and unify *Value* with the value therein.
-
-- `dynvector_iterator_prev(+Id, ?Value)`
-Move the iterator down one position, and unify *Value* with the value therein.
+- `dynvector_iterator_prev(+Id, ?Value)` - Move the iterator down one position, and unify *Value* with the value therein.  
 
 
-**2.2) `dynvector-persist.pl`**
+**2.2) dynvector-persist.pl**  
 
-- `dynvector_clone(+IdSource, +IdTarget)
-Create *IdTarget* as a clone of *IdSource*.
+- `dynvector_clone(+IdSource, +IdTarget)` - Create *IdTarget* as a clone of *IdSource*.  
 
-- `dynvector_erase(+Id, +DataSet)
-Erase *Id*'s data, as part of *DataSet*, from external storage.
+- `dynvector_erase(+Id, +DataSet)` - Erase *Id*'s data, as part of *DataSet*, from external storage.  
 
-- `dynvector_persist(+Id, +DataSet)
-Persist *Id*'s data, as part of *DataSet*, in external storage.
+- `dynvector_persist(+Id, +DataSet)` - Persist *Id*'s data, as part of *DataSet*, in external storage.  
 
-- `dynvector_restore(+Id, +DataSet)
-Restore *Id*'s data, as part of *DataSet*, from external storage.
+- `dynvector_restore(+Id, +DataSet)` - Restore *Id*'s data, as part of *DataSet*, from external storage.  
 
-- `dynvector_serialize(+Id, ?Serialized)
-Unify *Serialized* with *Id*'s serialized data, for backup/restore purposes.
+- `dynvector_serialize(+Id, ?Serialized)` - Unify *Serialized* with *Id*'s serialized data, for backup/restore purposes.  
