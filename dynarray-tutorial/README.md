@@ -6,7 +6,7 @@ We will be using a publicly available dataset from https://www.kaggle.com/suprat
 
 The dataset in organized in *records* and *fields*, which will be mapped to *rows* and *columns* in a 2-dimension *dynarray*. Each rows holds data about one artist, with the following columns: *name*, *years*, *genre*, *nationality*, *bio*, *wikipedia*, *paintings* (we dropped the column *id*, as we prefer to use *name* to uniquely identify an artist). Throughout this tutorial we will refer to the Prolog source code file *tutorial.pl*, located in this folder, a must-read for a full understanding of what is being presented.
 
-To create a *dynarray*, it is a good idea to make sure it does not exist yet, as the operation will fail if it already exists. If necessary (not really the situation here), use
+To create a *dynarray*, it is a good idea to make sure it does not exist yet, as the operation will fail if it already exists. If necessary (not really the situation here), use  
 `(\+ is_dynarray(artists) ; dynarray_destroy(artists)),`  
 `dynarray_create(artists, [100,7]),`  
 or simply
@@ -16,7 +16,7 @@ since `dynarray_destroy/1` fails silently when there is nothing to destroy.
 
 The parameter *[100,7]* specifies a 2-dimension *dynarray* with a maximum of 100 rows and 7 columns. Although the *artists.csv* file contains only 50 rows, it is a good practice to specify a greater number of rows, if expansion is foreseen. This incurs no storage or performance costs, as *dynarrays* take storage dynamically as needed, and sizes impact performance only when storage is actually allocated up to near or beyond the running platform's limits (for a discussion of performance *vis-à-vis* resources used, see the accompanying *dynvector tutorial* in this package).
 
-*Dynarrays* allows for labels to be used as indices for column identification, a much more intuitive and safer way than using integers. The code fragment (lines 140-146) is
+*Dynarrays* allows for labels to be used as indices for column identification, a much more intuitive and safer way than using integers. The code fragment (lines 140-146) is  
 `dynarray_label(artists, name, 0),`  
 `dynarray_label(artists, years, 1),`  
 `dynarray_label(artists, genre, 2),`  
@@ -43,76 +43,54 @@ or
 `swipl < tutorial.cmd`  
  
 
-**3) SUMMARY OF PUBLIC PREDICATES**
+**3) SUMMARY OF PUBLIC PREDICATES**  
 
 
-**3.1) `dynarray-core.pl`**
+**3.1) dynarray-core.pl**  
 
-- `dynarray_create(+Id, +DimRanges)
-Create dynarray *Id*, with dimensions/ranges *DimRanges*.
+- `dynarray_create(+Id, +DimRanges)` - Create dynarray *Id*, with dimensions/ranges *DimRanges*.  
 
-- `dynarray_destroy(+Id)
-Destroy dynarray *Id*, releasing all the storage space taken.
+- `dynarray_destroy(+Id)` - Destroy dynarray *Id*, releasing all the storage space taken.  
 
-- `dynarray_value(+Id, +Indices, ?Value)
-Unify *Value* with the value stored at *Indices*
+- `dynarray_value(+Id, +Indices, ?Value)` - Unify *Value* with the value stored at *Indices*.  
 
-- `dynarray_delete(+Id, +Indices)
-Erase the cell at *Indices*, releasing the storage space taken.
+- `dynarray_delete(+Id, +Indices)` - Erase the cell at *Indices*, releasing the storage space taken.  
 
-- `dynarray_find(+Id, ?Value, ?Indices)
-Unify *Value* or *Indices* with an occurrence of *Value* or *Indices*, respectively.
+- `dynarray_find(+Id, ?Value, ?Indices)` - Unify *Value* or *Indices* with an occurrence of *Value* or *Indices*, respectively.  
 
-- `dynarray_fill(+Id, +Value)`
-Load all *Id*'s cells with *Value*.
+- `dynarray_fill(+Id, +Value)` - Load all *Id*'s cells with *Value*.  
 
-- `dynarray_list(+Id, ?List)`
-Unify *List* with all the cells in the *dynarray*.
+- `dynarray_list(+Id, ?List)` - Unify *List* with all the cells in the *dynarray*.  
 
-- `dynarray_label(+Id, +Label, ?Value)`
-Unify *Label* with *Value*.
+- `dynarray_label(+Id, +Label, ?Value)` - Unify *Label* with *Value*.  
 
-- `dynarray_dims(+Id, -DimCount)`
-Retrieve the number of dimensions.
+- `dynarray_dims(+Id, -DimCount)` - Retrieve the number of dimensions.  
 
-- `dynarray_cells(+Id, -CellCount)`
-Retrieve the total number of cells.
+- `dynarray_cells(+Id, -CellCount)` - Retrieve the total number of cells.  
 
-- `dynarray_cells(+Id, +Dim, -CellCount)`
-Retrieve the total number of cells in dimension *Dim*.
+- `dynarray_cells(+Id, +Dim, -CellCount)` - Retrieve the total number of cells in dimension *Dim*.  
 
-- `dynarray_top(+Id, +Dim, -Top)`
-Unify *Top* with the highest inserted index value on the given dimension, even if it has subsequently been deleted.
+- `dynarray_top(+Id, +Dim, -Top)` - Unify *Top* with the highest inserted index value on the given dimension, even if it has subsequently been deleted.  
 
-- `dynarray_position_delete(+Id, +Position)`
-Erase the cell at *Position*, releasing the storage space taken.
+- `dynarray_position_delete(+Id, +Position)` - Erase the cell at *Position*, releasing the storage space taken.  
 
-- `dynarray_position_find(+Id, ?Value, ?Position)`
-Unify *Value* or *Position* with an occurrence of *Value* or *Position*, respectively.
+- `dynarray_position_find(+Id, ?Value, ?Position)` - Unify *Value* or *Position* with an occurrence of *Value* or *Position*, respectively.  
 
-- `dynarray_position_indices(+Id, ?Position, ?Indices)`
-Unify *Position* with the corresponding *Indices* (*Position* is the cell's 0-based linear position).
+- `dynarray_position_indices(+Id, ?Position, ?Indices)` - Unify *Position* with the corresponding *Indices* (*Position* is the cell's 0-based linear position).  
 
-- `dynarray_position_value(+Id, +Position, ?Value)`
-Unify *Value* with the value of cell at *Position*.
+- `dynarray_position_value(+Id, +Position, ?Value)` - Unify *Value* with the value of cell at *Position*.  
 
-- `is_dynarray(+Id)`
-Succeed if *Id* identifies a *dynarray*.
+- `is_dynarray(+Id)` - Succeed if *Id* identifies a *dynarray*.  
 
 
-**3.2) `dynarray-persist.pl`**
+**3.2) dynarray-persist.pl**  
 
-- `dynarray_clone(+IdSource, +IdTarget)`
-Create *IdTarget* as a clone of *IdSource*.
+- `dynarray_clone(+IdSource, +IdTarget)` - Create *IdTarget* as a clone of *IdSource*.  
 
-- `dynarray_erase(+DynId, +DataSet)`
-Erase *Id*'s data, as part of *DataSet*, from external storage.
+- `dynarray_erase(+DynId, +DataSet)` - Erase *Id*'s data, as part of *DataSet*, from external storage.  
 
-- `dynarray_persist(+DynId, +DataSet)`
-Persist *Id*'s data, as part of *DataSet*, in external storage.
+- `dynarray_persist(+DynId, +DataSet)` - Persist *Id*'s data, as part of *DataSet*, in external storage.  
 
-- `dynarray_restore(+DynId, +DataSet)`
-Restore *Id*'s data, as part of *DataSet*, from external storage.
+- `dynarray_restore(+DynId, +DataSet)` - Restore *Id*'s data, as part of *DataSet*, from external storage.  
 
-- `dynarray_serialize(+Id, ?Serialized)`
-Unify *Serialized* with *Id*'s serialized data, for backup/restore purposes.
+- `dynarray_serialize(+Id, ?Serialized)` - Unify *Serialized* with *Id*'s serialized data, for backup/restore purposes.  

@@ -18,8 +18,8 @@ One possible use of *dynvectors*, and one we will pursue throughout this benchma
 
 Clearly, the expected rate of hits to misses will be around 1:9, varying slightly every time the benchmark runs with these numbers as parameters.
 
-There are many ways to iterate over *dynvectors*, one of them being to use its iterator built-in implementation:
-`. . .`
+There are many ways to iterate over *dynvectors*, one of them being to use its iterator built-in implementation:  
+`. . .`  
 `% create an iterator over the contents of *DynvectorId*`  
 `dynvector_iterator_create(DynvectorId),`  
 `repeat,`  
@@ -58,7 +58,6 @@ Another possibility is to use maplist/2:
 Finally, recursivity may be used:  
 `my_pred(VectorId, 0, Count),`  
 `. . .`  
-
 `my_pred(_DynvectorId, Count, Count).`  
 `my_pred(DynvectorId, Index, Count) :-`  
         `dynvector_value(DynvectorId, Index, Value),`  
@@ -105,6 +104,7 @@ Equipment used:
 
 1) Base/Search size: 100000 - Values range: 1..1000000
 
+|---------------------------------------|-----------------|-----------------|
 |             Benchmark Type            |    SWI-Prolog   |     SICStus     |
 |N|    iteration     |     search       |(MS Win)|(Ubuntu)|(MS Win)|(Ubuntu)|
 |-|------------------|------------------|--------|--------|--------|--------|
