@@ -224,7 +224,7 @@ Legends:
 - `dynvector_iterator_prev(+Id, ?Value)` - Move the iterator down one position, and unify *Value* with the value therein.  
 
 
-**2.2) dynvector-persist.pl**  
+**2.2) dynvector-persistence.pl**  
 
 - `dynvector_clone(+IdSource, +IdTarget)` - Create *IdTarget* as a clone of *IdSource*.  
 

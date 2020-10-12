@@ -83,7 +83,7 @@ or
 - `is_dynarray(+Id)` - Succeed if *Id* identifies a *dynarray*.  
 
 
-**3.2) dynarray-persist.pl**  
+**3.2) dynarray-persistence.pl**  
 
 - `dynarray_clone(+IdSource, +IdTarget)` - Create *IdTarget* as a clone of *IdSource*.  
 
