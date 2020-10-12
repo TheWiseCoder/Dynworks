@@ -24,7 +24,7 @@ Please, find a comprehensive tutorial on using dynarrays in the folder *dynarray
 * *Dynvectors* are resource-minded; their cells are not required to have values assigned to, in any particular sequence or fashion.
 * In order to avoid resource wastage, *dynvectors* should be explicitly destroyed, upon ceasing to be of any further use.
 
-In the folder *dynvector-benchmark* we present a beginner's tutorial on using dynvectors, and demonstrate the enormous performance gains they provide when used as replacements for standard Prolog lists.
+In the folder *dynvector-benchmark* we present a beginner's tutorial on using *dynvectors*, and demonstrate the enormous performance gains they provide when used as replacements for standard Prolog lists.
 
 **3. PERSISTENCE**
 

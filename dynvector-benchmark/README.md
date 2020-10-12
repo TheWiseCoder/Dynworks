@@ -25,23 +25,28 @@ There are many ways to iterate over *dynvectors*, one of them being to use its b
 `repeat,`  
         `dynvector_iterator_current(DynvectorId, Value),`  
         `. . . (do something with Value)`  
-        `% fail point`  
+        `% increment iterator up to its upper bound`  
         `\+ dynvector_iterator_next(DynvectorId, _Value),`  
 `!,`  
+`% destroy the iterator`  
 `dynvector_iterator_destroy(DynvectorId),`  
 `. . .`  
 
 `dynvector_iterator_create/1` creates an iterator with a range equals to the entire contents of the *dynvector*, `dynvector_iterator_current/2` retrieves or sets the value at the current position, and `dynvector_iterator_next/2` increments the iterator pointer, failing when it reaches the end of the iterator.
 
 Alternatively, a counter may be used:  
+`% create counter 'loop', and initialize it to 0`  
 `counter_create(loop),`  
 `repeat,`  
+        `% retrieve Value from counter loop`  
         `counter_value(loop, Index)`  
+        `% retrieve Value from dynarray at Index`  
         `dynvector_value(DynvectorId, Index, Value),`  
         `. . . (do something with Value)`  
-        `% fail point`  
+        `% increment counter up to Count`  
         `counter_inc(loop, Count),`  
 `!,`  
+`% destroy counter`  
 `counter_destroy(loop),`  
 
 `counter_create/2` creates a counter with 0 as its initial value, counter_value/2, retrieves the value of the `counter, dynvector_value/3` retrieves/set *Value* at *Index*, and `counter_inc/2` increments the counter and fails if its resulting value is not *Count*.
@@ -49,9 +54,10 @@ Alternatively, a counter may be used:
 Another possibility is to use maplist/2:  
 `. . .`  
 `numlist(0, Last, Indices),`  
-`maplist(my_pred(DynvectorId), Index), Indices),`  
+`maplist(my_pred(DynvectorId), Indices),`  
 `. . .`  
 `my_pred(DynectorId, Index) :-`  
+        `% retrieve Value from dynarray at Index`  
         `dynvector_value(DynvectorId, Index, Value),`  
         `. . . (do something with Value).`  
 
@@ -60,6 +66,7 @@ Finally, recursivity may be used:
 `. . .`  
 `my_pred(_DynvectorId, Count, Count).`  
 `my_pred(DynvectorId, Index, Count) :-`  
+        `% retrieve Value from dynarray at Index`  
         `dynvector_value(DynvectorId, Index, Value),`  
         `. . . (do something with Value)`  
         `IndexNext is Index + 1,`  
