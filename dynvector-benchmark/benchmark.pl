@@ -14,7 +14,7 @@
 * NOTES :
 *       None yet.
 *
-*       Copyright TheWiseProgrammer 2020.  All rights reserved.
+*       Copyright TheWiseCoder 2020.  All rights reserved.
 *
 * REVISION HISTORY :
 *
