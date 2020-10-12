@@ -85,7 +85,7 @@ dynvector_clone(IdSource, IdTarget) :-
     % serialize the source dynvector
     dynvector_serialize(IdSource, Data),
 
-    % create target dynvector with data from source
+    % create target dynvector with serialized data from IdSource
     dynvector_serialize(IdTarget, Data).
 
 %-------------------------------------------------------------------------------

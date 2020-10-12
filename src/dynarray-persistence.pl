@@ -85,7 +85,7 @@ dynarray_clone(IdSource, IdTarget) :-
     % serialize the source dynarray
     dynarray_serialize(IdSource, Data),
 
-    % create target dynarray with data from source
+    % create target dynarray with serialized data from IdSource
     dynarray_serialize(IdTarget, Data).
 
 %-------------------------------------------------------------------------------
