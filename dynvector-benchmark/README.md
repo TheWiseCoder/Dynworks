@@ -101,7 +101,8 @@ Equipment used:
      Desktop Intel Core i7-4770K CPU 3.50 GHz x 4, 16.0 GB RAM
   B) Ubuntu 20.04.01 LTS, 64-bit
      Notebook Intel Core i7-3537U CPU 2.00 GHz x 4, 7.7 GB RAM
-
+  
+  
 1) Base/Search size: 100000 - Values range: 1..1000000
 
 |N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
@@ -115,8 +116,8 @@ Equipment used:
 |7|dynvector-iterator|memberchk         |  219502|  315775|   67017|   99661|
 |8|list-recursion    |memberchk-unsorted|  212149|  316104|   70065|  102154|
 |9|list-recursion    |memberchk-sorted  |  223043|  316777|  134461|  132836|
-
-
+  
+  
 2) Base/Search size: 500000 - Values range: 1..5000000
 
 |N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
@@ -130,8 +131,8 @@ Equipment used:
 |7|dynvector-iterator|memberchk         | 5162279| 7927544| 1642470| 2508727|
 |8|list-recursion    |memberchk-unsorted| 5167659| 8142615| 1704884| 2580523|
 |9|list-recursion    |memberchk-sorted  |12765616|21331819| 5309165|14673131|
-
-
+  
+  
 3) Base/Search size: 2000000 - Values range: 1..10000000
 
 |N|    iteration     |     search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
@@ -146,12 +147,12 @@ Equipment used:
 |8|list-recursion    |memberchk-unsorted|   **   |   **   |   **   |   **   |
 |9|list-recursion    |memberchk-sorted  |   **   |   **   |   **   |   **   |
 
-Legends:
-(a) SWI-Prolog / MS Windows
-(b) SWI-Prolog / Ubuntu
-(c) SICStus / MS Windows
-(d) SICStus / Ubuntu
-** It is not feasible to compute the time to complete the benchmark.
+Legends:  
+**(a)** SWI-Prolog / MS Windows  
+**(b)** SWI-Prolog / Ubuntu  
+**(c)** SICStus / MS Windows  
+**(d)** SICStus / Ubuntu  
+**** It is not feasible to compute the time to complete the benchmark.  
 
 
 RESULTS
