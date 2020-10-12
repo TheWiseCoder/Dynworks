@@ -1,3 +1,3 @@
-compile('dynvector-benchmark.pl').
+compile('benchmark.pl').
 benchmark([1,2,3,4], 2000000,10000000),
 halt.
