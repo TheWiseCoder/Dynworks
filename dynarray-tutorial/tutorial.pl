@@ -43,6 +43,9 @@
         reverse/2
     ]).
 
+read_stream(File, Records) :-
+    read_records(File, Records).
+
 :- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------
 
 :- use_module(library(apply),
@@ -59,6 +62,9 @@
     [
         numlist/3
     ]).
+
+read_stream(File, Records) :-
+    csv_read_stream(File, Records, []).
 
 :- endif.                                       % ------------------------------
 
@@ -133,19 +139,13 @@ load_row([Name,Years,Genre,Nationality,Bio,Wikipedia,Paintings]) :-
 input_data(Dialect, File, Lists) :-
 
     % read data
-    read_stream(Dialect, File, Records),
+    read_stream(File, Records),
 
     % skip first record (field names)
     [_|Tail] = Records,
 
     % process data
     input_data_(Dialect, Tail, [], Lists).
-
-read_stream(sicstus, File, Records) :-
-    read_records(File, Records).
-
-read_stream(swi, File, Records) :-
-    csv_read_stream(File, Records, []).
 
 % (done)
 input_data_(_Dialect, [], ListsProgress, ListsFinal) :-
