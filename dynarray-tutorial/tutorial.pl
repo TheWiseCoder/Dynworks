@@ -98,7 +98,7 @@ tutorial_prepare :-
     dynarray_label(artists, paintings, 6),
 
     % retrieve data from file
-    open('c:/eclipse/dynworks/dynarray-tutorial/artists.csv', 'read', File),
+    open('artists.csv', 'read', File),
     input_data(Dialect, File, Records),
     close(File),
 
