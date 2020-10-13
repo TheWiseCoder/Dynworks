@@ -43,35 +43,6 @@
         reverse/2
     ]).
 
-input_data(File, Lists) :-
-
-    % read data
-    read_records(File, Records),
-
-    % skip first record (field names)
-    [_|Tail] = Records,
-
-    % process data
-    input_data_(Tail, [], Lists).
-
-% (done)
-input_data_([], ListsProgress, ListsFinal) :-
-    reverse(ListsProgress, ListsFinal).
-
-% (iterate)
-input_data_([Record|Records], ListsProgress, ListsFinal) :-
-
-    [_,string(C1),string(C2),string(C3),
-     string(C4),string(C5),string(C6),integer(_,C7)] = Record,
-    atom_codes(A1, C1),
-    atom_codes(A2, C2),
-    atom_codes(A3, C3),
-    atom_codes(A4, C4),
-    atom_codes(A5, C5),
-    atom_codes(A6, C6),
-    atom_codes(A7, C7),
-    input_data_(Records, [[A1,A2,A3,A4,A5,A6,A7]|ListsProgress], ListsFinal).
-
 :- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------
 
 :- use_module(library(apply),
@@ -88,27 +59,6 @@ input_data_([Record|Records], ListsProgress, ListsFinal) :-
     [
         numlist/3
     ]).
-
-input_data(File, Lists) :-
-
-    % read data
-    csv_read_stream(File, Records, []),
-
-    % skip first record (field names)
-    [_|Tail] = Records,
-
-    % process data
-    input_data_(Tail, [], Lists).
-
-% (done)
-input_data_([], ListsProgress, ListsFinal) :-
-    reverse(ListsProgress, ListsFinal).
-
-% (iterate)
-input_data_([Record|Records], ListsProgress, ListsFinal) :-
-
-    row(_, A1, A2, A3, A4, A5, A6, A7) = Record,
-    input_data_(Records, [[A1,A2,A3,A4,A5,A6,A7]|ListsProgress], ListsFinal).
 
 :- endif.                                       % ------------------------------
 
@@ -131,6 +81,9 @@ input_data_([Record|Records], ListsProgress, ListsFinal) :-
 
 tutorial_prepare :-
 
+    % identify the Prolog platform
+    current_prolog_flag(dialect, Dialect),
+
     % create the dynarray
     dynarray_destroy(artists),
     dynarray_create(artists, [100,7]),
@@ -145,8 +98,8 @@ tutorial_prepare :-
     dynarray_label(artists, paintings, 6),
 
     % retrieve data from file
-    open('artists.csv', 'read', File),
-    input_data(File, Records),
+    open('c:/eclipse/dynworks/dynarray-tutorial/artists.csv', 'read', File),
+    input_data(Dialect, File, Records),
     close(File),
 
     % load data onto the dynarray, one row at a time
@@ -174,6 +127,51 @@ load_row([Name,Years,Genre,Nationality,Bio,Wikipedia,Paintings]) :-
     dynarray_value(artists, [Row,bio], Bio),
     dynarray_value(artists, [Row,wikipedia], Wikipedia),
     dynarray_value(artists, [Row,paintings], Paintings).
+
+%-------------------------------------------------------------------------------
+
+input_data(Dialect, File, Lists) :-
+
+    % read data
+    read_stream(Dialect, File, Records),
+
+    % skip first record (field names)
+    [_|Tail] = Records,
+
+    % process data
+    input_data_(Dialect, Tail, [], Lists).
+
+read_stream(sicstus, File, Records) :-
+    read_records(File, Records).
+
+read_stream(swi, File, Records) :-
+    csv_read_stream(File, Records, []).
+
+% (done)
+input_data_(_Dialect, [], ListsProgress, ListsFinal) :-
+    reverse(ListsProgress, ListsFinal).
+
+% (iterate)
+input_data_(sicstus, [Record|Records], ListsProgress, ListsFinal) :-
+
+    [_,string(C1),string(C2),string(C3),
+     string(C4),string(C5),string(C6),integer(_,C7)] = Record,
+    atom_codes(A1, C1),
+    atom_codes(A2, C2),
+    atom_codes(A3, C3),
+    atom_codes(A4, C4),
+    atom_codes(A5, C5),
+    atom_codes(A6, C6),
+    atom_codes(A7, C7),
+    input_data_(sicstus, Records,
+                [[A1,A2,A3,A4,A5,A6,A7]|ListsProgress], ListsFinal).
+
+% (iterate)
+input_data_(swi, [Record|Records], ListsProgress, ListsFinal) :-
+
+    row(_, A1, A2, A3, A4, A5, A6, A7) = Record,
+    input_data_(swi, Records,
+                [[A1,A2,A3,A4,A5,A6,A7]|ListsProgress], ListsFinal).
 
 %-------------------------------------------------------------------------------
 
