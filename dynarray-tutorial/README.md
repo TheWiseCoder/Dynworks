@@ -41,12 +41,31 @@ Alternatively, from the command line on this folder run
 `sicstus < tutorial.cmd`  
 or  
 `swipl < tutorial.cmd`  
- 
 
-**3) SUMMARY OF PUBLIC PREDICATES**  
+**3. A NOTE ABOUT THE CSV IMPLEMENTATION**
+
+You may appreciate the fact that the first part of the task performed in this tutorial, namely the loading of data from a *CSV* file onto a dynarray, could have been accomplished with this much simpler code:
+`open('artists.sv', read, Stream),`  
+`dynarray_csv(artists, Stream),`  
+
+The complete `tutorial_prepare/0` predicate would be just:  
+`tutorial_prepare :-`  
+        `% open csv file`  
+        `open('artists.sv', read, Stream),`  
+        `% create the dynarray from the csv file`  
+        `dynarray_destroy(artists),`  
+        `dynarray_csv(artists, Stream),`  
+         `% persist the dynarray`  
+        `dynarray_persist(artists, my_dataset),`  
+        `dynarray_destroy(artists).`  
+
+This is due to the fact that *dynarrays* have a built-in implementation for persisting to, and restoring from, *CSV* files. Using this facility, though, would defeat the purpose of the tutorial.
 
 
-**3.1) dynarray-core.pl**  
+**4) SUMMARY OF PUBLIC PREDICATES**  
+
+
+**4.1) dynarray-core.pl**  
 
 - `dynarray_create(+Id, +DimRanges)` - Create dynarray *Id*, with dimensions/ranges *DimRanges*.  
 
@@ -75,17 +94,19 @@ or
 - `dynarray_position_delete(+Id, +Position)` - Erase the cell at *Position*, releasing the storage space taken.  
 
 - `dynarray_position_find(+Id, ?Value, ?Position)` - Unify *Value* or *Position* with an occurrence of *Value* or *Position*, respectively.  
-
+  
 - `dynarray_position_indices(+Id, ?Position, ?Indices)` - Unify *Position* with the corresponding *Indices* (*Position* is the cell's 0-based linear position).  
 
 - `dynarray_position_value(+Id, +Position, ?Value)` - Unify *Value* with the value of cell at *Position*.  
 
 - `is_dynarray(+Id)` - Succeed if *Id* identifies a *dynarray*.  
-
-
-**3.2) dynarray-persistence.pl**  
+  
+  
+**4.2) dynarray-persistence.pl**  
 
 - `dynarray_clone(+IdSource, +IdTarget)` - Create *IdTarget* as a clone of *IdSource*.  
+
+- `dynarray_csv(+Id, +Stream)` - Persist/restore *Id* to/from a *CSV* file through *Stream*.  
 
 - `dynarray_erase(+DynId, +DataSet)` - Erase *Id*'s data, as part of *DataSet*, from external storage.  
 

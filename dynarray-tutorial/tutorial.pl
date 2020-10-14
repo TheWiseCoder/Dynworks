@@ -50,7 +50,7 @@ read_stream(File, Records) :-
 
 :- use_module(library(apply),
     [
-        maplist/3
+        maplist/2
     ]).
 
 :- use_module(library(csv),
@@ -60,7 +60,8 @@ read_stream(File, Records) :-
 
 :- use_module(library(lists),
     [
-        numlist/3
+        numlist/3,
+        reverse/2
     ]).
 
 read_stream(File, Records) :-

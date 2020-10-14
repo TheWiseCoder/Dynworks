@@ -31,7 +31,7 @@
 *       dynarray_dims(+Id, -DimCount)
 *       dynarray_fill(+Id, +Value)
 *       dynarray_find(+Id, ?Value, ?Indices)
-*       dynarray_label(+Id, +Label, ?Value)
+*       dynarray_label(+Id, ?Label, ?Value)
 *       dynarray_list(+Id, ?List)
 *       dynarray_top(+Id, +Dim, -Top)
 *       dynarray_value(+Id, +Indices, ?Value)
@@ -242,16 +242,17 @@ is_dynarray(Id) :-
 % unify Value with the value associated with the named attribute
 % Id        atom identifying the dynarray
 % Label     atom standing for the named attribute
-% Value     associated with the named attribute
-% dynarray_label(+Id, +Label, ?Value)
+% Value     value associated with the named attribute
+% dynarray_label(+Id, ?Label, ?Value)
 dynarray_label(Id, Label, Value) :-
 
-    (ground(Value) ->
-        % fail point (must be an atom, and must not start with da_)
+    ((ground(Label) , ground(Value)) ->
+        % fail point (must be an atom, and must not start with 'da_')
         \+ sub_atom(Label, 0, 3, _, da_),
         (retract(dynarr_labels(Id, Label, _)) ; true),
         assertz(dynarr_labels(Id, Label, Value))
     ;
+        % fail if Label and Value are both vars
         dynarr_labels(Id, Label, Value)
     ).
 
