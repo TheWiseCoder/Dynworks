@@ -10,7 +10,7 @@ where Id is an atom identifying the *dynvector*. It will fail if a *dynvector* w
 or simply  
 `dynvector_destroy(Id),`  
 `dynvector_create(Id),`  
-since `dynvector_destroy/1` fails silently when there is nothing to destroy. Note that the *dynvector*'s size (or the maximum number of cells it may contain) is not specified, as it grows and shrinks dynamically as needed.
+since `dynvector_destroy/1` will not fail or complain when there is nothing to destroy. Note that the *dynvector*'s size (or the maximum number of cells it may contain) is not specified, as it grows and shrinks dynamically as needed.
 
 A *dynvector* may also be created indirectly with `dynvector_list(+Id, +List)`, which causes the content of *List* to be loaded onto the *dynvector*, creating it anew or, if it already exists, replacing its contents.
 
