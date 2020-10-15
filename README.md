@@ -36,7 +36,7 @@ The *Dynworks* library requires SICStus Prolog version 4.6.0 or newer, or SWI-Pr
 
 To use the persistence features on Microsoft Windows, Berkeley DB for Windows version 6.2.38 must be installed. The installers *db-6.2.28_86.msi* (32 bits) and *db-6.2.28_64.msi* (64 bits) may be obtained directly from the Oracle Berkeley DB site. Most Linux distributions already carry the Berkeley DB library by default. Additionally, on Linux environments SWI-Prolog requires that the package *swi-prolog-bdb* be installed.
 
-**4. SWI-PROLOG PACK**
+**5. SWI-PROLOG PACK**
 
 A pack is available for the SWi-Prolog platform, in the folder *swi_pack*. To install it, execute
 
