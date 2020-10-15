@@ -74,7 +74,7 @@ randseq(K, N, Set) :-
         numlist/3
     ]).
 
-:- use_module('../../goldies/src/counter/swi-counter',
+:- use_module('../src/swi/simple_counter',
     [
         counter_create/1,
         counter_inc/1,
