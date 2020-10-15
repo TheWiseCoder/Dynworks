@@ -36,7 +36,13 @@
         maplist/2
     ]).
 
-:- use_module('../Goldies/src/counter/sicstus-counter',
+:- use_module(library(random),
+    [
+        random_numlist/4,
+        random_permutation/2
+    ]).
+
+:- use_module('../src/sicstus/simple_counter',
     [
         counter_create/1,
         counter_inc/1,
@@ -44,12 +50,17 @@
         counter_value/2
     ]).
 
-:- use_module('../Goldies/src/marks/sicstus-marks',
-    [
-        get_flag/2,
-        set_flag/2,
-        randseq/3
-    ]).
+get_flag(Key, Value) :-
+    ( bb_get(Key, Value)
+    ; (Value = 0 , bb_put(Key, Value)) ).
+
+set_flag(Key, Value) :- bb_put(Key, Value).
+
+randseq(K, N, Set) :-
+    K =< N,
+    P is float(K) / float(N),
+    random_numlist(P, 1, N, Ints),
+    random_permutation(Ints, Set).
 
 :- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------
 
@@ -73,7 +84,18 @@
 
 :- endif.                                       % ------------------------------
 
-:- use_module('../src/dynvector-core').
+:- use_module('../src/dynvector_core',
+    [
+        dynvector_create/1,
+        dynvector_destroy/1,
+        dynvector_find/3,
+        dynvector_iterator_create/1,
+        dynvector_iterator_current/2,
+        dynvector_iterator_destroy/1,
+        dynvector_iterator_next/2,
+        dynvector_list/2,
+        dynvector_value/3
+    ]).
 
 % invoke benchmark with defaults Benchmarks/SearchCount/RangeCount
 benchmark :-

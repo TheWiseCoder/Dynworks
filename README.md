@@ -30,11 +30,7 @@ In the folder *dynvector-benchmark* we present a beginner's tutorial on using *d
 
 The implementation includes modules providing persistance for instances of both *dynarrays* and *dynvectors*, using the Berkeley DB library. The tutorial in the folder *dynarray-tutorial* illustrates persisting and restoring *dynarrays*.
 
-**4. INCLUDED PROJECT**
-
-This project includes as sub-module *Goldies*, a small collection of useful Prolog utilities. Please, visit https://github.com/TheWiseCoder/Goldies
-
-**5. REQUIREMENTS**
+**4. REQUIREMENTS**
 
 The *Dynworks* library requires SICStus Prolog version 4.6.0 or newer, or SWI-Prolog version 8.2.1 or newer, running under Microsoft Windows 10 or Ubuntu 20.04. It might work with older versions of SICStus or SWI-Prolog, or on platforms other than the ones mentioned, but this has not been tested.
 

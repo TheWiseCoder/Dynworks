@@ -1,16 +1,14 @@
 /*******************************************************************************
-* FILENAME / MODULE : dynarray-persistence.pl / dynarray_persistence
+* FILENAME / MODULE : dynarray_persistence.pl / dynarray_persistence
 *
 * DESCRIPTION :
 *       This module provides persistence for dynarray objects, using the
-*       Berkeley DB utility package. Please, refer to the portability layer
-*       files (sicstus-bdb.pl and swi-bdb.pl) for details on the Prolog
-*       interface to Berkeley DB.
+*       Berkeley DB utility package. Please, refer to the interface layer files
+*       'bdb-wrapper.*' for details on the Prolog interface to Berkeley DB.
 *
 *       Additionally, persisting and restoring from '.csv' files is also
-*       implemented. Please, refer to the portability layer files
-*       (sicstus-csv.pl and swi-csv.pl) for details. The following
-*       considerations apply for csv operations:
+*       implemented. Please, refer to the interface layer files 'csv-wrapper.*'
+*       for details. The following  considerations apply for csv operations:
 *         1. the dynarray involved must be 2-dimensional, and will be handled
 *            as having rows (dimension 1) and columns (dimension 2)
 *         2. the stream involved must be of type 'text', and will be read
@@ -77,14 +75,14 @@
         nth0/3
     ]).
 
-:- use_module('../Goldies/src/bdb/sicstus-bdb',
+:- use_module('./sicstus/bdb_wrapper',
     [
         bdb_erase/2,
         bdb_retrieve/3,
         bdb_store/3
     ]).
 
-:- use_module('../Goldies/src/csv/sicstus-csv',
+:- use_module('./sicstus/csv_wrapper',
     [
         csv_input_records/2,
         csv_is_header/1,
@@ -97,23 +95,23 @@
     [
         convlist/3,
         maplist/2,
-        maplist/3,
-        nth0/3
+        maplist/3
     ]).
 
 :- use_module(library(lists),
     [
+        nth0/3,
         numlist/3
     ]).
 
-:- use_module('../Goldies/src/bdb/swi-bdb',
+:- use_module('./swi/bdb_wrapper',
     [
         bdb_erase/2,
         bdb_retrieve/3,
         bdb_store/3
     ]).
 
-:- use_module('../Goldies/src/csv/swi-csv',
+:- use_module('./swi/csv_wrapper',
     [
         csv_input_records/2,
         csv_is_header/1,
@@ -122,7 +120,7 @@
 
 :- endif.                                       % ------------------------------
 
-:- use_module('dynarray-core',
+:- use_module('dynarray_core',
     [
         dynarray_cells/3,
         dynarray_create/2,

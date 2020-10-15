@@ -1,5 +1,5 @@
 /*******************************************************************************
-* FILENAME / MODULE : dynarray-core.pl / dynarray_core
+* FILENAME / MODULE : dynarray_core.pl / dynarray_core
 *
 * DESCRIPTION :
 *       This module provides an implementation of dynarrays. These are their

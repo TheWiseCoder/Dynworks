@@ -4,8 +4,7 @@
 * DESCRIPTION :
 *       This module provides persistence for dynvector objects, using the
 *       Berkeley DB utility package. Please, refer to the portability layer
-*       files (sicstus-bdb.pl and swi-bdb.pl) for details on the Prolog
-*       interface to Berkeley DB.
+*       file (bdb-wrapper.pl) for details on the Prolog interface to Berkeley DB.
 *
 * PUBLIC PREDICATES :
 *       dynvector_clone(+IdSource, +IdTarget)
@@ -38,7 +37,7 @@
 
 :- if(current_prolog_flag(dialect, sicstus)).   % SICStus ----------------------
 
-:- use_module('../Goldies/src/bdb/sicstus-bdb',
+:- use_module('./sicstus/bdb_wrapper',
     [
         bdb_erase/2,
         bdb_retrieve/3,
@@ -47,7 +46,7 @@
 
 :- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------
 
-:- use_module('../Goldies/src/bdb/swi-bdb',
+:- use_module('./swi/bdb-wrapper',
     [
         bdb_erase/2,
         bdb_retrieve/3,
@@ -61,7 +60,7 @@
         nth0/3
     ]).
 
-:- use_module('dynvector-core',
+:- use_module('dynvector_core',
     [
         dynvector_create/1,
         dynvector_destroy/1,

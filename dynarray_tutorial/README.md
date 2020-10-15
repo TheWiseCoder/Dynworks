@@ -1,8 +1,6 @@
 **1) DYNARRAY TUTORIAL**
 
-This tutorial presents a very simple, but yet illustrative, use of *dynarrays*, a high-performance implementation of *dynamic arrays*. To leverage this work, some utilities from another project, **Prolog Goldies**, are used, as specified in the appropriate `use_module` clauses.
-
-We will be using a publicly available dataset from https://www.kaggle.com/supratimhaldar/deepartist-identify-artist-from-art . We will show how to use *dynarrays* to hold table data in a natural way, and how to easily persist and restore data using the Berkeley DB library. The file with the data we need is *artists.csv*, a very small part of a bigger *archive.zip* (if you are interested in the complete collection of high-quality images it contains, just register at the *kaggle.com* site and download everything free of charge).
+This tutorial presents a very simple, but yet illustrative, use of *dynarrays*, a high-performance implementation of *dynamic arrays*. We will be using a publicly available dataset from https://www.kaggle.com/supratimhaldar/deepartist-identify-artist-from-art . We will show how to use *dynarrays* to hold table data in a natural way, and how to easily persist and restore data using the Berkeley DB library. The file with the data we need is *artists.csv*, a very small part of a bigger *archive.zip* (if you are interested in the complete collection of high-quality images it contains, just register at the *kaggle.com* site and download everything free of charge).
 
 The dataset in organized in *records* and *fields*, which will be mapped to *rows* and *columns* in a 2-dimension *dynarray*. Each rows holds data about one artist, with the following columns: *name*, *years*, *genre*, *nationality*, *bio*, *wikipedia*, *paintings* (we dropped the column *id*, as we prefer to use *name* to uniquely identify an artist). Throughout this tutorial we will refer to the Prolog source code file *tutorial.pl*, located in this folder, a must-read for a full understanding of what is being presented.
 
@@ -12,7 +10,7 @@ To create a *dynarray*, it is a good idea to make sure it does not exist yet, as
 or simply  
 `dynarray_destroy(artists),`  
 `dynarray_create(artists, [100,7]),`  
-since `dynarray_destroy/1` will not fail or complain when there is nothing to destroy.
+since `dynarray_destroy/1` will neither fail nor complain when there is nothing to destroy.
 
 The parameter *[100,7]* specifies a 2-dimension *dynarray* with a maximum of 100 rows and 7 columns. Although the *artists.csv* file contains only 50 rows, it is a good practice to specify a greater number of rows, if expansion is foreseen. This incurs no storage or performance costs, as *dynarrays* take storage dynamically as needed, and sizes impact performance only when storage is actually allocated up to near or beyond the running platform's limits (for a discussion of performance *vis-à-vis* resources used, see the accompanying *dynvector-tutorial* in this package).
 
@@ -28,9 +26,9 @@ The parameter *[100,7]* specifies a 2-dimension *dynarray* with a maximum of 100
 The predicate `tutorial_prepare/0` creates the *dynarray*, invokes `input_data/2` to read the data from the *artists.csv* file, invokes `maplist/2` with `load_row/1` to load the rows onto the *dynarray*, and then it persists the data. The predicate `tutorial_display/0` restores the *dynarray* to memory and invokes `maplist/2` with`display_row/1` to display the rows. As simple as that!
 
 
-**2) RUN THE TUTORIAL**
+**2) RUN THE TUTORIAL**  
 
-Before you start, follow the instructions in https://github.com/TheWiseCoder/Goldies/tree/main/src/bdb to prepare your installation to persist/restore data using Prolog and Berkeley DB. Make sure the Prolog engine can find the file *artists.csv* in this folder (`open/3` at line 107), or move it to a more convenient location.
+Before you start, follow the instructions in the accompanying *src/swi/bdb_wrapper.md* and *src/sicstus/bdb_wrapper.md* files, to prepare your installation to persist/restore data using Prolog and Berkeley DB. Make sure the Prolog engine can find the file *artists.csv* in this folder (`open/3` at line 107), or move it to a more convenient location.
 
 To run the tutorial, load and compile *tutorial.pl* in this folder, and then execute  
 `tutorial_prepare.`  

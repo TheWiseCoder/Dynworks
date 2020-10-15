@@ -83,8 +83,9 @@ To invoke the benchmark, use one of
 `benchmark(+Benchmarks, +SearchCount, +RangeCount).`  
 where *Benchmarks* is a list with the benchmark type(s) desired (default: [1,2,3,4]), *SearchCount* is the number of random integers in the search and base sets(default: 100000), and *RangeCount* is the range to use (default: 1000000) when generating the two sets of random integers. Note that in SICStus, the number of random integers generated is not exact, but a close approximation, due to the behavior of the predicate used. This, however, in no way affects the benchmark results.
 
-Alternatively, use one of the command files *benchmarkN.cmd*  
+Alternatively, from this folder use one of the command files *benchmarkN.cmd*  
 `sicstus < benchmarkN.cmd`  
+or  
 `swipl < benchmarkN.cmd`  
 on either Windows or Ubuntu.  
 

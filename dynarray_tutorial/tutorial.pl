@@ -33,7 +33,6 @@
 
 :- use_module(library(csv),
     [
-        read_record/2,
         read_records/2
     ]).
 
@@ -69,7 +68,7 @@ read_stream(File, Records) :-
 
 :- endif.                                       % ------------------------------
 
-:- use_module('../src/dynarray-core',
+:- use_module('../src/dynarray_core',
     [
         dynarray_create/2,
         dynarray_destroy/1,
@@ -78,7 +77,7 @@ read_stream(File, Records) :-
         dynarray_value/3
     ]).
 
-:- use_module('../src/dynarray-persistence',
+:- use_module('../src/dynarray_persistence',
     [
         dynarray_persist/2,
         dynarray_restore/2
