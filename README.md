@@ -1,6 +1,6 @@
 **Dynworks** bring to the Prolog world high-performance implementations of *dynamic arrays* and *dynamic vectors*. The package has been fully tested under the SISCtus 4.6.0 and the SWI-Prolog 8.2.1, on both Windows 10 and Ubuntu 20.04 environments.
 
-**1. DYNARRAYS**
+**1. DYNARRAYS**  
 
 * *Dynarrays* are powerful, flexible, high-performance, hash-based multi-dimensional arrays.
 * *Dynarrays* have O(1) read/insert/update/delete times, and this holds true up to sizes in the order of millions of cells.
@@ -13,7 +13,7 @@
 
 Please, find a comprehensive tutorial on using dynarrays in the folder *dynarray-tutorial*.
 
-**2. DYNVECTORS**
+**2. DYNVECTORS**  
 
 * *Dynvectors* are powerful, flexible, extendable, high-performance, hash-based vectors.
 * *Dynvectors* have O(1) read/insert/update/delete times, and this holds true up to sizes in the order of millions of cells.
@@ -26,12 +26,18 @@ Please, find a comprehensive tutorial on using dynarrays in the folder *dynarray
 
 In the folder *dynvector-benchmark* we present a beginner's tutorial on using *dynvectors*, and demonstrate the enormous performance gains they provide when used as replacements for standard Prolog lists.
 
-**3. PERSISTENCE**
+**3. PERSISTENCE**  
 
 The implementation includes modules providing persistance for instances of both *dynarrays* and *dynvectors*, using the Berkeley DB library. The tutorial in the folder *dynarray-tutorial* illustrates persisting and restoring *dynarrays*.
 
-**4. REQUIREMENTS**
+**4. REQUIREMENTS**  
 
 The *Dynworks* library requires SICStus Prolog version 4.6.0 or newer, or SWI-Prolog version 8.2.1 or newer, running under Microsoft Windows 10 or Ubuntu 20.04. It might work with older versions of SICStus or SWI-Prolog, or on platforms other than the ones mentioned, but this has not been tested.
 
 To use the persistence features on Microsoft Windows, Berkeley DB for Windows version 6.2.38 must be installed. The installers *db-6.2.28_86.msi* (32 bits) and *db-6.2.28_64.msi* (64 bits) may be obtained directly from the Oracle Berkeley DB site. Most Linux distributions already carry the Berkeley DB library by default. Additionally, on Linux environments SWI-Prolog requires that the package *swi-prolog-bdb* be installed.
+
+**4. SWI-PROLOG PACK**
+
+A pack is available for the SWi-Prolog platform, in the folder *swi_pack*. To install it, execute
+
+`pack_install('https://github.com/TheWiseCoder/Dynworks/raw/main/swi_pack/dynworks-1.0.zip').`  
