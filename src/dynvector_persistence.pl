@@ -46,7 +46,7 @@
 
 :- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------
 
-:- use_module('./swi/bdb-wrapper',
+:- use_module('./swi/bdb_wrapper',
     [
         bdb_erase/2,
         bdb_retrieve/3,
