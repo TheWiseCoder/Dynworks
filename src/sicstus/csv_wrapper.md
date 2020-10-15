@@ -1,6 +1,6 @@
 These modules are an attempt to define a standard interface for '.csv' file operations, to be used in different Prolog environments. The code has been fully tested with SICStus 4.6.0, under Windows 10 Enterpise and Ubuntu 20.04 operating systems. It might perform equally well in other releases, but this has not been tested.
 
-The code is a wrapper for the built-in library primitives in the SICStus plarform. No attempt is made here to describe, document or explain the *CSV* standard, as appropriate documentation for that is widely available. Please, refer to the source code files and to the manuals for the platform(s) used.
+The code is a wrapper for the built-in library primitives in the SICStus plarform. The input/output fields are plain scalar values, such as atoms standing for strings, integers, or floats. No attempt is made here to describe, document or explain the *CSV* standard, as appropriate documentation for that is widely available. Please, refer to the source code file and to the user manual.
 
 Using the available predicates is straight forward:
 
