@@ -1,4 +1,4 @@
-**1) DYNVECTOR BENCHMARK**
+**1. DYNVECTOR BENCHMARK**
 
 This benchmark is also a beginner's tutorial on how to use *dynvectors*. It will go through some significant features of the package, but make sure to complement it by perusing the documentation in the source code files. To leverage this work, some utilities from another project, **Prolog Goldies**, are used, as specified in the appropriate `use_module` clauses.
 
@@ -112,7 +112,7 @@ B) Ubuntu 20.04.01 LTS, 64-bit
     Notebook Intel Core i7-3537U CPU 2.00 GHz x 4, 7.7 GB RAM  
   
   
-1) Base/Search size: 100000 - Values range: 1..1000000  
+1a. Base/Search size: 100000 - Values range: 1..1000000  
 
 |N|    Iteration     |     Search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
 |-|:-----------------|:-----------------|-------:|-------:|-------:|-------:|
@@ -127,7 +127,7 @@ B) Ubuntu 20.04.01 LTS, 64-bit
 |9|list-recursion    |memberchk-sorted  |  223043|  316777|  134461|  132836|
   
   
-2) Base/Search size: 500000 - Values range: 1..5000000  
+1b. Base/Search size: 500000 - Values range: 1..5000000  
 
 |N|    Iteration     |     Search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
 |-|:-----------------|:-----------------|-------:|-------:|-------:|-------:|
@@ -142,7 +142,7 @@ B) Ubuntu 20.04.01 LTS, 64-bit
 |9|list-recursion    |memberchk-sorted  |12765616|21331819| 5309165|14673131|
   
   
-3) Base/Search size: 2000000 - Values range: 1..10000000  
+1c. Base/Search size: 2000000 - Values range: 1..10000000  
 
 |N|    Iteration     |     Search       |SWI-W(a)|SWI-U(b)|SIC-W(c)|SIC-U(d)|
 |-|:-----------------|:-----------------|:------:|:------:|:------:|:------:|
@@ -164,23 +164,23 @@ Legends:
 ** It is not feasible to compute the time to complete the benchmark.  
 
 
-**RESULTS**  
+**2. RESULTS**  
 
-1. The differences found running the benchmark with the same parameters on the same Prolog environment, but different operating systems (Windows and Ubuntu), may be fully explained by the differences in the hardware capabilities (CPU and RAM) of the two host machines.
+2.1. The differences found running the benchmark with the same parameters on the same Prolog environment, but different operating systems (Windows and Ubuntu), may be fully explained by the differences in the hardware capabilities (CPU and RAM) of the two host machines.
 
-2. Among the iteration strategies tested, SWI-Prolog shows a much better performance when the iteration is carried out recursively, with standard Prolog lists. SICStus, on the other hand, shows no significative performance difference related to the choice of the iteration mechanism.
+2.2. Among the iteration strategies tested, SWI-Prolog shows a much better performance when the iteration is carried out recursively, with standard Prolog lists. SICStus, on the other hand, shows no significative performance difference related to the choice of the iteration mechanism.
 
-3. On the subject of searching very large sets, SWI-Prolog shines when its native database hash mechanism is used. As a matter of fact, it shows consistent performance gains of thousands of times (i.e., around three orders of magnitude) over SICStus + its  native hash mechanism, and a little less over SICStus + lists and `memberchk/2`.
+2.3. On the subject of searching very large sets, SWI-Prolog shines when its native database hash mechanism is used. As a matter of fact, it shows consistent performance gains of thousands of times (i.e., around three orders of magnitude) over SICStus + its  native hash mechanism, and a little less over SICStus + lists and `memberchk/2`.
 
-4. On moderately-sized datasets (less than a few hundred thousand items), SICStus performs around two times better than SWI-Prolog when the search is done with `memberchk/2` over lists, and curiously, even substantially better when the list is unsorted. Taken individually, SICStus performs better when searching with `memberchk/2` than when it uses its native database hash mechanism, whereas the opposite is true for SWI-Prolog.
+2.4. On moderately-sized datasets (less than a few hundred thousand items), SICStus performs around two times better than SWI-Prolog when the search is done with `memberchk/2` over lists, and curiously, even substantially better when the list is unsorted. Taken individually, SICStus performs better when searching with `memberchk/2` than when it uses its native database hash mechanism, whereas the opposite is true for SWI-Prolog.
 
-5. If one must deal with very large data sets (i.e., data sets holding from hundreds of thousands to many millions of items), the only viable alternative among the ones attempted here is searching on *dynvectors*, using `dynvector_find/3` and SWI-Prolog. As shown on table 3, performance can be as high as 1 million searches per second on a 2 million item data set, using run-of-the-mill PCs. We took the challenge up to searches on data sets containing 10 million items, and SWI-Prolog kept its high marks throughout. This is absolutely impressive in the Prolog world.
-
-
-**2) SUMMARY OF PUBLIC PREDICATES**  
+2.5. If one must deal with very large data sets (i.e., data sets holding from hundreds of thousands to many millions of items), the only viable alternative among the ones attempted here is searching on *dynvectors*, using `dynvector_find/3` and SWI-Prolog. As shown on table 3, performance can be as high as 1 million searches per second on a 2 million item data set, using run-of-the-mill PCs. We took the challenge up to searches on data sets containing 10 million items, and SWI-Prolog kept its high marks throughout. This is absolutely impressive in the Prolog world.
 
 
-**2.1) `dynvector-core.pl`**  
+**3. SUMMARY OF PUBLIC PREDICATES**  
+
+
+**3.1 dynvector-core.pl**  
 
 
 - `dynvector_create(+Id)` - Create dynvector *Id*.  
@@ -233,7 +233,7 @@ Legends:
 - `dynvector_iterator_prev(+Id, ?Value)` - Move the iterator down one position, and unify *Value* with the value therein.  
 
 
-**2.2) dynvector-persistence.pl**  
+**3.2. dynvector-persistence.pl**  
 
 - `dynvector_clone(+IdSource, +IdTarget)` - Create *IdTarget* as a clone of *IdSource*.  
 

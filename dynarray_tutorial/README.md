@@ -1,4 +1,4 @@
-**1) DYNARRAY TUTORIAL**
+**1. DYNARRAY TUTORIAL**
 
 This tutorial presents a very simple, but yet illustrative, use of *dynarrays*, a high-performance implementation of *dynamic arrays*. We will be using a publicly available dataset from https://www.kaggle.com/supratimhaldar/deepartist-identify-artist-from-art . We will show how to use *dynarrays* to hold table data in a natural way, and how to easily persist and restore data using the Berkeley DB library. The file with the data we need is *artists.csv*, a very small part of a bigger *archive.zip* (if you are interested in the complete collection of high-quality images it contains, just register at the *kaggle.com* site and download everything free of charge).
 
@@ -26,7 +26,7 @@ The parameter *[100,7]* specifies a 2-dimension *dynarray* with a maximum of 100
 The predicate `tutorial_prepare/0` creates the *dynarray*, invokes `input_data/2` to read the data from the *artists.csv* file, invokes `maplist/2` with `load_row/1` to load the rows onto the *dynarray*, and then it persists the data. The predicate `tutorial_display/0` restores the *dynarray* to memory and invokes `maplist/2` with`display_row/1` to display the rows. As simple as that!
 
 
-**2) RUN THE TUTORIAL**  
+**2. RUN THE TUTORIAL**  
 
 Before you start, follow the instructions in the accompanying *src/swi/bdb_wrapper.md* and *src/sicstus/bdb_wrapper.md* files, to prepare your installation to persist/restore data using Prolog and Berkeley DB. Make sure the Prolog engine can find the file *artists.csv* in this folder (`open/3` at line 107), or move it to a more convenient location.
 
@@ -60,10 +60,10 @@ The complete `tutorial_prepare/0` predicate would be just:
 This is due to the fact that *dynarrays* have a built-in implementation for persisting to, and restoring from, *CSV* files. Using this facility, though, would defeat the purpose of the tutorial.
 
 
-**4) SUMMARY OF PUBLIC PREDICATES**  
+**4/ SUMMARY OF PUBLIC PREDICATES**  
 
 
-**4.1) dynarray-core.pl**  
+**4.1. dynarray-core.pl**  
 
 - `dynarray_create(+Id, +DimRanges)` - Create dynarray *Id*, with dimensions/ranges *DimRanges*.  
 
@@ -100,7 +100,7 @@ This is due to the fact that *dynarrays* have a built-in implementation for pers
 - `is_dynarray(+Id)` - Succeed if *Id* identifies a *dynarray*.  
   
   
-**4.2) dynarray-persistence.pl**  
+**4.2. dynarray-persistence.pl**  
 
 - `dynarray_clone(+IdSource, +IdTarget)` - Create *IdTarget* as a clone of *IdSource*.  
 

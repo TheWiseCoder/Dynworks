@@ -1,4 +1,4 @@
-**Dynworks** bring to the Prolog world high-performance implementations of *dynamic arrays* and *dynamic vectors*. The package has been fully tested under the SISCtus 4.6.0 and the SWI-Prolog 8.2.1, on both Windows 10 and Ubuntu 20.04 environments.
+**Dynworks** bring to the Prolog world high-performance implementations of *dynamic multi-dimensional arrays* and *dynamic vectors*. The package has been fully tested under the SISCtus 4.6.0 and the SWI-Prolog 8.2.1 platforms, on both Windows 10 and Ubuntu 20.04 environments.
 
 **1. DYNARRAYS**  
 
@@ -28,7 +28,7 @@ In the folder *dynvector-benchmark* we present a beginner's tutorial on using *d
 
 **3. PERSISTENCE**  
 
-The implementation includes modules providing persistance for instances of both *dynarrays* and *dynvectors*, using the Berkeley DB library. The tutorial in the folder *dynarray-tutorial* illustrates persisting and restoring *dynarrays*.
+The implementation includes modules providing persistence for instances of both *dynarrays* and *dynvectors*, using the Berkeley DB library. The tutorial in the folder *dynarray_tutorial* illustrates persisting and restoring *dynarrays*.
 
 **4. REQUIREMENTS**  
 
