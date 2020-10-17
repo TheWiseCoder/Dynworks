@@ -209,8 +209,8 @@ Legends:
 
 - `dynvector_iterator_create(+Id)` - Create an iterator over all the contents of *Id*.  
 
-- `dynvector_iterator_create(+Id, +From)` - Create an iterator over the contents from *Top* to *Id*'s last element.  
-- `dynvector_iterator_create(+Id, +From, +To)` - Create an iterator over the contents from *Top* to *To*.  
+- `dynvector_iterator_create(+Id, +From)` - Create an iterator over the contents from *From* to *Id*'s last element.  
+- `dynvector_iterator_create(+Id, +From, +To)` - Create an iterator over the contents from *From* to *To*.  
 
 - `dynvector_iterator_destroy(+Id)` - Destroy the iterator over *Id*'s contents.  
 
