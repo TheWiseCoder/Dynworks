@@ -40,4 +40,4 @@ To use the persistence features on Microsoft Windows, Berkeley DB for Windows ve
 
 A pack is available for the SWi-Prolog platform, in the folder *swi_pack*. To install it, execute
 
-`pack_install('https://github.com/TheWiseCoder/Dynworks/raw/main/swi_pack/dynworks-1.0.zip').`  
+`pack_install(dynworks).`  
