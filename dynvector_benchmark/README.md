@@ -1,6 +1,6 @@
 **1. DYNVECTOR BENCHMARK**
 
-This benchmark is also a beginner's tutorial on how to use *dynvectors*. It will go through some significant features of the package, but make sure to complement it by perusing the documentation in the source code files. To leverage this work, some utilities from another project, **Prolog Goldies**, are used, as specified in the appropriate `use_module` clauses.
+This benchmark is also a beginner's tutorial on how to use *dynvectors*. It will go through some significant features of the package, but make sure to complement it by perusing the documentation in the source code files.
 
 Creating a *dynvector* is straight forward:  
 `dynvector_create(Id),`  
