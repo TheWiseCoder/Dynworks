@@ -10,8 +10,8 @@
 /** <module> Persistence for dynvector objects, using Berkeley DB
 
 This module provides persistence for dynvector objects, using the Berkeley DB
-utility package. Please, refer to bdb_rapper.pl for details on the SWI-Prolog
-interface to Berkeley DB.
+utility package. For details on the SWI-Prolog interface to Berkeley DB,
+please refer to the documentation for bdb_rapper.pl .
 
 @author GT Nunes
 @version 1.1.1
@@ -80,19 +80,20 @@ dynvector_clone(IdSource, IdTarget) :-
 
 %! dynvector_serialize(+Id, ?Serialized) is det.
 %
-%  A serialization mechanism, for backup/restore purposes. For a given
-%  dynvector containing `Nv` values and `Nb` labels, its serialization
-%  structure will be<br>
-%     `<Nb>`,<br>
-%     `[<key-label-1>,<value-label-1>],...,[<key-label-Nb>,<value-label-Nb>]`,<br>
-%     `[<index-1>,<value-1>],...,[<index-Nv>,<value-Nv>]`
+%  A serialization mechanism, for backup/restore purposes.
 %
-% The serialized list will thus contain `Np + Nv + 1` elements:<br>
-%   `<num-labels>`    - the total number of key-value label pairs<br>
-%   `<key-label-j>`   - the key in the key-value label pair j<br>
-%   `<value-label-j>` - the value in the key-value label pair<br>
-%   `<index-j>`       - the index position of value j within the dynvector<br>
-%   `<value-j>`       - the value j within the dynvector
+%  For a given dynvector containing `Nv` values and `Nb` labels,
+%  its serialization structure will be<br/>
+%     <Nb>,<br/>
+%     [<key-label-1>,<value-label-1>],...,[<key-label-Nb>,<value-label-Nb>],<br/>
+%     [<index-1>,<value-1>],...,[<index-Nv>,<value-Nv>]
+%
+% The serialized list will thus contain `Np + Nv + 1` elements:<br/>
+%   <num-labels>    - the total number of key-value label pairs<br/>
+%   <key-label-j>   - the key in the key-value label pair `j`<br/>
+%   <value-label-j> - the value in the key-value label pair<br/>
+%   <index-j>       - the index position of value `j` within the dynvector<br/>
+%   <value-j>       - the value `j` within the dynvector
 %
 %  @param Id         Atom identifying the dynvector
 %  @param Serialized Serialization list containing the dynvector data

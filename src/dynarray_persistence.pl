@@ -17,29 +17,21 @@ interface to Berkeley DB.
 Additionally, persisting and restoring from `.csv` files is also implemented.
 Please, refer to the csv_wrapper.pl for details.
 
-The following  considerations apply for CSV operations:
-
+The following  considerations apply for CSV operations:<br/>
 a. the dynarray involved must be 2-dimensional, and will be handled as having
-rows (dimension 1) and columns (dimension 2);
-
+rows (dimension 1) and columns (dimension 2);<br/>
 b. the stream involved must be of type 'text', and will be read or written from
-its current position;
-
+its current position;<br/>
 c. persisting to, or restoring from, the given stream will be attempted,
-depending on whether or not the dynarray exists;
-
+depending on whether or not the dynarray exists;<br/>
 d. input and output are performed through the Prolog platform's built-in CSV
-library;
-
+library;<br/>
 e. when persisting, the atoms associated with the dynarray's columns, if they
-exist, will be used as field names in the CSV file's header record;
-
+exist, will be used as field names in the CSV file's header record;<br/>
 f. when persisting, the data registered as labels, apart from the column names,
-will not be included;
-
+will not be included;<br/>
 g. when persisting, missing cells will be recorded on the CSV file as empty fields
-(containing the null char '\000\');
-
+(containing the null char '\000\');<br/>
 h. when restoring, an attempt will be made to extract field names from the CSV
 file's first record and use them as labels; if not possible, the record will be
 treated as regular data.
@@ -275,20 +267,21 @@ load_field(Id, RowOrdinal, ColOrdinal, Field) :-
 
 %! dynarray_serialize(+Id:atom, ?Serialized:data) is det.
 %
-%  A serialization mechanism, for backup/restore purposes. For a given dynarray
-%  containing `Nv` values and `Nb` labels, its serialization structure will
-%  be<br>
-%    `[<dims-ranges>],<Nb>`,<br>
-%    `[<key-label-1>,<value-label-1>],...,[<key-label-Nb>,<value-label-Nb>]`,<br>
-%    `[<pos-value-1>,<value-1>],...,[<pos-value-Nv>,<value-Nv>]`
+%  A serialization mechanism, for backup/restore purposes.
 %
-% The serialized list will thus contain `Np + Nv + 2` elements:<br>
-%    `<dims-ranges>`   - the dimensions ranges used for the dynarray creation<br>
-%    `<num-labels>`    - the total number of key-value label pairs<br>
-%    `<key-label-j>`   - the key in the key-value label pair `j`<br>
-%    `<value-label-j>` - the value in the key-value label pair `j`<br>
-%    `<pos-value-j>`   - the linear position of value `j` within the dynarray<br>
-%    `<value-j>`       - the value `j` within the dynarray<br>
+%  For a given dynarray containing `Nv` values and `Nb` labels, its serialization
+%  structure will be<br/>
+%    [<dims-ranges>],<Nb>,<br/>
+%    [<key-label-1>,<value-label-1>],...,[<key-label-Nb>,<value-label-Nb>],<br/>
+%    [<pos-value-1>,<value-1>],...,[<pos-value-Nv>,<value-Nv>]
+%
+% The serialized list will thus contain `Np + Nv + 2` elements:<br/>
+%    <dims-ranges>   - the dimensions ranges used for the dynarray creation<br/>
+%    <num-labels>    - the total number of key-value label pairs<br/>
+%    <key-label-j>   - the key in the key-value label pair `j`<br/>
+%    <value-label-j> - the value in the key-value label pair `j`<br/>
+%    <pos-value-j>   - the linear position of value `j` within the dynarray<br/>
+%    <value-j>       - the value `j` within the dynarray
 %
 %  @param Id         Atom identifying the dynarray
 %  @param Serialized Serialization list containing the dynarray data
@@ -442,7 +435,7 @@ dynarray_restore(Id, DataSet) :-
 
 %! dynarray_erase(+Id:atom, +DataSet:atom) is det.
 %
-%  Erase the dynarray persisted data.
+%  Erase the dynarray's persisted data.
 %
 %  @param Id      Atom identifying the dynarray
 %  @param DataSet Atom identifyingt the data set

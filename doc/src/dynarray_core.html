@@ -16,43 +16,64 @@
 This module provides an implementation of dynamic multi-dimensional arrays.</p>
 
 <p>
-These are some of their noteworthy characteristics:</p>
+These are some of their noteworthy characteristics:&lt;br/&gt;</p>
+
+<ol>
+<li>dynarrays are powerful, flexible, high-performance, hash-based</li>
+</ol>
 
 <p>
-a. dynarrays are powerful, flexible, high-performance, hash-based
-multi-dimensional arrays;</p>
+multi-dimensional arrays;&lt;br/&gt;</p>
+
+<ol>
+<li>dynarrays have O(1) read/insert/update/delete times, and this holds true</li>
+</ol>
 
 <p>
-b. dynarrays have O(1) read/insert/update/delete times, and this
-holds true up to sizes in the order of millions of cells;</p>
+up to sizes in the order of millions of cells;&lt;br/&gt;</p>
+
+<ol>
+<li>dynarrays are not immutable objects, or more specifically, they are not</li>
+</ol>
 
 <p>
-c. dynarrays are not immutable objects, or more specifically,
-they are not recreated upon modification;</p>
+recreated upon modification;&lt;br/&gt;</p>
+
+<ol>
+<li>dynarrays have no limitation on the number of dimensions, nor any restriction</li>
+</ol>
 
 <p>
-d. dynarrays have no limitation on the number of dimensions, nor
-any restriction on dimension sizes, apart from the running
-platform's resource limitations;</p>
+on dimension sizes, apart from the running platform's resource limitations;<br>
+5 dynarrays have a maximum number of cells, defined at creation time and
+kept constant thereafter;&lt;br/&gt;</p>
+
+<ol>
+<li>dynarrays demand no storage space reservation previous to the actual</li>
+</ol>
 
 <p>
-e. dynarrays have a maximum number of cells, defined at creation
-time and kept constant thereafter;</p>
+cell-by-cell space allocation requests;&lt;br/&gt;</p>
+
+<ol>
+<li>dynarrays are resource-minded; their cells are not required to have values</li>
+</ol>
 
 <p>
-f. dynarrays demand no storage space reservation previous to the
-actual cell-by-cell space allocation requests;</p>
+assigned to, in any particular sequence or fashion;&lt;br/&gt;</p>
+
+<ol>
+<li>in order to avoid resource wastage, dynarrays should be explicitly destroyed,</li>
+</ol>
 
 <p>
-g. dynarrays are resource-minded; their cells are not required to
-have values assigned to, in any particular sequence or fashion;</p>
+upon ceasing to be of any further use;&lt;br/&gt;</p>
+
+<ol>
+<li>elements may be freely inserted, updated, or deleted, as long as their</li>
+</ol>
 
 <p>
-h. in order to avoid resource wastage, dynarrays should be
-explicitly destroyed, upon ceasing to be of any further use;</p>
-
-<p>
-i. elements may be freely inserted, updated, or deleted, as long as their
 indices are within the dynarray's dimension bounds.</p>
 
 <dl class="tags">
@@ -75,7 +96,9 @@ Alternatively, a range of indices may be specified for any of its
 dimensions, in the form of an integer pair <code>Ii:If</code>. These pairs may
 contain negative values, and, within a single pair, the interval
 markers may be expressed in any order. Internally, offsets compensate
-for the fact that linear positions of cells start at 0 (zero).
+for the fact that linear positions of cells start at 0 (zero).</p>
+
+<p>
 These are examples of valid dynarray creation requests:<br>
 <code>dynarray_create(a, [9,5,8])</code> - indices ranges: [0 : 8,0 : 4,0 : 7]<br>
 <code>dynarray_create(a, [3,5,3 : -8])</code> - indices ranges: [0 : 2,-8 : 3]<br>
@@ -122,8 +145,10 @@ it does not exist.
 
 </dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_top/3"><b class="pred">dynarray_top</b><var class="arglist">(+Id:atom, +Dim:int, -Top:int)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Top</var> with the highest inserted index value on the dimension <var>Dim</var>,
-even if it has subsequently been deleted. Upon dynarray's creation, this
-value is set to -1 for all dimensions.
+even if it has subsequently been deleted.
+
+<p>
+Upon dynarray's creation, this value is set to -1 for all dimensions.</p>
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -152,10 +177,13 @@ value is set to -1 for all dimensions.
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_cells/3"><b class="pred">dynarray_cells</b><var class="arglist">(+Id:atom, +Dim:int, -CellCount:int)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>CellCount</var> with the number of cells in the dimension <var>Dim</var>. These
-are stored in the dynamic predicate <code>dynarr_dims(Id, DimI, DimSizeI)</code>.
-For the special instance <var>Dim0</var>, this list of lists is stored:
-<code>[[DimSizeI,I],...,[DimSizeK,K]]</code> (in ascending order by DimSizeI).
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_cells/3"><b class="pred">dynarray_cells</b><var class="arglist">(+Id:atom, +Dim:int, -CellCount:int)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>CellCount</var> with the number of cells in the dimension <var>Dim</var>.
+
+<p>
+The cell values are stored in the dynamic predicate
+<code>dynarr_dims(Id, DimI, DimSizeI)</code>. For the special instance <var>Dim0</var>,
+this list of lists is stored:<br>
+[[DimSizeI,I],...,[DimSizeK,K]] (in ascending order by <var>DimSizeI</var>).</p>
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -184,10 +212,15 @@ For the special instance <var>Dim0</var>, this list of lists is stored:
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_value/3"><b class="pred">dynarray_value</b><var class="arglist">(+Id:atom, +Indices:list, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value of the dynarray cell at <var>Indices</var>. Dynarrays
-may be sparsed, i.e., they may have cells not holding values, but attempts to
-retrieve the value of an empty cell will fail. Dynarray values are stored in
-the dynamic predicate <code>dynarr_vaLues(Position, Id, Value)</code>.
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_value/3"><b class="pred">dynarray_value</b><var class="arglist">(+Id:atom, +Indices:list, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value of the dynarray cell at <var>Indices</var>.
+
+<p>
+Dynarrays may be sparsed, i.e., they may have cells not holding values,
+but attempts to retrieve the value of an empty cell will fail.</p>
+
+<p>
+Dynarray values are stored in the dynamic predicate
+<code>dynarr_vaLues(Position, Id, Value)</code>.</p>
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -202,9 +235,11 @@ the dynamic predicate <code>dynarr_vaLues(Position, Id, Value)</code>.
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_position_value/3"><b class="pred">dynarray_position_value</b><var class="arglist">(+Id:atom, +Position:int, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value of the cell at <var>Position</var>. The dynarray may be
-sparsed, i.e., it may have cell not holding values, but attempts to retrieve
-value of an empty cell will fail.
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_position_value/3"><b class="pred">dynarray_position_value</b><var class="arglist">(+Id:atom, +Position:int, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value of the cell at <var>Position</var>.
+
+<p>
+The dynarray may be sparsed, i.e., it may have cell not holding values,
+but attempts to retrieve value of an empty cell will fail.</p>
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -219,13 +254,17 @@ value of an empty cell will fail.
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_label/3"><b class="pred">dynarray_label</b><var class="arglist">(+Id:atom, ?Label:atom, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value associated with <var>Label</var>. This allows atoms
-to stand for indices. <var>Label</var> values are stored in the dynamic predicate
-<code>dynarr_labels(Id, Label, Value)</code>. The following are the read-only private
-labels in use:<br>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_label/3"><b class="pred">dynarray_label</b><var class="arglist">(+Id:atom, ?Label:atom, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value associated with <var>Label</var>.
+
+<p>
+This allows atoms to stand for indices. <var>Label</var> values are stored in the
+dynamic predicate <code>dynarr_labels(Id, Label, Value)</code>.</p>
+
+<p>
+The following are the read-only private labels in use:<br>
 da_cells - number of cells in the dynarray<br>
 da_dims - number of dimensions in the dynarray<br>
-da_ranges - dimension ranges data used at the dynarray's creation
+da_ranges - dimension ranges data used at the dynarray's creation&lt;br/&gt;</p>
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -302,10 +341,14 @@ space taken. Fail if no such cell exists.
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_list/2"><b class="pred">dynarray_list</b><var class="arglist">(+Id:atom, ?List:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify the cells of the dynarray with the values in <var>List</var>. A 1-dimension
-dynarray sized to hold all the list elements may be created. Note that this
-is not a serialization mechanism, and as such it should not be used for
-backup/restore purposes.
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_list/2"><b class="pred">dynarray_list</b><var class="arglist">(+Id:atom, ?List:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify the cells of the dynarray with the values in <var>List</var>.
+
+<p>
+A 1-dimension dynarray sized to hold all the list elements may be created.</p>
+
+<p>
+Note that this is not a serialization mechanism, and as such it should not
+be used for backup/restore purposes.</p>
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>

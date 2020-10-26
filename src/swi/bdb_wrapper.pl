@@ -15,17 +15,17 @@ Berkeley DB utility package. Berkeley DB is an open-source software
 library intended to provide a high-performance embedded database for
 key/value data. Please, refer to 
 https://www.swi-prolog.org/pldoc/doc/_SWI_/library/bdb.pl
-for detailed instructions on how to use Berkeley DB.
+for additional instructions on how to use Berkeley DB.
 
 Being an embedded database implies that the library provides access
 to files containing one or more database tables. These tables are
-always binary, mapping keys to values. The SICStus Prolog interface
+always binary, mapping keys to values. The SWI-Prolog interface
 to Berkeley DB allows for fast storage of arbitrary Prolog terms,
 including cycles and constraints.
 
-On Windows, the package Berkeley DB for Windows version 6.2.38 must
+On Windows, the package _|Berkeley DB for Windows version 6.2.38|_ must
 have been installed. The installers *|db-6.2.28_86.msi|* (32 bits) and
-*|db-6.2.28_64.msi|* (64 bits) may be obtained directly from the
+*|db-6.2.28_64.msi|* (64 bits) may be obtained directly at the
 Oracle Berkeley DB site.
 
 Most Linux distributions already carry the Berkeley DB library
@@ -33,7 +33,7 @@ by default. Additionally, on Linux environments SWI-Prolog requires
 that the package *|swi-prolog-bdb|* be installed.
 
 The Linux *|db-util|* package is fully compatible with the database structure
-created by SWI-Prolog through Berkeley DB. For the db-util manpages, please
+created by SWI-Prolog through Berkeley DB. For the *|db-util|* manpages, please
 refer to https://manpages.debian.org/jessie/db-util/index.html .
 
 @author GT Nunes

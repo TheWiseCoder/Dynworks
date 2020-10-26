@@ -13,39 +13,25 @@
 <h1 class="file"><span style="float:right"></span>dynvector_core.pl -- Dynamic vectors</h1>
 
 <p>
-This module provides an implementation of dynvectors. These are their
-noteworthy characteristics:</p>
+This module provides an implementation of dynvectors.</p>
 
 <p>
+These are their noteworthy characteristics:<br>
 a. dynvectors are powerful, flexible, extendable, high-performance,
-hash-based vectors;</p>
-
-<p>
+hash-based vectors;<br>
 b. dynvectors have O(1) read/insert/update/delete times, and this holds
-true up to sizes in the order of millions of cells;</p>
-
-<p>
+true up to sizes in the order of millions of cells;<br>
 c. dynvectors are not immutable objects, or more specifically, they are not
-recreated upon modification;</p>
-
-<p>
+recreated upon modification;<br>
 d. dynvectors have no limitation on the number of cells, apart from the
-running platform's resource limitations;</p>
-
-<p>
+running platform's resource limitations;<br>
 e. dynvectors do not have a maximum number of cells specified at creation time -
 elements may be freely inserted, updated, or deleted, as the dynvector
-dynamically adjusts its upper bound as needed;</p>
-
-<p>
+dynamically adjusts its upper bound as needed;<br>
 f. dynvectors demand no storage space reservation previous to the actual
-cell-by-cell space allocation requests;</p>
-
-<p>
+cell-by-cell space allocation requests;<br>
 g. dynvectors are resource-minded; their cells are not required to have
-values assigned to, in any particular sequence or fashion;</p>
-
-<p>
+values assigned to, in any particular sequence or fashion;<br>
 h. in order to avoid resource wastage, dynvectors should be explicitly
 destroyed, upon ceasing to be of any further use.</p>
 
@@ -112,10 +98,15 @@ subsequently been deleted. Upon dynvector's creation, this value is set to -1.
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_value/3"><b class="pred">dynvector_value</b><var class="arglist">(+Id:atom, +Index:int, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value of the dynvector cell at <var>Index</var>. Dynvectors
-may be sparsed, i.e., they may have cells not holding values, but attempts to
-retrieve the value of an empty cell will fail. Dynvector values are stored in
-the dynamic predicate <code>dynvect_vaLues(Position, Id, Value)</code>.
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_value/3"><b class="pred">dynvector_value</b><var class="arglist">(+Id:atom, +Index:int, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value of the dynvector cell at <var>Index</var>.
+
+<p>
+Dynvectors may be sparsed, i.e., they may have cells not holding values,
+but attempts to retrieve the value of an empty cell will fail.</p>
+
+<p>
+Dynvector values are stored in the dynamic predicate
+<code>dynvect_vaLues(Position, Id, Value)</code>.</p>
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -130,14 +121,18 @@ the dynamic predicate <code>dynvect_vaLues(Position, Id, Value)</code>.
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_label/3"><b class="pred">dynvector_label</b><var class="arglist">(+Id:atom, +Label:atom, ?Value:Data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value associated with <var>Label</var>. This allows atoms
-to stand for indices. <var>Label</var> values are stored in the dynamic predicate
-<code>dynvect_labels(Id, Label, Value)</code>. The following are the read-only private
-labels in use:<br>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_label/3"><b class="pred">dynvector_label</b><var class="arglist">(+Id:atom, +Label:atom, ?Value:Data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value associated with <var>Label</var>.
+
+<p>
+This allows atoms to stand for indices. <var>Label</var> values are stored in the
+dynamic predicate <code>dynvect_labels(Id, Label, Value)</code>.</p>
+
+<p>
+The following are the read-only private labels in use:<br>
 dv_top - maximum index value in the dynvector<br>
 dv_first - begin index for iterator<br>
 dv_last - end index for iterator<br>
-dv_curr - current index for iterator
+dv_curr - current index for iterator&lt;br/&gt;</p>
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -215,9 +210,12 @@ Fail if no such cell exists.
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_list/2"><b class="pred">dynvector_list</b><var class="arglist">(+Id:atom, ?List:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify the cells of the dynvector with the values in <var>List</var>. A dynvector to hold
-all the list elements may be created. Note that this is not a serialization a
-mechanism, and as such it should not be used for backup/restore purposes.
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_list/2"><b class="pred">dynvector_list</b><var class="arglist">(+Id:atom, ?List:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify the cells of the dynvector with the values in <var>List</var>.
+
+<p>
+A dynvector to hold all the list elements may be created. Note that this is
+not a serialization a mechanism, and as such it should not be used for
+backup/restore purposes.</p>
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>

@@ -30,31 +30,24 @@
 
 /** <module> Dynamic vectors
 
-This module provides an implementation of dynvectors. These are their
-noteworthy characteristics:
+This module provides an implementation of dynvectors.
 
+These are their noteworthy characteristics:<br/>
 a. dynvectors are powerful, flexible, extendable, high-performance,
-hash-based vectors;
-
+hash-based vectors;<br/>
 b. dynvectors have O(1) read/insert/update/delete times, and this holds
-true up to sizes in the order of millions of cells;
-
+true up to sizes in the order of millions of cells;<br/>
 c. dynvectors are not immutable objects, or more specifically, they are not
-recreated upon modification;
-
+recreated upon modification;<br/>
 d. dynvectors have no limitation on the number of cells, apart from the
-running platform's resource limitations;
-
+running platform's resource limitations;<br/>
 e. dynvectors do not have a maximum number of cells specified at creation time -
 elements may be freely inserted, updated, or deleted, as the dynvector
-dynamically adjusts its upper bound as needed;
-
+dynamically adjusts its upper bound as needed;<br/>
 f. dynvectors demand no storage space reservation previous to the actual
-cell-by-cell space allocation requests;
-
+cell-by-cell space allocation requests;<br/>
 g. dynvectors are resource-minded; their cells are not required to have
-values assigned to, in any particular sequence or fashion;
-
+values assigned to, in any particular sequence or fashion;<br/>
 h. in order to avoid resource wastage, dynvectors should be explicitly
 destroyed, upon ceasing to be of any further use.
 
@@ -152,10 +145,13 @@ dynvector_top(Id, Top) :-
 
 %! dynvector_value(+Id:atom, +Index:int, ?Value:data) is semidet.
 %
-%  Unify Value with the value of the dynvector cell at Index. Dynvectors
-%  may be sparsed, i.e., they may have cells not holding values, but attempts to
-%  retrieve the value of an empty cell will fail. Dynvector values are stored in
-%  the dynamic predicate dynvect_vaLues(Position, Id, Value).
+%  Unify Value with the value of the dynvector cell at Index.
+%
+%  Dynvectors may be sparsed, i.e., they may have cells not holding values,
+%  but attempts to retrieve the value of an empty cell will fail.
+%
+%  Dynvector values are stored in the dynamic predicate
+% `dynvect_vaLues(Position, Id, Value)`.
 %
 %  @param Id    Atom identifying the dynvector
 %  @param Index The reference index, or a label standing for it
@@ -194,14 +190,16 @@ dynvector_value_(Id, Index, Value) :-
 
 %!  dynvector_label(+Id:atom, +Label:atom, ?Value:Data) is semidet.
 %
-%  Unify Value with the value associated with Label. This allows atoms
-%  to stand for indices. Label values are stored in the dynamic predicate
-%  dynvect_labels(Id, Label, Value). The following are the read-only private
-%  labels in use:<br>
-%    dv_top   - maximum index value in the dynvector<br>
-%    dv_first - begin index for iterator<br>
-%    dv_last  - end index for iterator<br>
-%    dv_curr  - current index for iterator
+%  Unify Value with the value associated with Label.
+%
+%  This allows atoms to stand for indices. Label values are stored in the
+%  dynamic predicate dynvect_labels(Id, Label, Value).
+%
+%  The following are the read-only private labels in use:<br/>
+%    dv_top   - maximum index value in the dynvector<br/>
+%    dv_first - begin index for iterator<br/>
+%    dv_last  - end index for iterator<br/>
+%    dv_curr  - current index for iterator<br/>
 %
 %  @param Id        atom identifying the dynvector
 %  @param Label     atom standing for the named attribute
@@ -371,9 +369,11 @@ dynvector_delete(Id, Index) :-
 
 %! dynvector_list(+Id:atom, ?List:list) is det.
 %
-%  Unify the cells of the dynvector with the values in List. A dynvector to hold
-%  all the list elements may be created. Note that this is not a serialization a
-%  mechanism, and as such it should not be used for backup/restore purposes.
+%  Unify the cells of the dynvector with the values in List.
+%
+%  A dynvector to hold all the list elements may be created. Note that this is
+%  not a serialization a  mechanism, and as such it should not be used for
+%  backup/restore purposes.
 %
 %  @param Id   Atom identifying the dynvector
 %  @param List List of values to unify the dynvector cells with

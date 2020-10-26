@@ -14,8 +14,8 @@
 
 <p>
 This module provides persistence for dynvector objects, using the Berkeley DB
-utility package. Please, refer to <code class="nofile">bdb_rapper.pl</code> for details on the SWI-Prolog
-interface to Berkeley DB.</p>
+utility package. For details on the SWI-Prolog interface to Berkeley DB,
+please refer to the documentation for <code class="nofile">bdb_rapper.pl</code> .</p>
 
 <dl class="tags">
 <dt class="keyword-author">author</dt><dd class="keyword-author">- GT Nunes</dd>
@@ -39,20 +39,22 @@ interface to Berkeley DB.</p>
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_serialize/2"><b class="pred">dynvector_serialize</b><var class="arglist">(+Id, ?Serialized)</var></a> is <b class="det">det</b></dt><dd class="defbody">A serialization mechanism, for backup/restore purposes. For a given
-dynvector containing <var>Nv</var> values and <var>Nb</var> labels, its serialization
-structure will be<br>
-`&lt;Nb&gt;`,<br>
-`[&lt;key-label-1&gt;,&lt;value-label-1&gt;],...,[&lt;key-label-Nb&gt;,&lt;value-label-Nb&gt;]`,<br>
-`[&lt;index-1&gt;,&lt;value-1&gt;],...,[&lt;index-Nv&gt;,&lt;value-Nv&gt;]`
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_serialize/2"><b class="pred">dynvector_serialize</b><var class="arglist">(+Id, ?Serialized)</var></a> is <b class="det">det</b></dt><dd class="defbody">A serialization mechanism, for backup/restore purposes.
+
+<p>
+For a given dynvector containing <var>Nv</var> values and <var>Nb</var> labels,
+its serialization structure will be<br>
+&lt;Nb&gt;,<br>
+[&lt;key-label-1&gt;,&lt;value-label-1&gt;],...,[&lt;key-label-Nb&gt;,&lt;value-label-Nb&gt;],<br>
+[&lt;index-1&gt;,&lt;value-1&gt;],...,[&lt;index-Nv&gt;,&lt;value-Nv&gt;]</p>
 
 <p>
 The serialized list will thus contain <code>Np + Nv + 1</code> elements:<br>
-`&lt;num-labels&gt;` - the total number of key-value label pairs<br>
-`&lt;key-label-j&gt;` - the key in the key-value label pair j<br>
-`&lt;value-label-j&gt;` - the value in the key-value label pair<br>
-`&lt;index-j&gt;` - the index position of value j within the dynvector<br>
-`&lt;value-j&gt;` - the value j within the dynvector</p>
+&lt;num-labels&gt; - the total number of key-value label pairs<br>
+&lt;key-label-j&gt; - the key in the key-value label pair <code>j</code><br>
+&lt;value-label-j&gt; - the value in the key-value label pair<br>
+&lt;index-j&gt; - the index position of value <code>j</code> within the dynvector<br>
+&lt;value-j&gt; - the value <code>j</code> within the dynvector</p>
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>

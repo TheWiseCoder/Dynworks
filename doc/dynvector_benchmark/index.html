@@ -137,7 +137,7 @@ benchmark(+Benchmarks, +SearchCount, +RangeCount).</pre>
 where <b>Benchmarks</b> is a list with the benchmark <code>type(s)</code> desired (default: [1,2,3,4]), <b>SearchCount</b> is the number of random integers in the search and base <code>sets(default: 100000)</code>, and <b>RangeCount</b> is the range to use (default: 1000000) when generating the two sets of random integers. Note that in SICStus, the number of random integers generated is not exact, but a close approximation, due to the behavior of the predicate used. This, however, in no way affects the benchmark results.</p>
 
 <p>
-Alternatively, from this folder use one of the command files <b>benchmarkN.cmd</b></p>
+Alternatively, from this folder use one of the command files <b>benchmarkN.cmd</b> (where <var>N</var> varies from <code>1</code> to <code>4</code>)</p>
 
 <pre class="code" ext="">
 sicstus &lt; benchmarkN.cmd</pre>
@@ -149,7 +149,7 @@ or</p>
 swipl &lt; benchmarkN.cmd</pre>
 
 <p>
-on either Windows or Ubuntu.&lt;br/&gt;</p>
+on either Windows or Ubuntu.</p>
 
 <p>
 These are the types of benchmark to choose from:</p>
@@ -163,18 +163,17 @@ These are the types of benchmark to choose from:</p>
 <li>iterate over the <b>dynvector</b> with <code>maplist/2</code>, search with <code>memberchk/2</code> over a list</li>
 <li>iterate over the <b>dynvector</b> with its built-in iterator, search with <code>memberchk/2</code> over a list</li>
 <li>iterate over a list, search with <code>memberchk/2</code> over an unsorted list</li>
-<li>iterate over a list, search with <code>memberchk/2</code> over a sorted list
-<br>
-<br>
-Invoking the benchmark with <code>benchmark</code> is the same as invoking it with <code>benchmark([1,2,3,4], 100000, 1000000)</code>. You may try various benchmark options with different sizes and ranges. SWI-Prolog will respond well over sizes and ranges in the millions. The same is not true for SICStus, as you may verify.
+<li>iterate over a list, search with <code>memberchk/2</code> over a sorted list</li>
+</ol>
+
+<p>
+Invoking the benchmark with <code>benchmark</code> is the same as invoking it with <code>benchmark([1,2,3,4], 100000, 1000000)</code>. You may try various benchmark options with different sizes and ranges. SWI-Prolog will respond well over sizes and ranges in the millions. The same is not true for SICStus, as you may verify.</p>
 
 <p>
 The tables below illustrate the results obtained with all nine options, running SICStus e SWI-Prolog, in three size/range situations. Under each Prolog/OS platform, we show the time it took to complete each run, in milliseconds.</p>
 
 <p>
-Equipment used:</p></li>
-</ol>
-
+Equipment used:</p>
 <ul>
 <li>Microsoft Windows 10 Enterprise, 64-bit<br>
 Desktop Intel Core i7-4770K CPU 3.50 GHz x 4, 16.0 GB RAM</li>
@@ -229,10 +228,10 @@ Notebook Intel Core i7-3537U CPU 2.00 GHz x 4, 7.7 GB RAM</li>
 
 <p>
 Legends:<br>
-(a) SWI-Prolog / MS Windows 10<br>
-(b) SWI-Prolog / Ubuntu 20.04<br>
-(c) SICStus / MS Windows 10<br>
-(d) SICStus / Ubuntu 20.04<br>
+(a) SWI-Prolog on MS Windows 10<br>
+(b) SWI-Prolog on Ubuntu 20.04<br>
+(d) SICStus on Ubuntu 20.04<br>
+(c) SICStus on MS Windows 10<br>
 ** It is not feasible to compute the time to complete the benchmark.</p>
 
 <h3 class="wiki">2. Result Analysis</h3>
@@ -250,7 +249,7 @@ Legends:<br>
 2.4. On moderately-sized datasets (less than a few hundred thousand items), SICStus performs around two times better than SWI-Prolog when the search is done with <code>memberchk/2</code> over lists, and curiously, even substantially better when the list is unsorted. Taken individually, SICStus performs better when searching with <code>memberchk/2</code> than when it uses its native database hash mechanism, whereas the opposite is true for SWI-Prolog.</p>
 
 <p>
-2.5. If one must deal with very large data sets (i.e., data sets holding from hundreds of thousands to many millions of items), the only viable alternative among the ones attempted here is searching on <b>dynvectors</b>, using <code>dynvector_find/3</code> and SWI-Prolog. As shown on table 3, performance can be as high as 1 million searches per second on a 2 million item data set, using run-of-the-mill PCs. We took the challenge up to searches on data sets containing 10 million items, and SWI-Prolog kept its high marks throughout. This is absolutely impressive in the Prolog world.</p>
+2.5. If one must deal with very large data sets (i.e., data sets holding from hundreds of thousands to many millions of items), the only viable alternative among the ones attempted here is searching on <b>dynvectors</b>, using <code>dynvector_find/3</code> and SWI-Prolog. As shown on table 1.3, performance can be as high as 1 million searches per second on a 2 million item data set, using run-of-the-mill PCs. We took the challenge up to searches on data sets containing 10 million items, and SWI-Prolog kept its high marks throughout. This is absolutely impressive in the Prolog world.</p>
 
 <h2 class="wiki plfiles">Prolog files</h2>
 
