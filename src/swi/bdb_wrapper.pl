@@ -37,7 +37,7 @@ created by SWI-Prolog through Berkeley DB. For the db-util manpages, please
 refer to https://manpages.debian.org/jessie/db-util/index.html .
 
 @author GT Nunes
-@version 1.0
+@version 1.1.1
 @copyright (c) 2020 GT Nunes
 @license BSD-3-Clause License
 */

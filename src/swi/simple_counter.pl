@@ -20,7 +20,7 @@ However, for performance reasons this is not enforced anywhere in the code.
 Consequences of non-compliance with this rule are unpredictable.
 
 @author GT Nunes
-@version 1.0
+@version 1.1.1
 @copyright (c) 2020 GT Nunes
 @license BSD-3-Clause License
 */
