@@ -54,7 +54,7 @@ i. elements may be freely inserted, updated, or deleted, as long as their
 indices are within the dynarray's dimension bounds.
 
 @author GT Nunes
-@version 1.0
+@version 1.1.1
 @copyright (c) 2020 GT Nunes
 @license BSD-3-Clause License
 */

@@ -45,7 +45,7 @@ file's first record and use them as labels; if not possible, the record will be
 treated as regular data.
 
 @author GT Nunes
-@version 1.0
+@version 1.1.1
 @copyright (c) 2020 GT Nunes
 @license BSD-3-Clause License
 */

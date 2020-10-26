@@ -59,7 +59,7 @@ h. in order to avoid resource wastage, dynvectors should be explicitly
 destroyed, upon ceasing to be of any further use.
 
 @author GT Nunes
-@version 1.0
+@version 1.1.1
 @copyright (c) 2020 GT Nunes
 @license BSD-3-Clause License
 */

@@ -11,7 +11,7 @@ a high-performance implementation of *dynamic arrays*. Make sure to complement
 it by reviewing the documentation.
 
 @author GT Nunes
-@version 1.0
+@version 1.1.1
 @copyright (c) 2020 GT Nunes
 @license BSD-3-Clause License
 */

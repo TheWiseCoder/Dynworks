@@ -14,7 +14,7 @@ utility package. Please, refer to bdb_rapper.pl for details on the SWI-Prolog
 interface to Berkeley DB.
 
 @author GT Nunes
-@version 1.0
+@version 1.1.1
 @copyright (c) 2020 GT Nunes
 @license BSD-3-Clause License
 */
