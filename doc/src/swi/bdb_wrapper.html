@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>bdb_wrapper.pl -- Berkeley DB Wrapper</title>
+
+<link rel="stylesheet" type="text/css" href="../../pldoc.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+
+
+<h1 class="file"><span style="float:right"></span>bdb_wrapper.pl -- Berkeley DB Wrapper</h1>
+
+<p>
+This module provides a simple, minimalistic approach to implementing
+persistence for Prolog data on the SWI-Prolog platform, by means of the
+Berkeley DB utility package. Berkeley DB is an open-source software
+library intended to provide a high-performance embedded database for
+key/value data. Please, refer to
+<a href="https://www.swi-prolog.org/pldoc/doc/_SWI_/library/bdb.pl">https://www.swi-prolog.org/pldoc/doc/_SWI_/library/bdb.pl</a>
+for detailed instructions on how to use Berkeley DB.</p>
+
+<p>
+Being an embedded database implies that the library provides access
+to files containing one or more database tables. These tables are
+always binary, mapping keys to values. The SICStus Prolog interface
+to Berkeley DB allows for fast storage of arbitrary Prolog terms,
+including cycles and constraints.</p>
+
+<p>
+On Windows, the package Berkeley DB for Windows version 6.2.38 must
+have been installed. The installers <b>db-6.2.28_86.msi</b> (32 bits) and
+<b>db-6.2.28_64.msi</b> (64 bits) may be obtained directly from the
+Oracle Berkeley DB site.</p>
+
+<p>
+Most Linux distributions already carry the Berkeley DB library
+by default. Additionally, on Linux environments SWI-Prolog requires
+that the package <b>swi-prolog-bdb</b> be installed.</p>
+
+<p>
+The Linux <b>db-util</b> package is fully compatible with the database structure
+created by SWI-Prolog through Berkeley DB. For the db-util manpages, please
+refer to <a href="https://manpages.debian.org/jessie/db-util/index.html">https://manpages.debian.org/jessie/db-util/index.html</a> .</p>
+
+<dl class="tags">
+<dt class="keyword-author">author</dt><dd class="keyword-author">- GT Nunes</dd>
+<dt class="keyword-version">version</dt><dd class="keyword-version">- 1.0</dd>
+<dt class="keyword-copyright">copyright</dt><dd class="keyword-copyright">- (c) 2020 GT Nunes</dd>
+<dt class="keyword-license">license</dt><dd class="keyword-license">- BSD-3-Clause License</dd>
+</dl>
+
+<dl>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="bdb_base/1"><b class="pred">bdb_base</b><var class="arglist">(+DataSet:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Make sure that the given dataset's base path for Berkeley DB exists.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>DataSet</var></td><td class="argdescr">- Atom identifying Berkeley DB's dataset</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="bdb_store/3"><b class="pred">bdb_store</b><var class="arglist">(+TagSet:atom, +DataSet:atom, +Data:data)</var></a> is <b class="det">det</b></dt><dd class="defbody">Persist <var>Data</var> to external storage.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>TagSet</var></td><td class="argdescr">- Atom identifying the tagset to store</td></tr>
+<tr><td><var>DataSet</var></td><td class="argdescr">- Atom identifying the dataset storage location fragment</td></tr>
+<tr><td><var>Data</var></td><td class="argdescr">- The data to store</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="bdb_retrieve/3"><b class="pred">bdb_retrieve</b><var class="arglist">(+TagSet:atom, +DataSet:atom, -Data:data)</var></a> is <b class="det">det</b></dt><dd class="defbody">Retrieve <var>Data</var> from external storage.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>TagSet</var></td><td class="argdescr">- Atom identifying the tagset to store</td></tr>
+<tr><td><var>DataSet</var></td><td class="argdescr">- Atom identifying the dataset storage location fragment</td></tr>
+<tr><td><var>Data</var></td><td class="argdescr">- The data to retrieve</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="bdb_erase/1"><b class="pred">bdb_erase</b><var class="arglist">(+DataSet:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Erase the specified external storage location.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>DataSet</var></td><td class="argdescr">- Atom identifying the dataset storage path fragment</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="bdb_erase/2"><b class="pred">bdb_erase</b><var class="arglist">(+TagSet:atom, +DataSet:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Erase the specified dataset from external storage.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>TagSet</var></td><td class="argdescr">- Atom identifying the dataset to erase</td></tr>
+<tr><td><var>DataSet</var></td><td class="argdescr">- Atom identifying the dataset storage location fragment</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+</body>
+</html>

@@ -1,81 +1,65 @@
-/*******************************************************************************
-* FILENAME / MODULE : dynarray_core.pl / dynarray_core
-*
-* DESCRIPTION :
-*       This module provides an implementation of dynarrays. These are their
-*       noteworthy characteristics:
-*         1. dynarrays are powerful, flexible, high-performance, hash-based
-*            multi-dimensional arrays
-*         2. dynarrays have O(1) read/insert/update/delete times, and this
-*            holds true up to sizes in the order of millions of cells
-*         3. dynarrays are not immutable objects, or more specifically,
-*            they are not recreated upon modification
-*         4. dynarrays have no limitation on the number of dimensions, nor
-*            any restriction on dimension sizes, apart from the running
-*            platform's resource limitations
-*         5. dynarrays have a maximum number of cells, defined at creation
-*            time and kept constant thereafter
-*         6. dynarrays demand no storage space reservation previous to the
-*            actual cell-by-cell space allocation requests
-*         7. dynarrays are resource-minded; their cells are not required to
-*            have values assigned to, in any particular sequence or fashion
-*         8. in order to avoid resource wastage, dynarrays should be
-*            explicitly destroyed, upon ceasing to be of any further use
-*
-* PUBLIC PREDICATES :
-*       dynarray_cells(+Id, -CellCount)
-*       dynarray_cells(+Id, +Dim, -CellCount)
-*       dynarray_create(+Id, +DimRanges)
-*       dynarray_delete(+Id, +Indices)
-*       dynarray_destroy(+Id)
-*       dynarray_dims(+Id, -DimCount)
-*       dynarray_fill(+Id, +Value)
-*       dynarray_find(+Id, ?Value, ?Indices)
-*       dynarray_label(+Id, ?Label, ?Value)
-*       dynarray_list(+Id, ?List)
-*       dynarray_top(+Id, +Dim, -Top)
-*       dynarray_value(+Id, +Indices, ?Value)
-*
-*       dynarray_position_delete(+Id, +Position)
-*       dynarray_position_find(+Id, ?Value, ?Position)
-*       dynarray_position_indices(+Id, ?Position, ?Indices)
-*       dynarray_position_value(+Id, +Position, ?Value)
-*
-*       is_dynarray(+Id)
-*
-* NOTES :
-*       None yet.
-*
-*       Copyright TheWiseCoder 2020.  All rights reserved.
-*
-* REVISION HISTORY :
-*
-* DATE        AUTHOR            REVISION
-* ----------  ----------------  ------------------------------------------------
-* 2020-07-25  GT Nunes          Module creation
-*
-*******************************************************************************/
-
 :- module(dynarray_core,
     [
-        dynarray_cells/2,
-        dynarray_cells/3,
-        dynarray_create/2,
-        dynarray_delete/2,
-        dynarray_destroy/1,
-        dynarray_dims/2,
-        dynarray_fill/2,
-        dynarray_find/3,
-        dynarray_label/3,
-        dynarray_list/2,
-        dynarray_top/3,
-        dynarray_value/3,
-        dynarray_position_delete/2,
-        dynarray_position_find/3,
-        dynarray_position_indices/3,
-        dynarray_position_value/3,
-        is_dynarray/1
+        dynarray_cells/2,               % dynarray_cells(+Id, -CellCount)
+        dynarray_cells/3,               % dynarray_cells(+Id, +Dim, -CellCount)
+        dynarray_create/2,              % dynarray_create(+Id, +DimRanges)
+        dynarray_delete/2,              % dynarray_delete(+Id, +Indices)
+        dynarray_destroy/1,             % dynarray_destroy(+Id)
+        dynarray_dims/2,                % dynarray_dims(+Id, -DimCount)
+        dynarray_fill/2,                % dynarray_fill(+Id, +Value)
+        dynarray_find/3,                % dynarray_find(+Id, ?Indices, ?Value)
+        dynarray_label/3,               % dynarray_label(+Id, ?Label, ?Value)
+        dynarray_list/2,                % dynarray_list(+Id, ?List)
+        dynarray_top/3,                 % dynarray_top(+Id, +Dim, -Top)
+        dynarray_value/3,               % dynarray_value(+Id, +Indices, ?Value)
+        dynarray_position_delete/2,     % dynarray_position_delete(+Id, +Position)
+        dynarray_position_find/3,       % dynarray_position_find(+Id, ?Pos, ?Value)
+        dynarray_position_indices/3,    % dynarray_position_indices(+Id, ?Pos, ?Inds)
+        dynarray_position_value/3,      % dynarray_position_value(_Id, +Pos, ?Value)
+        is_dynarray/1                   % is_dynarray(+Id)
     ]).
+
+/** <module> Dynamic, multi-dimensional arrays
+
+This module provides an implementation of dynamic multi-dimensional arrays.
+
+These are some of their noteworthy characteristics:
+
+a. dynarrays are powerful, flexible, high-performance, hash-based
+multi-dimensional arrays;
+
+b. dynarrays have O(1) read/insert/update/delete times, and this
+holds true up to sizes in the order of millions of cells;
+
+c. dynarrays are not immutable objects, or more specifically,
+they are not recreated upon modification;
+
+d. dynarrays have no limitation on the number of dimensions, nor
+any restriction on dimension sizes, apart from the running
+platform's resource limitations;
+
+e. dynarrays have a maximum number of cells, defined at creation
+time and kept constant thereafter;
+
+f. dynarrays demand no storage space reservation previous to the
+actual cell-by-cell space allocation requests;
+
+g. dynarrays are resource-minded; their cells are not required to
+have values assigned to, in any particular sequence or fashion;
+
+h. in order to avoid resource wastage, dynarrays should be
+explicitly destroyed, upon ceasing to be of any further use;
+
+i. elements may be freely inserted, updated, or deleted, as long as their
+indices are within the dynarray's dimension bounds.
+
+@author GT Nunes
+@version 1.0
+@copyright (c) 2020 GT Nunes
+@license BSD-3-Clause License
+*/
+
+%-------------------------------------------------------------------------------------
 
 :- use_module(library(lists),
     [
@@ -97,75 +81,30 @@
             dynarr_tops/3,
             dynarr_values/3.
 
-%-------------------------------------------------------------------------------
-% Powerful, flexible, high-performance, hash-based, multi-dimensional dynarrays.
-% Notes:
-%
-%   1. multi-dimensional dynarrays must be constructed with dimension sizes
-%      as integers > 0, and in this case their indices are 0-based positive
-%      integers, smaller then the corresponding dimension size
-%      (0 <= IndexI < DimSizeI)
-%
-%   2. alternatively, a range of indices may be specified for any of its
-%      dimensions, in the form of an integer pair Ii:If. These pairs may
-%      contain negative values, and, within a single pair, the interval
-%      markers may be expressed in any order. These are examples of valid
-%      dynarray creation requests:
-%      a. dynarray_create(a, [9,5,8])      - indices ranges: [0 : 8,0 : 4,0 : 7]
-%      b. dynarray_create(a, [3,5,3 : -8]) - indices ranges: [0 : 2,-8 : 3]
-%      c. dynarray_create(a, [3,19 : 4])   - indices ranges: [0 : 2,4 : 19]
-%      d. dynarray_create(a, [-4 : -3,7])  - indices ranges: [-4 : -3,0 : 6]
-%
-%   3. the dynarray may be sparsed, i.e., none of its cells must have been
-%      unified with a value, but dynarray_value/3 will fail on an attempt
-%      to retrieve the value of a non-grounded cell
-%
-%   4. atoms standing for indices may be specified with dynarray_label/3,
-%      for subsequent use with dynarray_value/3. For example:
-%      a. create the label 'path' to stand for index 0
-%         dynarray_label(Id, path, 0),
-%      b. now, value at indices [3,0] may be accessed as
-%         dynarray_value(Id, [3,path], Value)
-%
-%   5. elements may be freely inserted, updated, or deleted, as long as their
-%      indices are within the dynarray's dimension bounds
-%
-%   6. the following are the read-only private labels in use, whose values
-%      are retrievable with dynarray_label/3:
-%        da_cells  - number of cells in the dynarray
-%        da_dims   - number of dimensions in the dynarray
-%        da_ranges - dimension ranges data used at the dynarray's creation
-%
-%   7. the following dynamic predicates are privately used for internal
-%      operations, such as indices to linear position mapping:
-%
-%      a.1. dynarr_dims(Id, 0, DimsSizes) - DimsSizes structure:
-%           [[DimSizeI,I],...,[DimSizeK,K]] (in ascending order by DimSize)
-%        2. dynarr_dims(Id, i, DimSizeI) -
-%           DimSizeI = size of dimension i (i > 0)
-%
-%      b.1. dynarr_factors(Id, 0, DimsFactors) - DimsFactors structure:
-%           [DimFactor1,...,DimFactorN]
-%        2. dynarr_factors(Id, i, DimFactorI) -
-%           DimFactorI = factor for dimension i (i > 0)
-%
-%      c.1. dynarr_offsets(Id, 0, DimsOffsets) - DimsOffsets structure:
-%           [DimOffset1,...,DimOffsetN]
-%        2. dynarr_offsets(Id, i, DimOffsetI)
-%           DimOffsetI = offset index value for dimension i (i > 0)
-%
-%      d.1. dynarr_tops(Id, 0, DimsTops) - DimsTops structure:
-%           [DimTop1,...,DimTopN]
-%        2. dynarr_tops(Id, i, DimTopI)
-%           DimTopI = highest index value for dimension i (i > 0)
-%
-%      e.   dynarr_vaLues(Position, Id, Value)
-%           stores the elements of the dynarray
+%-------------------------------------------------------------------------------------
 
-% create a dynarray
-% dynarray_create(+Id, +DimRanges)
-% Id            atom identifying the dynarray
-% DimRanges     list of dimension ranges in ascending dimension order
+%! dynarray_create(+Id:atom, +DimRanges:list) is semidet.
+%
+%  Create a dynarray.
+%
+%  Multi-dimensional dynarrays must be constructed with dimension sizes as
+%  integers > 0, and in this case their indices are 0-based positive integers,
+%  smaller then the corresponding dimension size (0 <= IndexI < DimSizeI).
+%
+%  Alternatively, a range of indices may be specified for any of its
+%  dimensions, in the form of an integer pair `Ii:If`. These pairs may
+%  contain negative values, and, within a single pair, the interval
+%  markers may be expressed in any order. Internally, offsets compensate
+%  for the fact that linear positions of cells start at 0 (zero).
+%  These are examples of valid dynarray creation requests:<br>
+%    dynarray_create(a, [9,5,8])      - indices ranges: [0 : 8,0 : 4,0 : 7]<br>
+%    dynarray_create(a, [3,5,3 : -8]) - indices ranges: [0 : 2,-8 : 3]<br>
+%    dynarray_create(a, [3,19 : 4])   - indices ranges: [0 : 2,4 : 19]<br>
+%    dynarray_create(a, [-4 : -3,7])  - indices ranges: [-4 : -3,0 : 6]
+%
+%  @param Id        Atom identifying the dynarray
+%  @param DimRanges List of dimension ranges in ascending dimension order
+
 dynarray_create(Id, DimRanges) :-
 
     % fail point (make sure id is an atom)
@@ -183,9 +122,15 @@ dynarray_create(Id, DimRanges) :-
     assertz(dynarr_labels(Id, da_dims, DimCount)),
     assertz(dynarr_labels(Id, da_ranges, DimRanges)).
 
-% destroy a dynarray, and release all of its resources (no fail)
-% dynarray_destroy(+Id)
-% Id    atom identifying the dynarray
+%-------------------------------------------------------------------------------------
+
+%! dynarray_destroy(+Id:atom) is det.
+%
+% Destroy dynarray Id, and release all of its resources. No action if
+% it does not exist.
+%
+%  @param Id atom identifying the dynarray
+
 dynarray_destroy(Id) :-
 
   retractall(dynarr_dims(Id, _, _)),
@@ -195,101 +140,86 @@ dynarray_destroy(Id) :-
   retractall(dynarr_tops(Id, _, _)),
   retractall(dynarr_values(_, Id, _)).
 
-% Unify Top with the highest inserted index value on the given dimension, 
-% even if it has subsequently been deleted. Upon dynarray's creation,
-% this highest value is set to -1 for all dimensions.
-% dynarray_top(+Id, +Dim, -Top)
-% Id    atom identifying the dynarray
-% Dim   1-based dimension ordinal, or 0 for all top indices
-% Top   value of the highest index
-dynarray_top(Id, Dim, Top) :-
+%-------------------------------------------------------------------------------------
 
-    % Dim may be represented by a registered atom
-    %   holding the dimension's 0-based value
-    ( ( atom(Dim) ,
-        ( dynarray_label(Id, Dim, Dim0)
-        , Dim1 is Dim0 + 1) )
-    ; Dim1 = Dim),
-    dynarr_tops(Id, Dim1, Top).
+%! is_dynarray(+Id:atom) is semidet.
+%
+%  Fail if Id does not identify a dynarray.
+%
+%  @param Id Atom identifying the dynarray
 
-% unify CellCount with the number of cell positions in the dynarray
-% dynarray_cells(+Id, -CellCount)
-% Id            atom identifying the dynarray
-% CellCount     the number of cells in the dynarray
-dynarray_cells(Id, CellCount) :-
-    dynarr_labels(Id, da_cells, CellCount).
-
-% unify CellCount with the number of cells in the given dimension
-% Id            atom identifying the dynarray
-% Dim           the 1-based dynarray dimension
-% CellCount     the number of cells in the given dimension
-% dynarray_cells(+Id, +Dim, -CellCount)
-dynarray_cells(Id, Dim, CellCount) :-
-    dynarr_dims(Id, Dim, CellCount).
-
-% obtain the number of dimensions in the dynarray
-% Id            atom identifying the dynarray
-% DimCount      the number of dimensions in the dynarray
-dynarray_dims(Id, DimCount) :-
-    dynarr_labels(Id, da_dims, DimCount).
-
-% fail if Id does not identify a dynarray
-% is_dynarray(+Id)
-% Id    atom identifying the dynarray
 is_dynarray(Id) :-
     dynarr_dims(Id, 0, _).
 
-% unify Value with the value associated with the named attribute
-% Id        atom identifying the dynarray
-% Label     atom standing for the named attribute
-% Value     value associated with the named attribute
-% dynarray_label(+Id, ?Label, ?Value)
-dynarray_label(Id, Label, Value) :-
+%-------------------------------------------------------------------------------------
 
-    ((ground(Label) , ground(Value)) ->
-        % fail point (must be an atom, and must not start with 'da_')
-        \+ sub_atom(Label, 0, 3, _, da_),
-        (retract(dynarr_labels(Id, Label, _)) ; true),
-        assertz(dynarr_labels(Id, Label, Value))
-    ;
-        % fail if Label and Value are both vars
-        dynarr_labels(Id, Label, Value)
-    ).
+%! dynarray_top(+Id:atom, +Dim:int, -Top:int) is semidet.
+%
+%  Unify Top with the highest inserted index value on the dimension Dim, 
+%  even if it has subsequently been deleted. Upon dynarray's creation, this
+%  value is set to -1 for all dimensions.
+%
+%  @param Id  Atom identifying the dynarray
+%  @param Dim 1-based dimension ordinal, or 0 for all top indices
+%  @param Top Value of the highest index
 
-% Unify Value or Indices with an occurrence of Value or Indices in the
-% dynarray, respectively. Fail if no such value or index position exists.
-% dynarray_find(+Id, ?Value, ?Indices)
-% Id        atom identifying the dynarray
-% Value     the reference value
-% Indices   the reference indices
-dynarray_find(Id, Value, Indices) :-
+dynarray_top(Id, Dim, Top) :-
 
-    (ground(Indices) ->
-        labels_indices(Id, Indices, Indexes),
-        dynarray_position_indices(Id, Position, Indexes),
-        dynarr_values(Position, Id, Value)
-    ;
-        dynarr_values(Position, Id, Value),
-        dynarray_position_indices(Id, Position, Indices)
-    ).
+    % fail points
+    Dim >= 0,
+    dynarr_tops(Id, Dim, Top).
 
-% Unify Value or Position with an occurrence of Position or Value in the
-% dynarray, respectively. Fail if no such value exists or position exists.
-% dynarray_find(+Id, ?Value, ?Position)
-% Id        atom identifying the dynarray
-% Value     the reference value
-% Position  the reference linear position
-dynarray_position_find(Id, Value, Position) :-
-    dynarr_values(Position, Id, Value).
+%-------------------------------------------------------------------------------------
 
-%-------------------------------------------------------------------------------
-% Unify the specified dynarray element with its value. Fail on attempt
-% to retrieve the value of an empty cell.
+%! dynarray_cells(+Id:atom, -CellCount:int) is det.
+%
+%  Unify CellCount with the number of cells in the dynarray.
+%
+%  @param Id        Atom identifying the dynarray
+%  @param CellCount The number of cells in the dynarray
 
-% dynarray_value(+Id, +Indices, ?Value)
-% Id            atom identifying the dynarray
-% Indices       indices identifying the element
-% Value         the dynarray element value
+dynarray_cells(Id, CellCount) :-
+    dynarr_labels(Id, da_cells, CellCount).
+
+%! dynarray_cells(+Id:atom, +Dim:int, -CellCount:int) is semidet.
+%
+%  Unify CellCount with the number of cells in the dimension Dim. These
+%  are stored in the dynamic predicate `dynarr_dims(Id, DimI, DimSizeI)`.
+%  For the special instance `Dim0`, this list of lists is stored:
+%  `[[DimSizeI,I],...,[DimSizeK,K]]` (in ascending order by DimSizeI).
+%
+%  @param Id        Atom identifying the dynarray
+%  @param Dim       The 1-based dynarray dimension
+%  @param CellCount The number of cells in the given dimension
+
+dynarray_cells(Id, Dim, CellCount) :-
+    dynarr_dims(Id, Dim, CellCount).
+
+%-------------------------------------------------------------------------------------
+
+%! dynarray_dims(+Id:atom, -DimCount:int) is det.
+%
+%  Unify DimCount with the number of dimensions in the dynarray.
+%
+%  @param Id       Atom identifying the dynarray
+%  @param DimCount The number of dimensions in the dynarray
+
+dynarray_dims(Id, DimCount) :-
+    dynarr_labels(Id, da_dims, DimCount).
+
+%-------------------------------------------------------------------------------------
+
+%! dynarray_value(+Id:atom, +Indices:list, ?Value:data) is semidet.
+%
+%  Unify Value with the value of the dynarray cell at Indices. Dynarrays
+%  may be sparsed, i.e., they may have cells not holding values, but attempts to
+%  retrieve the value of an empty cell will fail. Dynarray values are stored in
+%  the dynamic predicate `dynarr_vaLues(Position, Id, Value)`.
+%
+%  @param Id      Atom identifying the dynarray
+%  @param Indices Indices identifying the element
+%  @param Value   The dynarray cell value
+
 dynarray_value(Id, Indices, Value) :-
 
     % obtain corresponding linear position
@@ -307,10 +237,16 @@ dynarray_value(Id, Indices, Value) :-
        dynarr_values(Position, Id, Value)
    ).
 
-% dynarray_position_value(+Id, +Position, ?Value)
-% Id            atom identifying the dynarray
-% Position      linear position identifying the element
-% Value         the dynarray element value
+%! dynarray_position_value(+Id:atom, +Position:int, ?Value:data) is semidet.
+%
+%  Unify Value with the value of the cell at Position. The dynarray may be
+%  sparsed, i.e., it may have cell not holding values, but attempts to retrieve
+%  value of an empty cell will fail.
+%
+%  @param Id       Atom identifying the dynarray
+%  @param Position Linear position identifying the cell
+%  @param Value    The dynarray cell value
+
 dynarray_position_value(Id, Position, Value) :-
 
     % has Value been grounded ?
@@ -325,11 +261,14 @@ dynarray_position_value(Id, Position, Value) :-
        dynarr_values(Position, Id, Value)
    ).
 
-% dynarray_value_(+Id, +Indices, +Position, +Value)
-% Id        atom identifying the dynarray
-% Indices   indices identifying the element
-% Position  linear position identifying the element
-% Value     the dynarray element value
+% dynarray_value_(+Id:atom, +Indices:list,
+%                 +Position:int, +Value:data) is semidet.
+%
+% @param Id       Atom identifying the dynarray
+% @param Indices  Indices identifying the element
+% @param Position Linear position identifying the element
+% @param Value    The dynarray element value
+
 dynarray_value_(Id, Indices, Position, Value) :-
 
     % register value at position
@@ -337,17 +276,90 @@ dynarray_value_(Id, Indices, Position, Value) :-
     assertz(dynarr_values(Position, Id, Value)),
 
     % register top indices
-    dynarray_tops_register(Id, 1, Indices, []).
+    dynarray_tops_register(Id, Indices).
 
-% register maximum indices associated with non-empty cells
-% dynarray_tops_register(+Id, +Dim, +[Index|Indices], +AllTops)
-% Id        atom identifying the dynarray
-% Indices   indices identifying the element
-% Position  linear position identifying the element
-% Value     the dynarray element value
+%-------------------------------------------------------------------------------------
+
+%! dynarray_label(+Id:atom, ?Label:atom, ?Value:data) is semidet.
+%
+%  Unify Value with the value associated with Label. This allows atoms
+%  to stand for indices. Label values are stored in the dynamic predicate
+%  `dynarr_labels(Id, Label, Value)`. The following are the read-only private
+%  labels in use:<br>
+%    da_cells  - number of cells in the dynarray<br>
+%    da_dims   - number of dimensions in the dynarray<br>
+%    da_ranges - dimension ranges data used at the dynarray's creation
+%
+%  @param Id    Atom identifying the dynarray
+%  @param Label Atom standing for the named attribute
+%  @param Value Value associated with the named attribute
+
+dynarray_label(Id, Label, Value) :-
+
+    ((ground(Label) , ground(Value)) ->
+        % fail point (must be an atom, and must not start with 'da_')
+        \+ sub_atom(Label, 0, 3, _, da_),
+        (retract(dynarr_labels(Id, Label, _)) ; true),
+        assertz(dynarr_labels(Id, Label, Value))
+    ;
+        % fail if Label and Value are both vars
+        dynarr_labels(Id, Label, Value)
+    ).
+
+%-------------------------------------------------------------------------------------
+
+%! dynarray_find(+Id:atom, ?Indices:list, ?Value:data) is semidet.
+%
+%  Unify Indices or Value with an occurrence of Indices or Value in the
+%  dynarray, respectively. Fail if no such value or indices exist.
+%
+%  @param Id      Atom identifying the dynarray
+%  @param Indices The reference indices
+%  @param Value   The reference value
+
+dynarray_find(Id, Indices, Value) :-
+
+    % are Indices fully specified ?
+    (ground(Indices) ->
+        % yes, so obtain linear position and retrieve value
+        labels_indices(Id, Indices, Indexes),
+        dynarray_position_indices(Id, Position, Indexes),
+        dynarr_values(Position, Id, Value)
+    ;
+        % no, so obtain the Indices of the cell holding Value
+        dynarr_values(Position, Id, Value),
+        dynarray_position_indices(Id, Position, Indices)
+    ).
+
+%! dynarray_position_find(+Id:atom, ?Position:int, ?Value:data) is semidet.
+%
+%  Unify Position or Value with an occurrence of Position or Value in the
+%  dynarray, respectively. Fail if no such value or position exists.
+%
+%  @param Id       atom identifying the dynarray
+%  @param Position the reference linear position
+%  @param Value    the reference value
+
+dynarray_position_find(Id, Position, Value) :-
+    dynarr_values(Position, Id, Value).
+
+%-------------------------------------------------------------------------------------
+
+%! dynarray_tops_register(+Id:atom, +Indices:list) is det.
+%
+%  Register maximum indices associated with non-empty cells. The dynamic
+% predicate `dynarr_tops(Id, DimI, DimTopI)` holds the corresponding values
+% for the 1-based dimensions. The special instance `Dim0` holds the list
+% `[DimTop1,...,DimTopN]` (top values for all dimensions).
+%
+%  @param Id       Atom identifying the dynarray
+%  @param Indices  Indices identifying the element
+
+dynarray_tops_register(Id, Indices) :-
+    dynarray_tops_register_(Id, 1, Indices, []).
 
 % (done)
-dynarray_tops_register(Id, _Dim, [], AllTops) :-
+dynarray_tops_register_(Id, _Dim, [], AllTops) :-
 
     % register top indices for all dimensions
     reverse(AllTops, DimsTops),
@@ -356,7 +368,7 @@ dynarray_tops_register(Id, _Dim, [], AllTops) :-
     
 
 % (iterate)
-dynarray_tops_register(Id, Dim, [Index|Indices], AllTops) :-
+dynarray_tops_register_(Id, Dim, [Index|Indices], AllTops) :-
 
     % obtain current top index for dimension
     dynarr_tops(Id, Dim, Top),
@@ -369,15 +381,18 @@ dynarray_tops_register(Id, Dim, [Index|Indices], AllTops) :-
     % go for the next index
     DimNext is Dim + 1,
     TopIndex is max(Top, Index),
-    dynarray_tops_register(Id, DimNext, Indices, [TopIndex|AllTops]).
+    dynarray_tops_register_(Id, DimNext, Indices, [TopIndex|AllTops]).
 
-%-------------------------------------------------------------------------------
-% Erase the dynarray cell at the given Indices or Position, releasing the
-% storage space taken. Fail if no such element exists.
+%-------------------------------------------------------------------------------------
 
-% dynarray_delete(+Id, +Indices)
-% Id        atom identifying the dynarray
-% Indices   Indices identifying the element
+%! dynarray_delete(+Id:atom, +Indices:list) is semidet.
+%
+%  Erase the dynarray cell at Indices, releasing the storage space taken.
+%  Fail if no such cell exists.
+%
+%  @param Id      Atom identifying the dynarray
+%  @param Indices Indices identifying the cell
+
 dynarray_delete(Id, Indices) :-
 
     % determine the element's linear position
@@ -389,22 +404,30 @@ dynarray_delete(Id, Indices) :-
     % fail point (cell might already be empty)
     retract(dynarr_values(Position, Id, _)).
 
-% dynarray_position_delete(+Id, +Position)
-% Id        atom identifying the dynarray
-% Position  linear position identifying the element
+%! dynarray_position_delete(+Id:atom, +Position:int) is semidet.
+%
+%  Erase the dynarray cell at the given Position, releasing the storage
+%  space taken. Fail if no such cell exists.
+%
+%  @param Id       Atom identifying the dynarray
+%  @param Position Linear position identifying the cell
+
 dynarray_position_delete(Id, Position) :-
     % fail point (cell might not exist)
     retract(dynarr_values(Position, Id, _)).
 
-%-------------------------------------------------------------------------------
-% Unify all the cells of the dynarray with the given list. A 1-dimension
-% dynarray able to hold all the list elements may be created. Note that this
-% is not a serialization mechanism, and as such it should not be used for
-% backup/restore purposes.
+%-------------------------------------------------------------------------------------
 
-% dynarray_list(+Id, ?List)
-% Id            atom identifying the dynarray
-% List          list to dump the dynarray cells to
+%! dynarray_list(+Id:atom, ?List:list) is det.
+%
+%  Unify the cells of the dynarray with the values in List. A 1-dimension
+%  dynarray sized to hold all the list elements may be created. Note that this
+%  is not a serialization mechanism, and as such it should not be used for
+%  backup/restore purposes.
+%
+%  @param Id   Atom identifying the dynarray
+%  @param List List of values to unify the dynarray cells with
+
 dynarray_list(Id, List) :-
 
     % HAZARD: ground(List) might be very expensive
@@ -417,21 +440,24 @@ dynarray_list(Id, List) :-
         list_to_dynarray_(List, Id, 0)
     ).
 
-% list_to_dynarray_(+[Value|List], +Id, +Position)
-% [Value|List]  the value to unify the dynarray cell with
-% Id            atom identifying the dynarray
-% Position      linear position identifying the dynarray cell
+% list_to_dynarray_(+List:list, +Id:atom, +Position:int) is det.
+
+% @param Value    The value to unify the dynarray cell with
+% @param Id       Atom identifying the dynarray
+% @param Position Linear position identifying the dynarray cell
 
 % (done)
 list_to_dynarray_([], Id, Position) :-
 
     % register the top index for each dimension
-    Pos is Position - 1,
-    ( ( Pos = -1
-      , dynarr_values(Id, da_dims, Dims)
-      , list_repeat(Dims, [-1], Indices) )
-    ; dynarray_position_indices(Id, Pos, Indices) ),
-    dynarray_tops_register(Id, 1, Indices, []).
+    (Position = 0 ->
+       dynarr_values(Id, da_dims, Dims),
+       list_repeat(Dims, [-1], Indices)
+    ;
+       Pos is Position - 1,
+       dynarray_position_indices(Id, Pos, Indices)
+    ),
+    dynarray_tops_register(Id, Indices).
 
 % (iterate)
 list_to_dynarray_([Value|List], Id, Position) :-
@@ -449,23 +475,27 @@ list_repeat(Count, [Elem|ListProgress], ListFinal) :-
     CountNext is Count - 1,
     list_repeat(CountNext, [Elem|[Elem|[ListProgress]]], ListFinal).
 
-%-------------------------------------------------------------------------------
-% unify all of the cells of the dynarray with the given value
+%-------------------------------------------------------------------------------------
 
-% dynarray_fill(+Id, +Value)
-% Id            atom identifying the dynarray
-% Value         value to unify the dynarray cells with
+%! dynarray_fill(+Id:atom, +Value:data) is det.
+%
+%  Unify all of the cells of the dynarray with Value.
+%
+%  @param Id    Atom identifying the dynarray
+%  @param Value Value to unify the dynarray cells with
+
 dynarray_fill(Id, Value) :-
 
     retractall(dynarr_values(_, Id, _)),
     dynarr_labels(Id, da_cells, CellCount),
     dynarray_fill_(Id, Value, 0, CellCount).
 
-% dynarray_fill_(+Id, +Value, +Position)
-% Id            atom identifying the dynarray
-% Value         value to unify the dynarray cell with
-% Position      0-based linear position identifying the dynarray cell
-% CellCount     number of cells in dynarray
+% dynarray_fill_(+Id:atom, +Value, +Position:int) is det.
+%
+% @param Id        Atom identifying the dynarray
+% @param Value     Value to unify the dynarray cell with
+% @param Position  0-based linear position identifying the dynarray cell
+% @param CellCount Number of cells in dynarray
 
 % (done)
 dynarray_fill_(_Id, _Value, CellCount, CellCount).
@@ -477,27 +507,32 @@ dynarray_fill_(Id, Value, Position, CellCount) :-
     PosNext is Position + 1,
     dynarray_fill_(Id, Value, PosNext, CellCount).
 
-%-------------------------------------------------------------------------------
-% initialize the dynarray by ackowledging its dimensions
-% and registering their relevant data
+%-------------------------------------------------------------------------------------
 
-% dynarray_dimensions(+Id, +DimRanges)
-% Id            atom identifying the dynarray
-% DimRanges     list holding the dynarray dimension ranges
+%! dynarray_dimensions(+Id:atom, +DimRanges:list) is det.
+%
+%  Initialize the dynarray by ackowledging its dimensions.The dynamic
+%  predicate `dynarr_offsets(Id, DimI, DimOffsetI)` holds the offsets for
+%  the 1-based dynarray dimensions. The special instance `Dim0` holds the
+%  list `[DimOffset1,...,DimOffsetN]` (offset values for all dimensions).
+%
+%  @param Id        Atom identifying the dynarray
+%  @param DimRanges List holding the dynarray dimension ranges
+
 dynarray_dimensions(Id, DimRanges) :-
 
     % register the dynarray dimension offsets, sizes, and top indices
     dynarray_dimensions_(Id, 1, DimRanges, [], [], []).
 
-% dynarray_dimensions_(+Id, +Dim, +[DimRange|DimRanges],
-%                      +DimOffsets, +DimTops, -DimsSizes)
-% Id                    atom identifying the dynarray
-% Dim                   the 1-based dynarray dimension
-% [DimRange|DimRanges]  range of indices of dimension Dim
-% DimTops               list of dimensions' top indices ([Top1,...,TopN])
-% DimOffsets            dimensions' indices offsets ([Offset1,...,OffsetN])
-% DimsSizes             list of dimensions and its sizes
-%                       ([[DimSize1,1],...,[DimSizeN,N]])
+% dynarray_dimensions_(+Id:atom, +Dim:int, +DimRanges:list,
+%                      +DimOffsets:list, +DimTops:list, -DimsSizes:list) is det.
+% @param Id         Atom identifying the dynarray
+% @param Dim        The 1-based dynarray dimension
+% @param DimRanges  Range of indices of dimension Dim
+% @param DimTops    List of dimensions' top indices ([Top1,...,TopN])
+% @param DimOffsets Dimensions' indices offsets ([Offset1,...,OffsetN])
+% @param DimsSizes  List of dimensions and its sizes
+%                   ([[DimSize1,1],...,[DimSizeN,N]])
 
 % (done)
 dynarray_dimensions_(Id, _Dim, [], DimOffsets, DimTops, DimsSizes) :-
@@ -547,55 +582,69 @@ dynarray_dimensions_(Id, Dim, [DimRange|DimRanges],
     dynarray_dimensions_(Id, DimNext, DimRanges, [Offset|DimOffsets],
                          [-1|DimTops], [[Size,Dim]|DimsSizes]).
 
-%-------------------------------------------------------------------------------
-% Obtain the number of cells in the dynarray and its compound factors.
+%-------------------------------------------------------------------------------------
+
+%! dynarray_factors(+Id:atom, -CellCount) is det.
+%
+% Obtain the number of cells in the dynarray, and its compound factors.
 % Compound factors are used for mapping between indices and linear positions.
+%
+% The dynamic predicate `dynarr_factors(Id, DimI, DimFactorI)` holds the
+% factors for the 1-based dimensions. The special instance `Dim0` holds the
+% list `[DimFactor1,...,DimFactorN]` (the factor values for all dimensions).
+%
 % These facts hold for a 4-dimension dynarray:
 %
-%   1. DimSizeW <= DimSizeX <= DimSizeY <= DimSizeZ
+% (a)<br>
+% DimSizeW <= DimSizeX <= DimSizeY <= DimSizeZ<br>
 %
-%   2. FactorW = DimSizeX * DimSizeY * DimSizeZ
-%      FactorX = DimSizeY * DimSizeZ
-%      FactorY = DimSizeZ
-%      FactorZ = 1
+% (b)<br>
+%  FactorW = DimSizeX * DimSizeY * DimSizeZ<br>
+%  FactorX = DimSizeY * DimSizeZ<br>
+%  FactorY = DimSizeZ<br>
+%  FactorZ = 1<br>
 %
-%   3. Indices (W,X,Y,Z) -> Linear position:
-%      Pos = FactorW * W + FactorX * X + FactorY * Y + FactorZ * Z
+%  (c)
+%  Indices (W,X,Y,Z) -> Linear position:<br>
+%  Pos = FactorW * W + FactorX * X + FactorY * Y + FactorZ * Z<br>
 %
-%   4. Linear position -> Indices (W,X,Y,Z):
-%      W    = div(Pos, FactorW)
-%      RemW = mod(Pos, FactorW)
-%      X    = div(RemW, FactorX)
-%      RemX = mod(RemW, FactorX)
-%      Y    = div(RemX, FactorY)
-%      RemY = mod(RemX, FactorY)
-%      Z    = div(RemY, FactorZ) -> FactorZ = 1, Z = RemY
+%  (d)
+%  Linear position -> Indices (W,X,Y,Z):<br>
+%  W    = div(Pos, FactorW)<br>
+%  RemW = mod(Pos, FactorW)<br>
+%  X    = div(RemW, FactorX)<br>
+%  RemX = mod(RemW, FactorX)<br>
+%  Y    = div(RemX, FactorY)<br>
+%  RemY = mod(RemX, FactorY)<br>
+%  Z    = div(RemY, FactorZ) -> FactorZ = 1, Z = RemY
+%
+%  @param Id        Atom identifying the dynarray
+%  @param CellCount Number of cells in dynarray
 
-% dynarray_factor(+Id, -DynarrayCount)
-% Id            atom identifying the dynarray
-% DynarrayCount number of cells in dynarray
-dynarray_factors(Id, DynarrayCount) :-
+dynarray_factors(Id, CellCount) :-
 
     dynarr_dims(Id, 0, DimsSizes),
     length(DimsSizes, DimCount),
-    dynarray_factors_(Id, DimCount, DimCount, 1, DimsSizes,
-                      1, DynarrayCount, [], DimFactors),
+    dynarray_factors_(Id, DimCount, DimCount, 1,
+                      DimsSizes, 1, CellCount, [], DimFactors),
 
     % the dynarr_factors 0 position holds the dimension factors:
-    %   [DimFactor1,...,DimFactorN]
+    % [DimFactor1,...,DimFactorN]
     assertz(dynarr_factors(Id, 0, DimFactors)).
 
-% dynarray_factors_(+Id, +DimOrdinal, +DimCount, +CompoundFactor, +DimsSizes,
-%                   +CountProgress, -CountFinal, +FactorsProgress,-FactorsFinal)
-% Id                    atom identifying the dynarray
-% DimOrdinal            size-based position for dynarray dimension
-% DimCount              number of dynarray dimensions
-% CompoundFactor        current compound factor
-% DimsSizes             list of dimensions and its sizes
-% CountProgress         working number of dynarray elements
-% CountFinal            final number of dynarray elements
-% FactorsProgress       the working dimension factors
-% FactorsFinal          the final dimension factors
+% dynarray_factors_(+Id:atom, +DimOrdinal:int, +DimCount:int,
+%                   +CompoundFactor:int, +DimsSizes:list,
+%                   +CountProgress:list, -CountFinal:list,
+%                   +FactorsProgress:list, -FactorsFinal:list)
+% @param Id              Atom identifying the dynarray
+% @param DimOrdinal      Size-based position for dynarray dimension
+% @param DimCount        Number of dynarray dimensions
+% @param CompoundFactor  Current compound factor
+% @param DimsSizes       List of dimensions and its sizes
+% param CountProgress    Working number of dynarray elements
+% @param CountFinal      Final number of dynarray elements
+% @param FactorsProgress The working dimension factors
+% @param FactorsFinal    The final dimension factors
 
 % (done)
 dynarray_factors_(_Id, 0, _DimCount, _CompoundFactor, _DimsSizes,
@@ -628,37 +677,43 @@ dynarray_factors_(Id, DimOrdinal, DimCount, CompoundFactor, DimsSizes,
                       DimsSizes, CountRevised, CountFinal,
                       [Factor|FactorsProgress], FactorsFinal).
 
-%-------------------------------------------------------------------------------
-% unify Position with the corresponding Indices
-% (Position is the cell's 0-based linear position)
-% dynarray_position_position(+Id, ?Position, ?Indices)
-% Id            atom identifying the dynarray
-% Position      the final 0-based linear position of the element
-% Indices       the element's indices (offset-corrected, if applicable)
+%-------------------------------------------------------------------------------------
+
+%! dynarray_position_indices(+Id:atom, ?Position:int, ?Indices:list) is semidet.
+%
+%  Unify Position or Indices with the corresponding Position or Indices,
+%  respectively.
+%
+%  @param Id       Atom identifying the dynarray
+%  @param Position The final 0-based linear position of the element
+%  @param Indices  The element's indices (offset-corrected, if applicable)
+
 dynarray_position_indices(Id, Position, Indices) :-
 
-    labels_indices(Id, Indices, Indexes),
-    dynarr_labels(Id, da_dims, DimCount),
     (ground(Position) ->
         % fail point
         Position >= 0,
         dynarr_dims(Id, 0, DimsSizes),
         position_indices_1(Id, Position, DimsSizes, [], IndicesOffset),
-        dynarray_offset(Id, Indexes, IndicesOffset)
+        dynarray_offset(Id, Indices, IndicesOffset)
     ;
+        labels_indices(Id, Indices, Indexes),
         dynarray_offset(Id, Indexes, IndicesOffset),
+        dynarr_labels(Id, da_dims, DimCount),
         indices_position_(Id, IndicesOffset, DimCount, 0, Position)
     ).
 
-% obtain the element's linear position from its indices:
+% indices_position_(+Id:atom, +Indices:list,
+%                   +Dim:int, +PosProgress:int, -PosFinal:int) is semidet.
+%
+% Obtain the element's linear position from its indices:<br>
 %   Pos = Factor1 * I1 + Factor2 * I2 + ... + FactorN * In (FactorN = 1)
 %
-% indices_position_(+Id, +Indices, +Dim, +PosProgress, -PosFinal)
-% Id                    atom identifying the dynarray
-% Indices               the element's indices
-% Dim                   the 1-based dynarray dimension
-% PosProgress           the working linear position of the element
-% PosFinal              the final linear position of the element
+% @param Id          Atom identifying the dynarray
+% @param Indices     The element's indices
+% @param Dim         The 1-based dynarray dimension
+% @param PosProgress The working linear position of the cell
+% @param PosFinal    The final linear position of the cell
 
 % (done)
 indices_position_(_Id, _Indices, 0, PosFinal, PosFinal).
@@ -677,25 +732,27 @@ indices_position_(Id, Indices, Dim, PosProgress, PosFinal) :-
     DimNext is Dim - 1,
     indices_position_(Id, Indices, DimNext, PosRevised, PosFinal).
 
-% obtain the element's indices from its linear position
-%      Size1 <= Size2 <= ... <= SizeN
+% position_indices_1(+Id:atom, +Factor:int, +Dim:int,
+%                    +IndicesProgress:list, -IndicesFinal:list) is semidet.
 %
-%      I1     = div(Pos, Factor1)
-%      Rem1   = mod(Pos, Factor1)
-%      I2     = div(Rem1, Factor2)
-%      Rem2   = mod(Rem1, Factor2)
-%      :                :
-%      :                :
-%      In-1   = div(RemN-2, FactorN-1)
-%      RemN-1 = mod(RemN-2, FactorN-1)
-%      In     = div(RemN-1, FactorN) -> In = RemN-1
+% Obtain the element's indices from its linear position:<br>
+%      Size1 <= Size2 <= ... <= SizeN<br>
 %
-% position_indices_1(+Id, +Factor, +Dim, +IndicesProgress, -IndicesFinal)
-% Id                atom identifying the dynarray
-% Position          the element's 0-based linear position
-% DimsSizes         the dimensions and their corresponding sizes
-% IndicesProgress   the working indices of the element
-% IndicesFinal      the final indices of the element
+%      I1     = div(Pos, Factor1)<br>
+%      Rem1   = mod(Pos, Factor1)<br>
+%      I2     = div(Rem1, Factor2)<br>
+%      Rem2   = mod(Rem1, Factor2)<br>
+%      :                :<br>
+%      :                :<br>
+%      In-1   = div(RemN-2, FactorN-1)<br>
+%      RemN-1 = mod(RemN-2, FactorN-1)<br>
+%      In     = div(RemN-1, FactorN) -> In = RemN-1<br>
+%
+% @param Id              Atom identifying the dynarray
+% @param Position        The element's 0-based linear position
+% @param DimsSizes       The dimensions and their corresponding sizes
+% @param IndicesProgress The working indices of the element
+% @param IndicesFinal    The final indices of the element
 
 % (done)
 position_indices_1(_Id, _Pos, [], IndicesProgress, IndicesFinal) :-
@@ -730,32 +787,16 @@ position_indices_2([], IndicesProgress, IndicesFinal) :-
 position_indices_2([[_,Index]|DimsIndices], IndicesProgress, IndicesFinal) :-
     position_indices_2(DimsIndices, [Index|IndicesProgress], IndicesFinal).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
-% convert any label in the list of indices into its corresponding integer value
-% labels_indices(+Id, +Labels, -Indices)
-% Id        atom identifying the dynarray
-% Labels    list of indices possibly containing atoms
-% Indices   list with corresponding integer values 
-labels_indices(Id, Labels, Indices) :-
-    ( (var(Labels) , Indices = Labels)
-    ; labels_indices_(Id, Labels, [], Indices) ).
+%! dynarray_offset(+Id:atom, ?Indices:list, ?OffsetIndices:list) is det.
+%  Unify Indices and OffsetIndices with the corresponding real indices
+%  and offset indices, respectively.
+%
+%  @param Id            Atom identifying the dynarray
+%  @param Indices       The dynarray cell's indices
+%  @param OffsetIndices The dynarray cell's offset indices
 
-labels_indices_(_Id, [], IndicesProgress, IndicesFinal) :-
-    reverse(IndicesProgress, IndicesFinal).
-
-labels_indices_(Id, [Label|Labels], IndicesProgress, IndicesFinal) :-
-
-    ((atom(Label) , dynarr_labels(Id, Label, Index)) ; Index = Label),
-    labels_indices_(Id, Labels, [Index|IndicesProgress], IndicesFinal).
-
-%-------------------------------------------------------------------------------
-% convert real indices into offset indices and back
-
-% dynarray_offset(+Id, ?Indices, ?OffsetIndices)
-% Id            atom identifying the dynarray
-% Indices       the dynarray cell's indices
-% OffsetIndices the dynarray cell's offset indices
 dynarray_offset(Id, Indices, OffsetIndices) :-
 
     (ground(Indices) ->
@@ -764,13 +805,14 @@ dynarray_offset(Id, Indices, OffsetIndices) :-
         offsets_indices_(Id, 1, OffsetIndices, [], Indices)
     ).
 
-% convert real indices into offset indices
-% indices_offsets_(+Id, +Dim, +[Index|Indices], +OffsetsProgress, -OffsetsFinal)
-% Id                    atom identifying the dynarray
-% Dim                   the current dynarray dimension
-% [Index|Indices]       the dynarray cell's real index at head of indices list
-% OffsetsProgress       the working dynarray cell's offset indices
-% OffsetsFinal          the final dynarray cell's offset indices
+% indices_offsets_(+Id:atom, +Dim:int, +Indices:list,
+%                  +OffsetsProgress:list, -OffsetsFinal:list) is det.
+% Convert real indices into offset indices.
+% @param Id              Atom identifying the dynarray
+% @param Dim             The current dynarray dimension
+% @param Indices         The dynarray cell's real indices
+% @param OffsetsProgress The working dynarray cell's offset indices
+% @param OffsetsFinal    The final dynarray cell's offset indices
 
 % (done)
 indices_offsets_(_Id, _Dim, [], OffsetsProgress, OffsetsFinal) :-
@@ -788,14 +830,14 @@ indices_offsets_(Id, Dim, [Index|Indices], OffsetsProgress, OffsetsFinal) :-
     indices_offsets_(Id, DimNext, Indices,
                      [OffsetIndex|OffsetsProgress], OffsetsFinal).
 
-% convert offset indices into real indices
-% offsets_indices_(+Id, +Dim, +[OffsetIndex|OffsetIndices],
-%                  +IndicesProgress, -IndicesFinal)
-% Id                    atom identifying the dynarray
-% Dim                   the current dynarray dimension
-% OffsetIndex           the dynarray cell's offset at head of indices list
-% IndicesProgress       the working dynarray cell's real indices
-% IndicesFinal          the final dynarray cell's real indices
+% offsets_indices_(+Id:atom, +Dim:int, +OffsetIndices:list,
+%                  +IndicesProgress:list, -IndicesFinal:list) is det.
+% Convert offset indices into real indices.
+% @param Id              Atom identifying the dynarray
+% @param Dim             The current dynarray dimension
+% @param OffsetIndices   The dynarray cell's offset indices
+% @param IndicesProgress The working dynarray cell's real indices
+% @param IndicesFinal    The final dynarray cell's real indices
 
 % (done)
 offsets_indices_(_Id, _Dim, [], IndicesProgress, IndicesFinal) :-
@@ -813,3 +855,32 @@ offsets_indices_(Id, Dim, [OffsetIndex|OffsetIndices],
     DimNext is Dim + 1,
     offsets_indices_(Id, DimNext, OffsetIndices,
                      [Index|IndicesProgress], IndicesFinal).
+
+%-------------------------------------------------------------------------------------
+
+%! labels_indices(+Id:atom, +Labels:list, -Indices:list) is semidet.
+%
+%  Unify Indices with a list of integers obtained from Labels.
+%
+%  @param Id      Atom identifying the dynarray
+%  @param Labels  List of indices possibly containing atoms
+%  @param Indices List with corresponding integer values
+ 
+labels_indices(Id, Labels, Indices) :-
+    labels_indices_(Id, Labels, [], Indices).
+
+% (done)
+labels_indices_(_Id, [], IndicesProgress, IndicesFinal) :-
+    reverse(IndicesProgress, IndicesFinal).
+
+% (iterate)
+labels_indices_(Id, [Label|Labels], IndicesProgress, IndicesFinal) :-
+
+    (atom(Label) ->
+        dynarr_labels(Id, Label, Index)
+    ;
+        Index = Label
+    ),
+
+    % go for the next label
+    labels_indices_(Id, Labels, [Index|IndicesProgress], IndicesFinal).

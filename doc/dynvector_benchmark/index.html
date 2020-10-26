@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>dynvector_benchmark</title>
+
+<link rel="stylesheet" type="text/css" href="../pldoc.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+
+
+<h3 class="wiki">1. Dynvector Benchmark</h3>
+
+<p>
+This benchmark is also a beginner's tutorial on how to use <b>dynvectors</b>. It will go through some significant features of the package, but make sure to complement it by perusing the documentation accompanying the source code files.</p>
+
+<p>
+Creating a <b>dynvector</b> is straight forward:</p>
+
+<pre class="code" ext="">
+dynvector_create(Id),</pre>
+
+<p>
+where <var>Id</var> is an atom identifying the <b>dynvector</b>. It will fail if a <b>dynvector</b> with the same id already exists. If necessary, use</p>
+
+<pre class="code" ext="">
+(\+ is_dynvector(Id) ; dynvector_destroy(Id)),
+dynvector_create(Id),</pre>
+
+<p>
+or simply</p>
+
+<pre class="code" ext="">
+dynvector_destroy(Id),
+dynvector_create(Id),</pre>
+
+<p>
+since <code>dynvector_destroy/1</code> will not fail or complain when there is nothing to destroy. Note that the size of the <b>dynvector</b> (or the maximum number of cells it may contain) is not specified, as it grows and shrinks dynamically as needed.</p>
+
+<p>
+A <b>dynvector</b> may also be created indirectly with <code>dynvector_list(+Id, +List)</code>, which causes the content of <var>List</var> to be loaded onto the <b>dynvector</b>, creating it anew or, if it already exists, replacing its contents.</p>
+
+<p>
+One possible use of <b>dynvectors</b>, and one we will pursue throughout this benchmark, is to replace standard Prolog lists when they are large and there is a need to search their contents. We will create two large lists with randomly generated integers, from an even larger interval. One of them will be our base set, the other our search set. We will iterate over the elements of the search set and try to determine if they are in the base set, counting the hits and misses.</p>
+
+<p>
+Clearly, if we use 100000 out of 1000000, the expected rate of hits to misses will be around 1:9, varying slightly every time the benchmark runs with these numbers as parameters.</p>
+
+<p>
+There are many ways to iterate over <b>dynvectors</b>, one of them being to use its built-in iterator implementation:</p>
+
+<pre class="code" ext="">
+. . .
+% create an iterator over the contents of DynvectorId
+dynvector_iterator_create(DynvectorId),
+repeat,
+    % retrieve Value at iterator's current position
+    dynvector_iterator_current(DynvectorId, Value),
+    . . . (do something with Value)
+    % increment iterator up to its upper bound
+    \+ dynvector_iterator_next(DynvectorId, _Value),
+!,
+% destroy the iterator
+dynvector_iterator_destroy(DynvectorId),
+. . .</pre>
+
+<p>
+<code>dynvector_iterator_create/1</code> creates an iterator with a range equals to the entire contents of the <b>dynvector</b>, <code>dynvector_iterator_current/2</code> retrieves the value at the current position, and <code>dynvector_iterator_next/2</code> increments the iterator pointer, failing when it reaches the end of the iterator.</p>
+
+<p>
+Alternatively, a counter may be used:</p>
+
+<pre class="code" ext="">
+% create counter 'loop', and initialize it to 0
+counter_create(loop),
+repeat,
+    % retrieve Value from counter
+    counter_value(loop, Index)
+    % retrieve Value from DynvectorId at Index
+    dynvector_value(DynvectorId, Index, Value),
+    . . . (do something with Value)
+    % increment counter up to Count
+    counter_inc(loop, Count),
+!,
+% destroy counter`
+counter_destroy(loop),</pre>
+
+<p>
+<code>counter_create/1</code> creates a counter with 0 as its initial value, <a href="simple_counter.html#counter_value/2">counter_value/2</a>, retrieves the value of the <code>counter, dynvector_value/3</code> retrieves/set <var>Value</var> at <var>Index</var>, and <code>counter_inc/2</code> increments the counter and fails if its resulting value is not <var>Count</var>.</p>
+
+<p>
+Another possibility is to use <code>maplist/2</code>:</p>
+
+<pre class="code" ext="">
+. . .
+numlist(0, Last, Indices),
+maplist(my_pred(DynvectorId), Indices),
+. . .
+my_pred(DynectorId, Index) :-
+    % retrieve Value from DynvectorId at Index
+    dynvector_value(DynvectorId, Index, Value),
+    . . . (do something with Value)</pre>
+
+<p>
+Finally, recursivity may be used:</p>
+
+<pre class="code" ext="">
+my_pred(VectorId, 0, Count),
+. . .
+my_pred(_DynvectorId, Count, Count).
+my_pred(DynvectorId, Index, Count) :-
+    % retrieve Value from DynvectorId at Index
+    dynvector_value(DynvectorId, Index, Value),
+    . . . (do something with Value)
+    IndexNext is Index + 1,
+    my_pred(DynvectorId, IndexNext, Count).</pre>
+
+<p>
+To search a <b>dynvector</b>, that is, to locate a given value within the <b>dynvector</b>, use</p>
+
+<pre class="code" ext="">
+dynvector_find(Id, Index, Value)</pre>
+
+<p>
+<b>Index</b> will be unified with the index of <b>Value</b>, or the invocation will fail if <b>Value</b> does not exist. This is the main purpose of this benchmark: to compare searching a <b>dynvector</b> with searching a list in the traditional way, using <code>memberchk/2</code>.</p>
+
+<p>
+To invoke the benchmark, use one of</p>
+
+<pre class="code" ext="">
+benchmark.
+benchmark(+Benchmarks).
+benchmark(+Benchmarks, +SearchCount, +RangeCount).</pre>
+
+<p>
+where <b>Benchmarks</b> is a list with the benchmark <code>type(s)</code> desired (default: [1,2,3,4]), <b>SearchCount</b> is the number of random integers in the search and base <code>sets(default: 100000)</code>, and <b>RangeCount</b> is the range to use (default: 1000000) when generating the two sets of random integers. Note that in SICStus, the number of random integers generated is not exact, but a close approximation, due to the behavior of the predicate used. This, however, in no way affects the benchmark results.</p>
+
+<p>
+Alternatively, from this folder use one of the command files <b>benchmarkN.cmd</b></p>
+
+<pre class="code" ext="">
+sicstus &lt; benchmarkN.cmd</pre>
+
+<p>
+or</p>
+
+<pre class="code" ext="">
+swipl &lt; benchmarkN.cmd</pre>
+
+<p>
+on either Windows or Ubuntu.&lt;br/&gt;</p>
+
+<p>
+These are the types of benchmark to choose from:</p>
+
+<ol>
+<li>iterate over the <b>dynvector</b> with a counter, search with <code>dynvector_find/3</code></li>
+<li>iterate over the <b>dynvector</b> with <a class="builtin" href="http://www.swi-prolog.org/pldoc/man?predicate=maplist/2">maplist/2</a>, search with <code>dynvector_find/3</code></li>
+<li>iterate over the <b>dynvector</b> with its built-in iterator, search with <code>dynvector_find/3</code></li>
+<li>iterate over a list, search with <code>dynvector_find/3</code></li>
+<li>iterate over the <b>dynvector</b> with a counter, search with <code>memberchk/2</code> over a list</li>
+<li>iterate over the <b>dynvector</b> with <code>maplist/2</code>, search with <code>memberchk/2</code> over a list</li>
+<li>iterate over the <b>dynvector</b> with its built-in iterator, search with <code>memberchk/2</code> over a list</li>
+<li>iterate over a list, search with <code>memberchk/2</code> over an unsorted list</li>
+<li>iterate over a list, search with <code>memberchk/2</code> over a sorted list
+<br>
+<br>
+Invoking the benchmark with <code>benchmark</code> is the same as invoking it with <code>benchmark([1,2,3,4], 100000, 1000000)</code>. You may try various benchmark options with different sizes and ranges. SWI-Prolog will respond well over sizes and ranges in the millions. The same is not true for SICStus, as you may verify.
+
+<p>
+The tables below illustrate the results obtained with all nine options, running SICStus e SWI-Prolog, in three size/range situations. Under each Prolog/OS platform, we show the time it took to complete each run, in milliseconds.</p>
+
+<p>
+Equipment used:</p></li>
+</ol>
+
+<ul>
+<li>Microsoft Windows 10 Enterprise, 64-bit<br>
+Desktop Intel Core i7-4770K CPU 3.50 GHz x 4, 16.0 GB RAM</li>
+<li>Ubuntu 20.04.01 LTS, 64-bit<br>
+Notebook Intel Core i7-3537U CPU 2.00 GHz x 4, 7.7 GB RAM</li>
+</ul>
+
+<h4 class="wiki">1.1. Base/Search size: 100000 - Values range: 1..1000000</h4>
+
+<table class="wiki">
+<tr><td>N</td><td>Iteration</td><td>Search</td><td>SWI-W(a)</td><td>SWI-U(b)</td><td>SIC-W(c)</td><td>SIC-U(d)</td></tr>
+<tr><td>1</td><td>dynvector-counter</td><td>dynvector_find</td><td>390</td><td>572</td><td>250284</td><td>235160</td></tr>
+<tr><td>2</td><td>dynvector-maplist</td><td>dynvector_find</td><td>141</td><td>262</td><td>249693</td><td>337610</td></tr>
+<tr><td>3</td><td>dynvector-iterator</td><td>dynvector_find</td><td>453</td><td>954</td><td>245763</td><td>339518</td></tr>
+<tr><td>4</td><td>list-recursion</td><td>dynvector_find</td><td>109</td><td>176</td><td>244775</td><td>233869</td></tr>
+<tr><td>5</td><td>dynvector-counter</td><td>memberchk</td><td>217712</td><td>314827</td><td>68863</td><td>99267</td></tr>
+<tr><td>6</td><td>dynvector-maplist</td><td>memberchk</td><td>219466</td><td>314970</td><td>78862</td><td>99203</td></tr>
+<tr><td>7</td><td>dynvector-iterator</td><td>memberchk</td><td>219502</td><td>315775</td><td>67017</td><td>99661</td></tr>
+<tr><td>8</td><td>list-recursion</td><td>memberchk-unsorted</td><td>212149</td><td>316104</td><td>70065</td><td>102154</td></tr>
+<tr><td>9</td><td>list-recursion</td><td>memberchk-sorted</td><td>223043</td><td>316777</td><td>134461</td><td>132836</td></tr>
+</table>
+
+<h4 class="wiki">1.2. Base/Search size: 500000 - Values range: 1..5000000</h4>
+
+<table class="wiki">
+<tr><td>N</td><td>Iteration</td><td>Search</td><td>SWI-W(a)</td><td>SWI-U(b)</td><td>SIC-W(c)</td><td>SIC-U(d)</td></tr>
+<tr><td>1</td><td>dynvector-counter</td><td>dynvector_find</td><td>2062</td><td>2913</td><td>5979917</td><td>6893043</td></tr>
+<tr><td>2</td><td>dynvector-maplist</td><td>dynvector_find</td><td>813</td><td>1279</td><td>5973836</td><td>6423391</td></tr>
+<tr><td>3</td><td>dynvector-iterator</td><td>dynvector_find</td><td>2343</td><td>4759</td><td>5979535</td><td>5959181</td></tr>
+<tr><td>4</td><td>list-recursion</td><td>dynvector_find</td><td>516</td><td>841</td><td>5973514</td><td>5870632</td></tr>
+<tr><td>5</td><td>dynvector-counter</td><td>memberchk</td><td>5162234</td><td>7903036</td><td>1670254</td><td>2504737</td></tr>
+<tr><td>6</td><td>dynvector-maplist</td><td>memberchk</td><td>5135975</td><td>7906523</td><td>1656815</td><td>2503408</td></tr>
+<tr><td>7</td><td>dynvector-iterator</td><td>memberchk</td><td>5162279</td><td>7927544</td><td>1642470</td><td>2508727</td></tr>
+<tr><td>8</td><td>list-recursion</td><td>memberchk-unsorted</td><td>5167659</td><td>8142615</td><td>1704884</td><td>2580523</td></tr>
+<tr><td>9</td><td>list-recursion</td><td>memberchk-sorted</td><td>12765616</td><td>21331819</td><td>5309165</td><td>14673131</td></tr>
+</table>
+
+<h4 class="wiki">1.3. Base/Search size: 2000000 - Values range: 1..10000000</h4>
+
+<table class="wiki">
+<tr><td>N</td><td>Iteration</td><td>Search</td><td>SWI-W(a)</td><td>SWI-U(b)</td><td>SIC-W(c)</td><td>SIC-U(d)</td></tr>
+<tr><td>1</td><td>dynvector-counter</td><td>dynvector_find</td><td>8626</td><td>12275</td><td>**</td><td>**</td></tr>
+<tr><td>2</td><td>dynvector-maplist</td><td>dynvector_find</td><td>3219</td><td>5322</td><td>**</td><td>**</td></tr>
+<tr><td>3</td><td>dynvector-iterator</td><td>dynvector_find</td><td>9484</td><td>19525</td><td>**</td><td>**</td></tr>
+<tr><td>4</td><td>list-recursion</td><td>dynvector_find</td><td>1969</td><td>3777</td><td>**</td><td>**</td></tr>
+<tr><td>5</td><td>dynvector-counter</td><td>memberchk</td><td>**</td><td>**</td><td>**</td><td>**</td></tr>
+<tr><td>6</td><td>dynvector-maplist</td><td>memberchk</td><td>**</td><td>**</td><td>**</td><td>**</td></tr>
+<tr><td>7</td><td>dynvector-iterator</td><td>memberchk</td><td>**</td><td>**</td><td>**</td><td>**</td></tr>
+<tr><td>8</td><td>list-recursion</td><td>memberchk-unsorted</td><td>**</td><td>**</td><td>**</td><td>**</td></tr>
+<tr><td>9</td><td>list-recursion</td><td>memberchk-sorted</td><td>**</td><td>**</td><td>**</td><td>**</td></tr>
+</table>
+
+<p>
+Legends:<br>
+(a) SWI-Prolog / MS Windows 10<br>
+(b) SWI-Prolog / Ubuntu 20.04<br>
+(c) SICStus / MS Windows 10<br>
+(d) SICStus / Ubuntu 20.04<br>
+** It is not feasible to compute the time to complete the benchmark.</p>
+
+<h3 class="wiki">2. Result Analysis</h3>
+
+<p>
+2.1. The differences found running the benchmark with the same parameters on the same Prolog environment, but different operating systems (Windows and Ubuntu), may be fully explained by the differences in the hardware capabilities (CPU and RAM) of the two host machines.</p>
+
+<p>
+2.2. Among the iteration strategies tested, SWI-Prolog shows a much better performance when the iteration (the iteration, not the search) is carried out recursively, with standard Prolog lists. SICStus, on the other hand, shows no significative performance difference related to the choice of the iteration mechanism.</p>
+
+<p>
+2.3. On the subject of searching very large sets, SWI-Prolog shines when its native database hash mechanism is used. As a matter of fact, it shows consistent performance gains of thousands of times (i.e., around three orders of magnitude) over SICStus + its native hash mechanism, and a little less over SICStus + lists + <code>memberchk/2</code>.</p>
+
+<p>
+2.4. On moderately-sized datasets (less than a few hundred thousand items), SICStus performs around two times better than SWI-Prolog when the search is done with <code>memberchk/2</code> over lists, and curiously, even substantially better when the list is unsorted. Taken individually, SICStus performs better when searching with <code>memberchk/2</code> than when it uses its native database hash mechanism, whereas the opposite is true for SWI-Prolog.</p>
+
+<p>
+2.5. If one must deal with very large data sets (i.e., data sets holding from hundreds of thousands to many millions of items), the only viable alternative among the ones attempted here is searching on <b>dynvectors</b>, using <code>dynvector_find/3</code> and SWI-Prolog. As shown on table 3, performance can be as high as 1 million searches per second on a 2 million item data set, using run-of-the-mill PCs. We took the challenge up to searches on data sets containing 10 million items, and SWI-Prolog kept its high marks throughout. This is absolutely impressive in the Prolog world.</p>
+
+<h2 class="wiki plfiles">Prolog files</h2>
+
+<table class="summary">
+<tr><th colspan="3" class="file"><span style="float:left"><a href="benchmark.html">benchmark.pl</a></span>&nbsp; -- Dynvector Benchmark<span style="float:right"></span></th></tr>
+<tr class="public"><td><a href="benchmark.html#benchmark/0">benchmark/0</a></td><td class="summary">Invoke benchmark with default values for <var>Benchmarks</var>/<var>SearchCount</var>/<var>RangeCount</var>.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="benchmark.html#benchmark/1">benchmark/1</a></td><td class="summary">Invoke benchmark with default values for <var>SearchCount</var>/<var>RangeCount</var>.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="benchmark.html#benchmark/3">benchmark/3</a></td><td class="summary">Invoke benchmark with given parameters.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+</table>
+
+</body>
+</html>

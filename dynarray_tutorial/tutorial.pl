@@ -1,30 +1,24 @@
-/*******************************************************************************
-* FILENAME / MODULE : tutorial.pl / user
-*
-* DESCRIPTION :
-*       This benchmark is also a beginner's tutorial on how to use dynvectors.
-*       It will go through some significant features of the package, which
-*       should be complemented by reading the documentation in the source code
-*       files.
-*
-* PUBLIC PREDICATES :
-*       tutorial_prepare
-*       tutorial_display
-*
-* NOTES :
-*       None yet.
-*
-*       Copyright TheWiseCoder 2020.  All rights reserved.
-*
-* REVISION HISTORY :
-*
-* DATE        AUTHOR            REVISION
-* ----------  ----------------  ------------------------------------------------
-* 2020-10-06  GT Nunes          Module creation
-*
-*******************************************************************************/
+:- module(tutorial,
+    [
+        tutorial_display/0,
+        tutorial_prepare/0
+    ]).
 
-:- if(current_prolog_flag(dialect, sicstus)).   % SICStus ----------------------
+/** <module> Dynarray Tutorial
+
+This tutorial presents a very simple, but yet illustrative, use of *dynarrays*,
+a high-performance implementation of *dynamic arrays*. Make sure to complement
+it by reviewing the documentation.
+
+@author GT Nunes
+@version 1.0
+@copyright (c) 2020 GT Nunes
+@license BSD-3-Clause License
+*/
+
+%-------------------------------------------------------------------------------------
+
+:- if(current_prolog_flag(dialect, sicstus)).   % SICStus ----------------------------
 
 :- use_module(library(between),
     [
@@ -45,7 +39,7 @@
 read_stream(File, Records) :-
     read_records(File, Records).
 
-:- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------
+:- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------------
 
 :- use_module(library(apply),
     [
@@ -66,7 +60,7 @@ read_stream(File, Records) :-
 read_stream(File, Records) :-
     csv_read_stream(File, Records, []).
 
-:- endif.                                       % ------------------------------
+:- endif.                                       % ------------------------------------
 
 :- use_module('../src/dynarray_core',
     [
@@ -83,8 +77,12 @@ read_stream(File, Records) :-
         dynarray_restore/2
     ]).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
+%! tutorial_prepare is det.
+%
+%  Load and process the data from `artists.csv`.
+%
 tutorial_prepare :-
 
     % identify the Prolog platform
@@ -114,10 +112,16 @@ tutorial_prepare :-
     % persist the data to external storage (dataset is 'my_dataset')
     dynarray_persist(artists, my_dataset),
 
-  % destroy the dynarray
+    % destroy the dynarray
     dynarray_destroy(artists).
 
-% load row onto dynarray
+%! load_row(+Record) is det.
+%
+%  Load a complete record onto the dynarray.
+%
+%  @param Record A complete record with the following structure:
+%                [+Name,+Years,+Genre,+Nationality,+Bio,+Wikipedia,+Paintings]
+
 load_row([Name,Years,Genre,Nationality,Bio,Wikipedia,Paintings]) :-
     
     % compute current row from top for dimension 1
@@ -134,7 +138,16 @@ load_row([Name,Years,Genre,Nationality,Bio,Wikipedia,Paintings]) :-
     dynarray_value(artists, [Row,wikipedia], Wikipedia),
     dynarray_value(artists, [Row,paintings], Paintings).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
+
+%! input_data(+Dialect:atom, +File:ref, -Lists:list) is det.
+%
+%  Read the artists database from Stream, and process it into records.
+%  Lists is unifies with the list of records read.
+%
+%  @param Dialect The Prolog runtime environment (`sicstus` or `swi`).
+%  @param File    The input file
+%  @param Lists   List of records obtained by processing the input data
 
 input_data(Dialect, File, Lists) :-
 
@@ -173,8 +186,12 @@ input_data_(swi, [Record|Records], ListsProgress, ListsFinal) :-
     input_data_(swi, Records,
                 [[A1,A2,A3,A4,A5,A6,A7]|ListsProgress], ListsFinal).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
+%! tutorial_display is det.
+%
+%  Display the processed data.
+ 
 tutorial_display :-
 
     % restore the dynarray from external storage (dataset is 'my_dataset')
@@ -190,7 +207,12 @@ tutorial_display :-
     % destroy the dynarray
     dynarray_destroy(artists).
 
-% display row
+%! display_row(+Row:int) is det.
+%
+%  Display one complete record.
+%
+%  @param Row The ordinal identifying the record.
+
 display_row(Row) :-
 
     % retrieve the data

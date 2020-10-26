@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>src</title>
+
+<link rel="stylesheet" type="text/css" href="../pldoc.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+
+
+<h2 class="wiki">Dynarrays and Dynvectors in Prolog</h2>
+
+<p>
+Please, find a comprehensive tutorial on using dynarrays in the folder <b>dynarray-tutorial</b>. Additionally, in the folder <b>dynvector-benchmark</b> we present a beginner's tutorial on using <b>dynvectors</b>, and demonstrate the enormous performance gains they provide when used as replacements for standard Prolog lists.</p>
+
+<p>
+The implementation includes modules providing persistence for instances of both <b>dynarrays</b> and <b>dynvectors</b>, using the Berkeley DB library. The tutorial in the folder <b>dynarray_tutorial</b> illustrates persisting and restoring <b>dynarrays</b>.</p>
+
+<h2 class="wiki subdirs">Sub directories</h2>
+
+<table class="subdirs">
+<tr><td><a class="subdir" href="swi/index.html">[dir] swi</a></td></tr>
+</table>
+
+<h2 class="wiki plfiles">Prolog files</h2>
+
+<table class="summary">
+<tr><th colspan="3" class="file"><span style="float:left"><a href="dynarray_core.html">dynarray_core.pl</a></span>&nbsp; -- Dynamic, multi-dimensional arrays<span style="float:right"></span></th></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_cells/2">dynarray_cells/2</a></td><td class="summary">Unify CellCount with the number of cells in the dynarray.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_cells/3">dynarray_cells/3</a></td><td class="summary">Unify CellCount with the number of cells in the dimension Dim.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_create/2">dynarray_create/2</a></td><td class="summary">Create a dynarray.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_delete/2">dynarray_delete/2</a></td><td class="summary">Erase the dynarray cell at Indices, releasing the storage space taken.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_destroy/1">dynarray_destroy/1</a></td><td class="summary">Destroy dynarray Id, and release all of its resources.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_dims/2">dynarray_dims/2</a></td><td class="summary">Unify DimCount with the number of dimensions in the dynarray.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_fill/2">dynarray_fill/2</a></td><td class="summary">Unify all of the cells of the dynarray with Value.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_find/3">dynarray_find/3</a></td><td class="summary">Unify Indices or Value with an occurrence of Indices or Value in the dynarray, respectively.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_label/3">dynarray_label/3</a></td><td class="summary">Unify Value with the value associated with Label.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_list/2">dynarray_list/2</a></td><td class="summary">Unify the cells of the dynarray with the values in List.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_position_delete/2">dynarray_position_delete/2</a></td><td class="summary">Erase the dynarray cell at the given Position, releasing the storage space taken.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_position_find/3">dynarray_position_find/3</a></td><td class="summary">Unify Position or Value with an occurrence of Position or Value in the dynarray, respectively.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_position_indices/3">dynarray_position_indices/3</a></td><td class="summary">Unify Position or Indices with the corresponding Position or Indices, respectively.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_position_value/3">dynarray_position_value/3</a></td><td class="summary">Unify Value with the value of the cell at Position.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_top/3">dynarray_top/3</a></td><td class="summary">Unify Top with the highest inserted index value on the dimension Dim, even if it has subsequently been deleted.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#dynarray_value/3">dynarray_value/3</a></td><td class="summary">Unify Value with the value of the dynarray cell at Indices.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_core.html#is_dynarray/1">is_dynarray/1</a></td><td class="summary">Fail if Id does not identify a dynarray.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr><th colspan="3" class="file"><span style="float:left"><a href="dynarray_persistence.html">dynarray_persistence.pl</a></span>&nbsp; -- Persistence for dynarray objects, using Berkeley DB<span style="float:right"></span></th></tr>
+<tr class="public"><td><a href="dynarray_persistence.html#dynarray_clone/2">dynarray_clone/2</a></td><td class="summary">Clone a dynarray.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_persistence.html#dynarray_csv/2">dynarray_csv/2</a></td><td class="summary">Persist or restore a dynarray into/from a CSV file.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_persistence.html#dynarray_erase/2">dynarray_erase/2</a></td><td class="summary">Erase the dynarray persisted data.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_persistence.html#dynarray_persist/2">dynarray_persist/2</a></td><td class="summary">Persist the dynarray data to a Berkeley DB external storage.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_persistence.html#dynarray_restore/2">dynarray_restore/2</a></td><td class="summary">Restore the dynarray data from a Berkeley DB external storage.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynarray_persistence.html#dynarray_serialize/2">dynarray_serialize/2</a></td><td class="summary">A serialization mechanism, for backup/restore purposes.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr><th colspan="3" class="file"><span style="float:left"><a href="dynvector_core.html">dynvector_core.pl</a></span>&nbsp; -- Dynamic vectors<span style="float:right"></span></th></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_append/3">dynvector_append/3</a></td><td class="summary">Append the given Value to the dynvector, and unify Index with the appension position.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_create/1">dynvector_create/1</a></td><td class="summary">Create a dynvector.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_delete/2">dynvector_delete/2</a></td><td class="summary">Erase the dynvector cell at Index, releasing the storage space taken.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_destroy/1">dynvector_destroy/1</a></td><td class="summary">Destroy dynvector Id, and release all of its resources.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_fill/2">dynvector_fill/2</a></td><td class="summary">Unify all of the cells of the dynvector with Value.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_find/3">dynvector_find/3</a></td><td class="summary">Unify Index or Value with an occurrence of Index or Value in the dynvector, respectively.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_insert/3">dynvector_insert/3</a></td><td class="summary">Insert Value into the dynvector at Index.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_iterator_append/2">dynvector_iterator_append/2</a></td><td class="summary">Insert Value after iterator's last position, and adjust the iterator's range accordingly.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_iterator_create/1">dynvector_iterator_create/1</a></td><td class="summary">Create iterator with range from <code>0</code> to Top.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_iterator_create/2">dynvector_iterator_create/2</a></td><td class="summary">Create iterator with range from From to Top.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_iterator_create/3">dynvector_iterator_create/3</a></td><td class="summary">Create iterator with range from From to To.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_iterator_current/2">dynvector_iterator_current/2</a></td><td class="summary">Unify Value with the value at iterator's current position.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_iterator_delete/1">dynvector_iterator_delete/1</a></td><td class="summary">Erase value at iterator's current position.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_iterator_destroy/1">dynvector_iterator_destroy/1</a></td><td class="summary">Destroy the dynvector's iterator.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_iterator_first/2">dynvector_iterator_first/2</a></td><td class="summary">Move the iterator to the first position, and unify Value with the value therein.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_iterator_index/2">dynvector_iterator_index/2</a></td><td class="summary">Unify Index with iterator's current index.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_iterator_insert/2">dynvector_iterator_insert/2</a></td><td class="summary">Insert Value at iterator's current position, and adjust the iterator's range accordingly.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_iterator_last/2">dynvector_iterator_last/2</a></td><td class="summary">Move the iterator to the last position, and unify Value with the value therein.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_iterator_next/2">dynvector_iterator_next/2</a></td><td class="summary">Move the itrator to the next position, and unify Value with the value therein.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_iterator_prev/2">dynvector_iterator_prev/2</a></td><td class="summary">Move the iterator to the previous position, and unify Value with the value therein.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_label/3">dynvector_label/3</a></td><td class="summary">Unify Value with the value associated with Label.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_list/2">dynvector_list/2</a></td><td class="summary">Unify the cells of the dynvector with the values in List.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_top/2">dynvector_top/2</a></td><td class="summary">Unify Top with the highest inserted index value in the dynvector, even if it has subsequently been deleted.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#dynvector_value/3">dynvector_value/3</a></td><td class="summary">Unify Value with the value of the dynvector cell at Index.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_core.html#is_dynvector/1">is_dynvector/1</a></td><td class="summary">Fail if Id does not identify a dynvector.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr><th colspan="3" class="file"><span style="float:left"><a href="dynvector_persistence.html">dynvector_persistence.pl</a></span>&nbsp; -- Persistence for dynvector objects, using Berkeley DB<span style="float:right"></span></th></tr>
+<tr class="public"><td><a href="dynvector_persistence.html#dynvector_clone/2">dynvector_clone/2</a></td><td class="summary">Clone a dynvector.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_persistence.html#dynvector_erase/2">dynvector_erase/2</a></td><td class="summary">Erase the dynvector persisted data.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_persistence.html#dynvector_persist/2">dynvector_persist/2</a></td><td class="summary">Persist the dynvector data to a Berkeley DB external storage.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_persistence.html#dynvector_restore/2">dynvector_restore/2</a></td><td class="summary">Restore the dynvector data from a Berkeley DB external storage.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="dynvector_persistence.html#dynvector_serialize/2">dynvector_serialize/2</a></td><td class="summary">A serialization mechanism, for backup/restore purposes.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+</table>
+
+</body>
+</html>

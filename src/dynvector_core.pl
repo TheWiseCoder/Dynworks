@@ -1,97 +1,70 @@
-/*******************************************************************************
-* FILENAME / MODULE : dynvector-core.pl / dynvector_core
-*
-* DESCRIPTION :
-*       This module provides an implementation of dynvectors. These are their
-*       noteworthy characteristics:
-*         1. dynvectors are powerful, flexible, extendable, high-performance,
-*            hash-based vectors
-*         2. dynvectors have O(1) read/insert/update/delete times, and this
-*            holds true up to sizes in the order of millions of cells
-*         3. dynvectors are not immutable objects, or more specifically,
-*            they are not recreated upon modification
-*         4. dynvectors have no limitation on the number of cells, apart from
-*            the running platform's resource limitations
-*         5. dynvectors do not have a maximum number of cells specified at
-*            creation time - a dynvector dynamically adjusts its upper bound
-*            as needed
-*         6. dynvectors demand no storage space reservation previous to the
-*            actual cell-by-cell space allocation requests
-*         7. dynvectors are resource-minded; their cells are not required to
-*            have values assigned to, in any particular sequence or fashion.
-*         8. in order to avoid resource wastage, dynvectors should be
-*            explicitly destroyed, upon ceasing to be of any further use.
-*
-* PUBLIC PREDICATES :
-*       dynvector_append(+Id, +Value, -Index)
-*       dynvector_create(+Id)
-*       dynvector_delete(+Id, +Index)
-*       dynvector_destroy(+Id)
-*       dynvector_fill(+Id, +Value)
-*       dynvector_find(+Id, ?Value, ?Index)
-*       dynvector_insert(+Id, +Index, +Value)
-*       dynvector_label(+Id, +Label, ?Value)
-*       dynvector_list(+Id, ?List)
-*       dynvector_top(+Id, -Top)
-*       dynvector_value(+Id, +Index, ?Value)
-*       is_dynvector(+Id)
-*
-*       dynvector_iterator_create(+Id)
-*       dynvector_iterator_create(+Id, +From)
-*       dynvector_iterator_create(+Id, +From, +To)
-*       dynvector_iterator_destroy(+Id)
-*       dynvector_iterator_delete(+Id)
-*       dynvector_iterator_append(+Id, -Value)
-*       dynvector_iterator_current(+Id, ?Value)
-*       dynvector_iterator_first(+Id, ?Value)
-*       dynvector_iterator_last(+Id, ?Value)
-*       dynvector_iterator_index(+Id, -Index)
-*       dynvector_iterator_insert(+Id, -Value)
-*       dynvector_iterator_next(+Id, ?Value)
-*       dynvector_iterator_prev(+Id, ?Value)
-*
-* NOTES :
-*       None yet.
-*
-*       Copyright TheWiseCoder 2020.  All rights reserved.
-*
-* REVISION HISTORY :
-*
-* DATE        AUTHOR            REVISION
-* ----------  ----------------  ------------------------------------------------
-* 2020-09-22  GT Nunes          Module creation
-*
-*******************************************************************************/
-
 :- module(dynvector_core,
     [
-        dynvector_append/3,
-        dynvector_create/1,
-        dynvector_delete/2,
-        dynvector_destroy/1,
-        dynvector_fill/2,
-        dynvector_find/3,
-        dynvector_insert/3,
-        dynvector_label/3,
-        dynvector_list/2,
-        dynvector_top/2,
-        dynvector_value/3,
-        is_dynvector/1,
+        dynvector_append/3,             % dynvector_append(+Id, +Value, -Index)
+        dynvector_create/1,             % dynvector_create(+Id)
+        dynvector_delete/2,             % dynvector_delete(+Id, +Index)
+        dynvector_destroy/1,            % dynvector_destroy(+Id)
+        dynvector_fill/2,               % dynvector_fill(+Id, +Value)
+        dynvector_find/3,               % dynvector_find(+Id, ?Index, ?Value)
+        dynvector_insert/3,             % dynvector_insert(+Id, +Index, +Value)
+        dynvector_label/3,              % dynvector_label(+Id, +Label, ?Value)
+        dynvector_list/2,               % dynvector_list(+Id, ?List)
+        dynvector_top/2,                % dynvector_top(+Id, -Top)
+        dynvector_value/3,              % dynvector_value(+Id, +Index, ?Value)
+        is_dynvector/1,                 % is_dynvector(+Id)
 
-        dynvector_iterator_append/2,
-        dynvector_iterator_create/1,
-        dynvector_iterator_create/2,
-        dynvector_iterator_create/3,
-        dynvector_iterator_current/2,
-        dynvector_iterator_delete/1,
-        dynvector_iterator_destroy/1,
-        dynvector_iterator_first/2,
-        dynvector_iterator_index/2,
-        dynvector_iterator_insert/2,
-        dynvector_iterator_last/2,
-        dynvector_iterator_next/2,
-        dynvector_iterator_prev/2
+        dynvector_iterator_append/2,    % dynvector_iterator_create(+Id)
+        dynvector_iterator_create/1,    % dynvector_iterator_create(+Id, +From)
+        dynvector_iterator_create/2,    % dynvector_iterator_create(+Id, +From, +To)
+        dynvector_iterator_create/3,    % dynvector_iterator_destroy(+Id)
+        dynvector_iterator_current/2,   % dynvector_iterator_delete(+Id)
+        dynvector_iterator_delete/1,    % dynvector_iterator_append(+Id, -Value)
+        dynvector_iterator_destroy/1,   % dynvector_iterator_current(+Id, ?Value)
+        dynvector_iterator_first/2,     % dynvector_iterator_first(+Id, ?Value)
+        dynvector_iterator_index/2,     % dynvector_iterator_last(+Id, ?Value)
+        dynvector_iterator_insert/2,    % dynvector_iterator_index(+Id, -Index)
+        dynvector_iterator_last/2,      % dynvector_iterator_insert(+Id, -Value)
+        dynvector_iterator_next/2,      % dynvector_iterator_next(+Id, ?Value)
+        dynvector_iterator_prev/2       % dynvector_iterator_prev(+Id, ?Value)
     ]).
+
+/** <module> Dynamic vectors
+
+This module provides an implementation of dynvectors. These are their
+noteworthy characteristics:
+
+a. dynvectors are powerful, flexible, extendable, high-performance,
+hash-based vectors;
+
+b. dynvectors have O(1) read/insert/update/delete times, and this holds
+true up to sizes in the order of millions of cells;
+
+c. dynvectors are not immutable objects, or more specifically, they are not
+recreated upon modification;
+
+d. dynvectors have no limitation on the number of cells, apart from the
+running platform's resource limitations;
+
+e. dynvectors do not have a maximum number of cells specified at creation time -
+elements may be freely inserted, updated, or deleted, as the dynvector
+dynamically adjusts its upper bound as needed;
+
+f. dynvectors demand no storage space reservation previous to the actual
+cell-by-cell space allocation requests;
+
+g. dynvectors are resource-minded; their cells are not required to have
+values assigned to, in any particular sequence or fashion;
+
+h. in order to avoid resource wastage, dynvectors should be explicitly
+destroyed, upon ceasing to be of any further use.
+
+@author GT Nunes
+@version 1.0
+@copyright (c) 2020 GT Nunes
+@license BSD-3-Clause License
+*/
+
+%-------------------------------------------------------------------------------------
 
 :- if(current_prolog_flag(dialect, sicstus)).   % SICStus ----------------------
 
@@ -115,40 +88,14 @@
 :- volatile dynvect_labels/3,
             dynvect_values/3.
 
-%-------------------------------------------------------------------------------
-% Flexible, iterable, extendable dynvectors. Notes:
-%
-%   1. the dynvector may be sparsed, i.e., none of its cells must have been
-%      unified with a value, but dynvector_value/3 will fail on an attempt
-%      to retrieve the value of a non-grounded cell
-%
-%   2. atoms standing for index may be specified with dynvector_label/3,
-%      for subsequent use with dynvector_value/3 and other predicates
-%      requiring an index as parameter. For example:
-%      a. create the label 'path' to stand for index 0
-%         dynvector_label(Id, path, 0),
-%      b. now, value at index 0 may be accessed as
-%         dynvector_value(Id, path, Value)
-%
-%   3. elements may be freely inserted, updated, or deleted, and the
-%      dynvector's upper bound will automatically adjust to the new index
-%
-%   4. the elements in the dynvector are stored as facts
-%      dynvect_values(Position, Id, Value)
-%
-%   5. the label in the dynvector are stored as facts
-%      dynvect_labels(Id, Label, Value)
-%
-%   6. the following are the read-only private labels in use, whose values are
-%      retrievable with dynvector_label/3:
-%        dv_top   - maximum index value in the dynvector
-%        dv_first - begin index for iterator
-%        dv_last  - end index for iterator
-%        dv_curr  - current index for iterator
+%-------------------------------------------------------------------------------------
 
-% create a dynvector
-% dynvector_create(+Id)
-% Id    atom identifying the dynvector
+%! dynvector_create(+Id:atom) is semidet.
+%
+%  Create a dynvector.
+%
+%  @param Id Atom identifying the dynvector
+
 dynvector_create(Id) :-
 
     % fail point (make sure id is an atom)
@@ -163,46 +110,57 @@ dynvector_create(Id) :-
     assertz(dynvect_labels(Id, dv_last, -1)),
     assertz(dynvect_labels(Id, dv_curr, -1)).
 
-% destroy a dynvector, and release all of its resources (no fail)
-% dynvector_destroy(+Id)
-% Id    atom identifying the dynvector
+%-------------------------------------------------------------------------------------
+
+%! dynvector_destroy(+Id:atom)
+%
+%  Destroy dynvector Id, and release all of its resources. No action if
+%  it does not exist.
+%
+%  @param Id Atom identifying the dynvector
+
 dynvector_destroy(Id) :-
 
   retractall(dynvect_labels(Id, _, _)),
   retractall(dynvect_values(_, Id, _)).
 
-% Unify Top with the highest inserted index value in the dynvector, 
-% even if it has subsequently been deleted. Upon dynvector's creation,
-% this highest value is set to -1.
-% dynvector_top(+Id, +Dim, -Top)
-% Id    atom identifying the dynvector
-% Top   value of the highest index
-dynvector_top(Id, Top) :-
-    dynvect_labels(Id, dv_top, Top).
+%-------------------------------------------------------------------------------------
 
-% fail if Id does not identify a dynvector
-% is_dynvector(+Id)
-% Id    atom identifying the dynvector
+%! is_dynvector(+Id:atom) is semidet.
+%
+%  Fail if Id does not identify a dynvector.
+%
+%  @param Id Atom identifying the dynvector
+
 is_dynvector(Id) :-
     dynvect_labels(Id, dv_top, _).
 
-% Unify Index or Value with an occurrence of Index or Value in the
-% dynvector, respectively. Fail if no such value or index exists.
-% dynvector_find(+Id, +Value, -Index)
-% Id        atom identifying the dynvector
-% Value     the reference value
-% Index     the reference index
-dynvector_find(Id, Value, Index) :-
-    dynvect_values(Index, Id, Value).
+%-------------------------------------------------------------------------------------
 
-%-------------------------------------------------------------------------------
-% Unify the specified dynvector element with its value. Fail on attempt
-% to retrieve the value of an empty cell.
+%! dynvector_top(+Id:atom, -Top:int) is semidet.
+%
+%  Unify Top with the highest inserted index value in the dynvector, even if it has
+%  subsequently been deleted. Upon dynvector's creation, this value is set to -1.
+%
+%  @param Id  Atom identifying the dynvector
+%  @param Top Value of the highest index
 
-% dynvector_value(+Id, +Index, ?Value)
-% Id        atom identifying the dynvector
-% Index     the reference index, or a label standing for it
-% Value     the dynvector element value
+dynvector_top(Id, Top) :-
+    dynvect_labels(Id, dv_top, Top).
+
+%-------------------------------------------------------------------------------------
+
+%! dynvector_value(+Id:atom, +Index:int, ?Value:data) is semidet.
+%
+%  Unify Value with the value of the dynvector cell at Index. Dynvectors
+%  may be sparsed, i.e., they may have cells not holding values, but attempts to
+%  retrieve the value of an empty cell will fail. Dynvector values are stored in
+%  the dynamic predicate dynvect_vaLues(Position, Id, Value).
+%
+%  @param Id    Atom identifying the dynvector
+%  @param Index The reference index, or a label standing for it
+%  @param Value The dynvector cell value
+
 dynvector_value(Id, Index, Value) :-
 
     % determine the element's index from label, if necessary
@@ -232,13 +190,58 @@ dynvector_value_(Id, Index, Value) :-
     ; ( retract(dynvect_labels(Id, dv_top, _))
       , assertz(dynvect_labels(Id, dv_top, Index)) ) ).
 
-%-------------------------------------------------------------------------------
-% append the given value or list of values to the dynvector
+%-------------------------------------------------------------------------------------
 
-% dynvector_append(+Id, +Value, -Index)
-% Id        atom identifying the dynvector
-% Value     value or list of of values to append
-% Index     index identifying the element holding Value or its first element
+%!  dynvector_label(+Id:atom, +Label:atom, ?Value:Data) is semidet.
+%
+%  Unify Value with the value associated with Label. This allows atoms
+%  to stand for indices. Label values are stored in the dynamic predicate
+%  dynvect_labels(Id, Label, Value). The following are the read-only private
+%  labels in use:<br>
+%    dv_top   - maximum index value in the dynvector<br>
+%    dv_first - begin index for iterator<br>
+%    dv_last  - end index for iterator<br>
+%    dv_curr  - current index for iterator
+%
+%  @param Id        atom identifying the dynvector
+%  @param Label     atom standing for the named attribute
+%  @param Value     associated with the named attribute
+
+dynvector_label(Id, Label, Value) :-
+
+    (ground(Value) ->
+        % fail point (must be an atom, and must not start with dv_)
+        \+ sub_atom(Label, 0, 3, _, dv_),
+        (retract(dynvect_labels(Id, Label, _)) ; true),
+        assertz(dynvect_labels(Id, Label, Value))
+    ;
+        dynvect_labels(Id, Label, Value)
+    ).
+
+%-------------------------------------------------------------------------------------
+
+%! dynvector_find(+Id:atom, ?Index:int, ?Value:data) is semidet.
+%
+%  Unify Index or Value with an occurrence of Index or Value in the
+%  dynvector, respectively. Fail if no such value or index exist.
+%
+%  @param Id    Atom identifying the dynvector
+%  @param Index The reference index
+%  @param Value The reference value
+
+dynvector_find(Id, Index, Value) :-
+    dynvect_values(Index, Id, Value).
+
+%-------------------------------------------------------------------------------------
+
+%! dynvector_append(+Id:atom, +Value:data, -Index:int) is det.
+%
+%  Append the given Value to the dynvector, and unify Index with the
+%  appension position. Value may be scalar, a list, or another dynvector.
+%
+%  @param Id    Atom identifying the dynvector
+%  @param Value Value or list of of values to append
+%  @param Index Index identifying the element holding Value or its first element
 
 dynvector_append(Id, Value, Index) :-
 
@@ -279,13 +282,17 @@ dynvector_append_([Value|Values], Id, Index) :-
     IndexNext is Index + 1,
     dynvector_append_(Values, IndexNext, Id).
 
-%-------------------------------------------------------------------------------
-% insert the given value or list of values at the given index inro the dynvector
+%-------------------------------------------------------------------------------------
 
-% dynvector_insert(+Id, +Index, +Value)
-% Id        atom identifying the dynvector
-% Index     the insertion point
-% Value     value or list of of values to insert
+%! dynvector_insert(+Id:atom, +Index:int, +Value:data)
+%
+%  Insert Value into the dynvector at Index. Value may be scalar, a list,
+%  or another dynvector.
+%
+%  @param Id    Atom identifying the dynvector
+%  @param Index The insertion point
+%  @param Value Value or list of of values to insert
+
 dynvector_insert(Id, Index, Value) :-
 
     % is Value a list of Values ?
@@ -339,13 +346,16 @@ dynvector_insert_([Value|Values], Id, Top, From, To) :-
     FromNext is From + 1,
     dynvector_insert_(Values, Id, Top, FromNext, ToNext).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
-% erase the dynvector cell at the given index
-% (will fail if no such element exists.)
-% dynvector_delete(+Id, +Index)
-% Id        atom identifying the dynvector
-% Index     the reference index, or a label standing for it
+%! dynvector_delete(+Id:atom, +Index) is semidet.
+%
+%  Erase the dynvector cell at Index, releasing the storage space taken.
+%  Fail if no such cell exists.
+%
+%  @param Id    Atom identifying the dynvector
+%  @param Index The reference index, or a label standing for it
+
 dynvector_delete(Id, Index) :-
 
     % determine the element's Index from Label, if necessary
@@ -357,31 +367,17 @@ dynvector_delete(Id, Index) :-
     % fail point (cell might already be empty)
     retract(dynvect_values(Inx, Id, _)).
 
-% unify Value with the value associated with the named attribute
-% Id        atom identifying the dynvector
-% Label     atom standing for the named attribute
-% Value     associated with the named attribute
-% dynvector_label(+Id, +Label, ?Value)
-dynvector_label(Id, Label, Value) :-
+%-------------------------------------------------------------------------------------
 
-    (ground(Value) ->
-        % fail point (must be an atom, and must not start with dv_)
-        \+ sub_atom(Label, 0, 3, _, dv_),
-        (retract(dynvect_labels(Id, Label, _)) ; true),
-        assertz(dynvect_labels(Id, Label, Value))
-    ;
-        dynvect_labels(Id, Label, Value)
-    ).
+%! dynvector_list(+Id:atom, ?List:list) is det.
+%
+%  Unify the cells of the dynvector with the values in List. A dynvector to hold
+%  all the list elements may be created. Note that this is not a serialization a
+%  mechanism, and as such it should not be used for backup/restore purposes.
+%
+%  @param Id   Atom identifying the dynvector
+%  @param List List of values to unify the dynvector cells with
 
-%-------------------------------------------------------------------------------
-% Unify all of the cells of the dynvector with the given list. A dynvector
-% capable of to hold all the list elements may be created. Note that this
-% is not a serialization mechanism, and as such it should not be used for
-% backup/restore purposes.
-
-% dynvector_list(+Id, ?List)
-% Id        atom identifying the dynvector
-% List      list to dump the dynvector cells to
 dynvector_list(Id, List) :-
 
     % HAZARD: ground(List) might be very expensive
@@ -402,10 +398,11 @@ dynvector_list(Id, List) :-
         list_to_dynvector_(Values, Id, 0)
     ).
 
-% list_to_dynvector_(+[Value|List], +Id, +Index)
-% [Value|List]  the value to unify the dynvector cell with
-% Id        atom identifying the dynvector
-% Index     index identifying the dynvector cell
+% list_to_dynvector_(+List:list, +Id:atom, +Index:int) is det.
+%
+%  @param List  The value to unify the dynvector cell with
+%  @param Id    Atom identifying the dynvector
+%  @param Index Index identifying the dynvector cell
 
 % (done)
 list_to_dynvector_([], Id, Index) :-
@@ -422,23 +419,27 @@ list_to_dynvector_([Value|List], Id, Index) :-
     IndexNext is Index + 1,
     list_to_dynvector_(List, Id, IndexNext).
 
-%-------------------------------------------------------------------------------
-% unify all of the cells of the dynvector with the given value
+%-------------------------------------------------------------------------------------
 
-% dynvector_fill(+Id, +Value)
-% Id        atom identifying the dynvector
-% Value     value to unify the dynvector cells with
+%! dynvector_fill(+Id:atom, +Value:data) is det.
+%
+%  Unify all of the cells of the dynvector with Value.
+%
+%  @param Id    Atom identifying the dynvector
+%  @param Value Value to unify the dynvector cells with
+
 dynvector_fill(Id, Value) :-
 
     retractall(dynvect_values(_, Id, _)),
     dynvect_labels(Id, dv_top, Count),
     dynvector_fill_(Id, Value, 0, Count).
 
-% dynvector_fill_(+Id, +Value, +Index, +Count)
-% Id        atom identifying the dynvector
-% Value     value to unify the dynvector cell with
-% Index     0-based index identifying the dynvector cell
-% Count     number of cells in dynvector
+% dynvector_fill_(+Id:atom, +Value:data, +Index:int, +Count:int) is det.
+%
+% @param Id    Atom identifying the dynvector
+% @param Value Value to unify the dynvector cell with
+% @param Index 0-based index identifying the dynvector cell
+% @param Count Nnumber of cells in dynvector
 
 % (done)
 dynvector_fill_(_Id, _Value, Count, Count).
@@ -453,31 +454,41 @@ dynvector_fill_(Id, Value, Index, Count) :-
     IndexNext is Index + 1,
     dynvector_fill_(Id, Value, IndexNext, Count).
 
-%-------------------------------------------------------------------------------
-% Iterator creation / destruction
+%-------------------------------------------------------------------------------------
 
-% create iterator from 0 to Top
-% dynvector_iterator_create(+Id)
-% Id    atom identifying the dynvector
+%! dynvector_iterator_create(+Id:atom) is semidet.
+%
+%  Create iterator with range from `0` to Top.
+%
+%  @param Id Atom identifying the dynvector
+
 dynvector_iterator_create(Id) :-
 
     dynvect_labels(Id, dv_top, Top),
     dynvector_iterator_create(Id, 0, Top).
 
-% create iterator from From to Top
-% dynvector_iterator_create(+Id, +From)
-% Id    atom identifying the dynvector
-% From  the iterator's first index
+%! dynvector_iterator_create(+Id:atom, +From:int) is semidet.
+%
+%  Create iterator with range from From to Top.
+%
+%  @param Id   Atom identifying the dynvector
+%  @param From The iterator's first index
+
 dynvector_iterator_create(Id, From) :-
 
     dynvect_labels(Id, dv_top, Top),
     dynvector_iterator_create(Id, From, Top).
 
-% create iterator from From to To
-% dynvector_iterator_create(+Id, +To)
-% Id    atom identifying the dynvector
-% From  the iterator's first index
-% To    the iterator's last index
+%! dynvector_iterator_create(+Id:atom, +From:int, +To:int) is semidet.
+%
+%  Create iterator with range from From to To. Initial and final range
+%  positions must be consistent with the dynvector state. Fail if the dynvector
+%  already has an active iterator.
+
+%  @param Id   Atom identifying the dynvector
+%  @param From The iterator's first index
+%  @param To   The iterator's last index
+
 dynvector_iterator_create(Id, From, To) :-
 
     % fail points (From and To must be consistent)
@@ -499,9 +510,15 @@ dynvector_iterator_create(Id, From, To) :-
     retract(dynvect_labels(Id, dv_curr, _)),
     assertz(dynvect_labels(Id, dv_curr, From)).
 
-% Destroy the dynvector's iterator. Fail if dynvector does not exist.
-% dynvector_iterator_destroy(+Id)
-% Id    atom identifying the dynvector
+%-------------------------------------------------------------------------------------
+
+%! dynvector_iterator_destroy(+Id:atom) is semidet.
+%
+%  Destroy the dynvector's iterator. Fail if dynvector Id does not exist.
+%  No action if dynvector does not have an active iterator.
+%
+%  @param Id Atom identifying the dynvector
+
 dynvector_iterator_destroy(Id) :-
 
     retract(dynvect_labels(Id, dv_first, _)),
@@ -511,12 +528,17 @@ dynvector_iterator_destroy(Id) :-
     retract(dynvect_labels(Id, dv_curr, _)),
     assertz(dynvect_labels(Id, dv_curr, -1)).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
-% unify Value with the value at iterator's next position
-% dynvector_iterator_next(+Id, ?Value)
-% Id        atom identifying the dynvector
-% Value     value to unify the iterator's position with
+%! dynvector_iterator_next(+Id:atom, ?Value:data) is semidet.
+%
+%  Move the itrator to the next position, and unify Value with the value therein.
+%  Fail if dynvector does not have an active iterator, or if a next position is not
+%  possible.
+%
+%  @param Id    Atom identifying the dynvector
+%  @param Value Value to unify the iterator's next position with
+
 dynvector_iterator_next(Id, Value) :-
 
     % retrieve iterator's current position
@@ -540,12 +562,17 @@ dynvector_iterator_next_(Id, Current, Last, Value) :-
     % go for the next position
     ; (!, dynvector_iterator_next_(Id, Next, Last, Value)) ).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
-% unify Value with the value at iterator's previous position
-% dynvector_iterator_prev(+Id, ?Value)
-% Id        atom identifying the dynvector
-% Value     value to unify the iterator's position with
+%! dynvector_iterator_prev(+Id:atom, ?Value:data) is semidet.
+%
+%  Move the iterator to the previous position, and unify Value with the value
+%  therein. Fail if dynvector does not have an active iterator, or if a previous
+%  position is not possible.
+%
+%  @param Id    Atom identifying the dynvector
+%  @param Value Value to unify the iterator's previous position with
+
 dynvector_iterator_prev(Id, Value) :-
 
     % retrieve iterator's current position
@@ -569,12 +596,16 @@ dynvector_iterator_prev_(Id, Current, First, Value) :-
     % go for the previous position
     ; (!, dynvector_iterator_prev_(Id, Prev, First, Value)) ).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
-% unify Value with the value at iterator's first position
-% dynvector_iterator_first(+Id, ?Value)
-% Id        atom identifying the dynvector
-% Value     value to unify the iterator's position with
+%! dynvector_iterator_first(+Id:atom, ?Value:data) is semidet.
+%
+%  Move the iterator to the first position, and unify Value with the value
+%  therein. Fail if dynvector does not have an active iterator.
+
+%  @param Id    Atom identifying the dynvector
+%  @param Value Value to unify the iterator's first position with
+
 dynvector_iterator_first(Id, Value) :-
 
     % obtain iterator's first index
@@ -587,10 +618,16 @@ dynvector_iterator_first(Id, Value) :-
     % fail point
     dynvector_iterator_nav_(Id, First, Value).
 
-% unify Value with the value at iterator's last position
-% dynvector_iterator_last(+Id, ?Value)
-% Id        atom identifying the dynvector
-% Value     value to unify the iterator's position with
+%-------------------------------------------------------------------------------------
+
+%! dynvector_iterator_last(+Id:atom, ?Value:data) is semidet.
+%
+%  Move the iterator to the last position, and unify Value with the value
+%  therein. Fail if dynvector does not have an active iterator.
+
+%  @param Id    Atom identifying the dynvector
+%  @param Value Value to unify the iterator's last position with
+
 dynvector_iterator_last(Id, Value) :-
 
     % obtain iterator's last index
@@ -603,10 +640,13 @@ dynvector_iterator_last(Id, Value) :-
     % fail point
     dynvector_iterator_nav_(Id, Last, Value).
 
-% unify Value with the value at Index
-% dynvector_iterator_nav_(+Id, ?Value)
-% Id        atom identifying the dynvector
-% Value     value to unify the iterator's position with
+% dynvector_iterator_nav_(+Id:atom, ?Value:data) is det.
+%
+% Unify Value with the value at Index.
+%
+% @param Id    Atom identifying the dynvector
+% @param Value Value to unify the iterator's given position with
+
 dynvector_iterator_nav_(Id, Index, Value) :-
 
     % has Value been grounded ?
@@ -625,13 +665,16 @@ dynvector_iterator_nav_(Id, Index, Value) :-
     retract(dynvect_labels(Id, dv_curr, _)),
     assertz(dynvect_labels(Id, dv_curr, Index)).
 
-%-------------------------------------------------------------------------------
-% Iterator operations
+%-------------------------------------------------------------------------------------
 
-% unify Value with the value at iterator's current position
-% dynvector_iterator_current(+Id, ?Value)
-% Id        atom identifying the dynvector
-% Value     value to unify the iterator's position with
+%! dynvector_iterator_current(+Id:atom, ?Value) is semidet.
+%
+%  Unify Value with the value at iterator's current position. Fail if
+%  dynvector does not have an active iterator.
+%
+%  @param Id    Atom identifying the dynvector
+%  @param Value Value to unify the iterator's current position with
+
 dynvector_iterator_current(Id, Value) :-
 
     % obtain iterator's current index
@@ -644,9 +687,15 @@ dynvector_iterator_current(Id, Value) :-
     % fail point
     dynvector_iterator_nav_(Id, Current, Value).
 
-% remove value at iterator's current position
-% dynvector_iterator_delete(+Id)
-% Id        atom identifying the dynvector
+%-------------------------------------------------------------------------------------
+
+%! dynvector_iterator_delete(+Id:atom) is semidet.
+%
+%  Erase value at iterator's current position. Fail if dynvector does not have
+%  an active iterator.
+%
+%  @param Id Atom identifying the dynvector
+
 dynvector_iterator_delete(Id) :-
 
     % obtain iterator's current index
@@ -657,10 +706,15 @@ dynvector_iterator_delete(Id) :-
     % remove value
     (retract(dynvect_values(Current, Id, _)) ; true).
 
-% unify Index with iterator's current index
-% dynvector_iterator_index(+Id, -Index)
-% Id        atom identifying the dynvector
-% Index     the iterator's current index
+%-------------------------------------------------------------------------------------
+
+%! dynvector_iterator_index(+Id:atom, -Index:int) is semidet.
+%
+%  Unify Index with iterator's current index.
+%
+%  @param Id    Atom identifying the dynvector
+%  @param Index The iterator's current index
+
 dynvector_iterator_index(Id, Index) :-
 
     % fail point (Index must be a var)
@@ -669,15 +723,21 @@ dynvector_iterator_index(Id, Index) :-
     % obtain iterator's current index
     dynvect_labels(Id, dv_curr, Index).
 
-% insert Value at iterator's current position
-% dynvector_iterator_insert(+Id, ?Value)
-% Id        atom identifying the dynvector
-% Value     value to be inserted
+%-------------------------------------------------------------------------------------
+
+%! dynvector_iterator_insert(+Id:atom, ?Value:data) is semidet.
+%
+%  Insert Value at iterator's current position, and adjust the iterator's
+%  range accordingly. Fail if dynvector does not have an active iterator.
+%
+%  @param Id    Atom identifying the dynvector
+%  @param Value Value to be inserted
+
 dynvector_iterator_insert(Id, Value) :-
 
     % obtain iterator's current position
     dynvect_labels(Id, dv_curr, Index),
-    % fail point (iterator mus be active)
+    % fail point (iterator must be active)
     Index > -1,
 
     % save dynvector's current Top
@@ -693,10 +753,16 @@ dynvector_iterator_insert(Id, Value) :-
     retract(dynvect_labels(Id, dv_last, _)),
     assertz(dynvect_labels(Id, dv_last, LastNew)).
 
-% insert Value following iterator's last position
-% dynvector_iterator_append(+Id, ?Value)
-% Id        atom identifying the dynvector
-% Value     value to be inserted
+%-------------------------------------------------------------------------------------
+
+%! dynvector_iterator_append(+Id:atom, ?Value)
+%
+%  Insert Value after iterator's last position, and adjust the iterator's
+%  range accordingly. Fail if dynvector does not have an active iterator.
+%
+%  @param Id    Atom identifying the dynvector
+%  @param Value Value to be appended
+
 dynvector_iterator_append(Id, Value) :-
 
     % obtain iterator's current position

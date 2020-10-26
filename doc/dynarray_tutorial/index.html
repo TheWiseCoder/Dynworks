@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>dynarray_tutorial</title>
+
+<link rel="stylesheet" type="text/css" href="../pldoc.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+
+
+<h3 class="wiki">1. Dynarray Tutorial</h3>
+
+<p>
+This tutorial presents a very simple, but yet illustrative, use of <b>dynarrays</b>, a high-performance implementation of <b>dynamic arrays</b>. We will be using a publicly available dataset from <a href="https://www.kaggle.com/supratimhaldar/deepartist-identify-artist-from-art">https://www.kaggle.com/supratimhaldar/deepartist-identify-artist-from-art</a> . We will show how to use <b>dynarrays</b> to hold table data in a natural way, and how to easily persist and restore data using the Berkeley DB library. The file with the data we need is <b>artists.csv</b>, a very small part of a bigger <b>archive.zip</b> (if you are interested in the complete collection of high-quality images it contains, just register at the <b>kaggle.com</b> site and download everything free of charge).</p>
+
+<p>
+The dataset in organized in <b>records</b> and <b>fields</b>, which will be mapped to <b>rows</b> and <b>columns</b> in a 2-dimension <b>dynarray</b>. Each row holds data about one artist, with the following columns: <b>name</b>, <b>years</b>, <b>genre</b>, <b>nationality</b>, <b>bio</b>, <b>wikipedia</b>, <b>paintings</b> (we dropped the column <b>id</b>, as we prefer to use <b>name</b> to uniquely identify an artist). Throughout this tutorial we will refer to the Prolog source code file <b><a class="file" href="tutorial.html">tutorial.pl</a></b>, located in this folder, a must-read for a full understanding of what is being presented.</p>
+
+<p>
+To create a <b>dynarray</b>, it is a good idea to make sure it does not exist yet, as the operation will fail if it already exists. If necessary (not really the situation here), use</p>
+
+<pre class="code" ext="">
+(\+ is_dynarray(artists) ; dynarray_destroy(artists)),
+dynarray_create(artists, [100,7]),</pre>
+
+<p>
+or simply</p>
+
+<pre class="code" ext="">
+dynarray_destroy(artists),
+dynarray_create(artists, [100,7]),</pre>
+
+<p>
+since <code>dynarray_destroy/1</code> will neither fail nor complain when there is nothing to destroy.</p>
+
+<p>
+The parameter [100,7] specifies a 2-dimension <b>dynarray</b> with a maximum of 100 rows and 7 columns. Although the <b>artists.csv</b> file contains only 50 rows, it is a good practice to specify a greater number of rows, if expansion is foreseen. This incurs no storage or performance costs, as <b>dynarrays</b> take storage dynamically as needed, and sizes impact performance only when storage is actually allocated up to near or beyond the running platform's limits (for a discussion of performance <b>vis-a-vis</b> resources used, see the accompanying <b>dynvector-tutorial</b> in this package).</p>
+
+<p>
+<b>Dynarrays</b> allows for labels to be used as indices for column identification, a much more intuitive and safer way than using integers. The code fragment (lines 96-102) is</p>
+
+<pre class="code" ext="">
+dynarray_label(artists, name, 0),
+dynarray_label(artists, years, 1),
+dynarray_label(artists, genre, 2),
+dynarray_label(artists, nationality, 3),
+dynarray_label(artists, bio, 4),
+dynarray_label(artists, wikipedia, 5),
+dynarray_label(artists, paintings, 6),</pre>
+
+<p>
+The predicate <code>tutorial_prepare/0</code> (lines 86-116) creates the <b>dynarray</b>, invokes <code>input_data/2</code> to read the data from the <b>artists.csv</b> file, invokes <code>maplist/2</code> with <code>load_row/1</code> to load the rows onto the <b>dynarray</b>, and then it persists the data. The predicate <code>tutorial_display/0</code> restores the <b>dynarray</b> to memory and invokes <code>maplist/2</code> with <code>display_row/1</code> to display the rows. As simple as that!</p>
+
+<h3 class="wiki">2. Run the Tutorial</h3>
+
+<p>
+Before you start, follow the instructions in the documentation accompanying the Berkeley DB wrapper <b><code class="nofile">bdb_wrapper.pl</code></b>, to prepare your installation to persist/restore data. Make sure the Prolog engine can find the file <b>artists.csv</b> in this folder (<code>open/3</code> at line 105), or move it to a more convenient location.</p>
+
+<p>
+To run the tutorial, load and compile <b><a class="file" href="tutorial.html">tutorial.pl</a></b> in this folder, and then execute</p>
+
+<pre class="code" ext="">
+tutorial_prepare.</pre>
+
+<p>
+followed by</p>
+
+<pre class="code" ext="">
+tutorial_display.</pre>
+
+<p>
+Alternatively, from the command line on this folder run</p>
+
+<pre class="code" ext="">
+sicstus &lt; tutorial.cmd</pre>
+
+<p>
+or</p>
+
+<pre class="code" ext="">
+swipl &lt; tutorial.cmd</pre>
+
+<h3 class="wiki">3. A Note About the CSV Implementation</h3>
+
+<p>
+You may appreciate the fact that the first part of the task performed in this tutorial, namely the loading of data from a <b>CSV</b> file onto a <b>dynarray</b>, could have been accomplished with this much simpler code:</p>
+
+<pre class="code" ext="">
+open('artists.csv', read, Stream),
+dynarray_csv(artists, Stream),</pre>
+
+<p>
+The complete <code>tutorial_prepare/0</code> predicate would be just:</p>
+
+<pre class="code" ext="">
+tutorial_prepare :-
+    % open csv file
+    open('artists.sv', read, Stream),
+    % create the dynarray from the csv file
+    dynarray_destroy(artists),
+    dynarray_csv(artists, Stream),
+    % persist the dynarray
+    dynarray_persist(artists, my_dataset),
+    dynarray_destroy(artists).</pre>
+
+<p>
+This is due to the fact that <b>dynarrays</b> have a built-in implementation for persisting to, and restoring from, <b>CSV</b> files. Using this facility, though, would defeat the purpose of the tutorial.</p>
+
+<h2 class="wiki plfiles">Prolog files</h2>
+
+<table class="summary">
+<tr><th colspan="3" class="file"><span style="float:left"><a href="tutorial.html">tutorial.pl</a></span>&nbsp; -- Dynarray Tutorial<span style="float:right"></span></th></tr>
+<tr class="public"><td><a href="tutorial.html#tutorial_display/0">tutorial_display/0</a></td><td class="summary">Display the processed data.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="tutorial.html#tutorial_prepare/0">tutorial_prepare/0</a></td><td class="summary">Load and process the data from <code>artists.csv</code>.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+</table>
+
+</body>
+</html>

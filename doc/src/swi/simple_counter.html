@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>simple_counter.pl -- A global, stack-independent, simple counter</title>
+
+<link rel="stylesheet" type="text/css" href="../../pldoc.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+
+
+<h1 class="file"><span style="float:right"></span>simple_counter.pl -- A global, stack-independent, simple counter</h1>
+
+<p>
+This is an implementation of a global, stack-independent, simple counter for
+the SWI-Prolog platform. It is intended for use with integer values, only.
+However, for performance reasons this is not enforced anywhere in the code.
+Consequences of non-compliance with this rule are unpredictable.</p>
+
+<dl class="tags">
+<dt class="keyword-author">author</dt><dd class="keyword-author">- GT Nunes</dd>
+<dt class="keyword-version">version</dt><dd class="keyword-version">- 1.0</dd>
+<dt class="keyword-copyright">copyright</dt><dd class="keyword-copyright">- (c) 2020 GT Nunes</dd>
+<dt class="keyword-license">license</dt><dd class="keyword-license">- BSD-3-Clause License</dd>
+</dl>
+
+<dl>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="counter_create/1"><b class="pred">counter_create</b><var class="arglist">(+Key:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Create counter <var>Key</var>, with 0 as its initial value.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Key</var></td><td class="argdescr">- Atom identifying the counter</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="counter_create/2"><b class="pred">counter_create</b><var class="arglist">(+Key:atom, +Value:int)</var></a> is <b class="det">det</b></dt><dd class="defbody">Create counter <var>Key</var>, with <var>Value</var> as its initial value.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Key</var></td><td class="argdescr">- Atom identifying the counter</td></tr>
+<tr><td><var>Value</var></td><td class="argdescr">- Initial value (integer)</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="counter_destroy/1"><b class="pred">counter_destroy</b><var class="arglist">(+Key:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Destroy counter <var>Key</var>.
+(Once set, flags cannot be removed, so we set it to the null char value).
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Key</var></td><td class="argdescr">- Atom identifying the counter</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="counter_add/2"><b class="pred">counter_add</b><var class="arglist">(+Key:atom, +Add:int)</var></a> is <b class="det">det</b></dt><dd class="defbody">Sum <var>Add</var> to counter <var>Key</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Key</var></td><td class="argdescr">- Atom identifying the counter</td></tr>
+<tr><td><var>Add</var></td><td class="argdescr">- Value to add to the counter (integer)</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="counter_add/3"><b class="pred">counter_add</b><var class="arglist">(+Key:atom, +Add:int, -Value:int)</var></a> is <b class="det">det</b></dt>
+<dt class="pubdef"><b class="pred">counter_add</b><var class="arglist">(+Key:atom, +Add:int, +Value:int)</var> is <b class="det">semidet</b></dt><dd class="defbody">Sum <var>Add</var> to counter <var>Key</var>, and unify <var>Value</var> with its final value.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Key</var></td><td class="argdescr">- Atom identifying the counter</td></tr>
+<tr><td><var>Add</var></td><td class="argdescr">- <var>Value</var> to add to the counter (integer)</td></tr>
+<tr><td><var>Value</var></td><td class="argdescr">- Counter's final value</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="counter_dec/1"><b class="pred">counter_dec</b><var class="arglist">(+Key:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Decrement counter <var>Key</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Key</var></td><td class="argdescr">- Atom identifying the counter</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="counter_dec/2"><b class="pred">counter_dec</b><var class="arglist">(+Key:atom, -Value:int)</var></a> is <b class="det">det</b></dt>
+<dt class="pubdef"><b class="pred">counter_dec</b><var class="arglist">(+Key:atom, +Value:int)</var> is <b class="det">semidet</b></dt><dd class="defbody">Decrement counter <var>Key</var>, and unify <var>Value</var> with its final value.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Key</var></td><td class="argdescr">- Atom identifying the counter</td></tr>
+<tr><td><var>Value</var></td><td class="argdescr">- Counter's final value</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="counter_inc/1"><b class="pred">counter_inc</b><var class="arglist">(+Key:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Increment counter <var>Key</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Key</var></td><td class="argdescr">- Atom identifying the counter</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="counter_inc/2"><b class="pred">counter_inc</b><var class="arglist">(+Key:atom, -Value:int)</var></a> is <b class="det">det</b></dt>
+<dt class="pubdef"><b class="pred">counter_inc</b><var class="arglist">(+Key:atom, +Value:int)</var> is <b class="det">semidet</b></dt><dd class="defbody">Increment counter <var>Key</var>, and unify <var>Value</var> with its final value.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Key</var></td><td class="argdescr">- Atom identifying the counter</td></tr>
+<tr><td><var>Value</var></td><td class="argdescr">- Counter's final value</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="counter_value/2"><b class="pred">counter_value</b><var class="arglist">(+Key:atom, ?Value:int)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify <var>Value</var> with the current value of counter <var>Key</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Key</var></td><td class="argdescr">- Atom identifying the counter</td></tr>
+<tr><td><var>Value</var></td><td class="argdescr">- The counter's value</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+</body>
+</html>

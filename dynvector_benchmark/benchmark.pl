@@ -1,30 +1,25 @@
-/*******************************************************************************
-* FILENAME / MODULE : benchmark.pl / user
-*
-* DESCRIPTION :
-*       This benchmark is also a beginner's tutorial on how to use dynvectors.
-*       It will go through some significant features of the package, which may
-*       be complemented by reading the documentation in the source code files.
-*
-* PUBLIC PREDICATES :
-*       benchmark
-*       benchmark(+Benchmarks)
-*       benchmark(+Benchmarks, +SearchCount, +RangeCount)
-*
-* NOTES :
-*       None yet.
-*
-*       Copyright TheWiseCoder 2020.  All rights reserved.
-*
-* REVISION HISTORY :
-*
-* DATE        AUTHOR            REVISION
-* ----------  ----------------  ------------------------------------------------
-* 2020-10-06  GT Nunes          Module creation
-*
-*******************************************************************************/
+:- module(benchmark,
+    [
+        benchmark/0,
+        benchmark/1,            % benchmark(+Benchmarks)
+        benchmark/3             %  benchmark(+Benchmarks, +SearchCount, +RangeCount)
+    ]).
 
-:- if(current_prolog_flag(dialect, sicstus)).   % SICStus ----------------------
+/** <module> Dynvector Benchmark
+
+This benchmark is also a beginner's tutorial on how to use dynvectors.
+It will go through some significant features of the package. Make sure
+to complement it by reviewing the documentation.
+
+@author GT Nunes
+@version 1.0
+@copyright (c) 2020 GT Nunes
+@license BSD-3-Clause License
+*/
+
+%-------------------------------------------------------------------------------------
+
+:- if(current_prolog_flag(dialect, sicstus)).   % SICStus ----------------------------
 
 :- use_module(library(between),
     [
@@ -62,7 +57,7 @@ randseq(K, N, Set) :-
     random_numlist(P, 1, N, Ints),
     random_permutation(Ints, Set).
 
-:- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------
+:- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------------
 
 :- use_module(library(apply),
     [
@@ -82,7 +77,7 @@ randseq(K, N, Set) :-
         counter_value/2
     ]).
 
-:- endif.                                       % ------------------------------
+:- endif.                                       % ------------------------------------
 
 :- use_module('../src/dynvector_core',
     [
@@ -97,21 +92,30 @@ randseq(K, N, Set) :-
         dynvector_value/3
     ]).
 
-% invoke benchmark with defaults Benchmarks/SearchCount/RangeCount
+%! benchmark is det.
+%
+%  Invoke benchmark with default values for `Benchmarks`/`SearchCount`/`RangeCount`.
+
 benchmark :-
     benchmark([1,2,3,4], 100000, 1000000).
 
-% invoke benchmark with defaults SearchCount/RangeCount
-% benchmark(+Benchmarks)
-% Benchmarks    list of operations to perform
+%! benchmark(+Benchmarks) is det.
+%
+%  Invoke benchmark with default values for `SearchCount`/`RangeCount`.
+%
+%  @param Benchmarks List of operations to perform
+
 benchmark(Benchmarks) :-
     benchmark(Benchmarks, 100000, 1000000).
 
-% invoke benchmark with given parameters
-% benchmark(+Benchmarks, +SearchCount, +RangeCount)
-% Benchmarks    list of operations to perform
-% SearchCount   number of randoms integers in base and search lists
-% RangeCount    upper bound for random integers generation
+%! benchmark(+Benchmarks, +SearchCount, +RangeCount) is det.
+%
+%  Invoke benchmark with given parameters.
+%
+%  @param Benchmarks  List of operations to perform
+%  @param SearchCount Number of randoms integers in base and search lists
+%  @param RangeCount  Upper bound for random integers generation
+
 benchmark(Benchmarks, SearchCount, RangeCount) :-
 
     % fail point
@@ -185,7 +189,7 @@ benchmarks(SearchData, BaseData, _SearchDyn, _BaseDyn, _LenSearch, 8) :-
 benchmarks(SearchData, BaseData, _SearchDyn, _BaseDyn, _LenSearch, 9) :-
     benchmark_list_sorted(SearchData, BaseData).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 % dynvector counter iteration, dynvector search
 
 benchmark_dynvector_counter(DynlSD, DynlBD, Count) :-
@@ -197,7 +201,7 @@ benchmark_dynvector_counter(DynlSD, DynlBD, Count) :-
     repeat,
         counter_value(loop, Index),
         dynvector_value(DynlSD, Index, Value),
-        (dynvector_find(DynlBD, Value, _) ->
+        (dynvector_find(DynlBD, _, Value) ->
             counter_inc(pass)
         ;
             counter_inc(fail)
@@ -208,7 +212,7 @@ benchmark_dynvector_counter(DynlSD, DynlBD, Count) :-
     !,
     benchmark_end.
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 % dynvector maplist iteration, dynvector search
 
 benchmark_dynvector_maplist(DynlSD, DynlBD, Count) :-
@@ -223,13 +227,13 @@ benchmark_dynvector_maplist(DynlSD, DynlBD, Count) :-
 benchmark_dynvector_maplist_(DynlSD, DynlBD, Count) :-
 
     dynvector_value(DynlSD, Count, Value),
-    (dynvector_find(DynlBD, Value, _Index) ->
+    (dynvector_find(DynlBD, _Index, Value) ->
         counter_inc(pass)
     ;
         counter_inc(fail)
     ).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 % dynvector iterator iteration, dynvector search
 
 benchmark_dynvector_iterator(DynlSD, DynlBD) :-
@@ -241,7 +245,7 @@ benchmark_dynvector_iterator(DynlSD, DynlBD) :-
 
     repeat,
         dynvector_iterator_current(DynlSD, Value),
-        (dynvector_find(DynlBD, Value, _Index) ->
+        (dynvector_find(DynlBD, _Index, Value) ->
             counter_inc(pass)
         ;
             counter_inc(fail)
@@ -252,7 +256,7 @@ benchmark_dynvector_iterator(DynlSD, DynlBD) :-
     !,
     benchmark_end.
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 % List iteration, dynvector search
 
 benchmark_list_dynvector(SearchData, DynlBD) :-
@@ -268,14 +272,14 @@ benchmark_list_dynvector_([], _) :-
 % (iterate)
 benchmark_list_dynvector_([H|SearchData], DynlBD) :-
 
-    (dynvector_find(DynlBD, H, _Index) ->
+    (dynvector_find(DynlBD, _Index, H) ->
         counter_inc(pass)
     ;
         counter_inc(fail)
     ),
     benchmark_list_dynvector_(SearchData, DynlBD).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 % dynvector counter iteration, memberchk search
 
 benchmark_dynvector_counter_memberchk(DynlSD, BaseData, Count) :-
@@ -298,7 +302,7 @@ benchmark_dynvector_counter_memberchk(DynlSD, BaseData, Count) :-
     !,
     benchmark_end.
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 % dynvector maplist iteration, memberchk search
 
 benchmark_dynvector_maplist_memberchk(DynlSD, BaseData, Count) :-
@@ -319,7 +323,7 @@ benchmark_dynvector_maplist_memberchk_(DynlSD, BaseData, Count) :-
         counter_inc(fail)
     ).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 % dynvector iterator iteration, memberchk search
 
 benchmark_dynvector_iterator_memberchk(DynlSD, List) :-
@@ -342,7 +346,7 @@ benchmark_dynvector_iterator_memberchk(DynlSD, List) :-
     !,
     benchmark_end.
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 % List iteration, unsorted/sorted memberchk search
 
 benchmark_list_unsorted(SearchData, BaseData) :-
@@ -372,7 +376,7 @@ benchmark_list_([H|SearchData], BaseData) :-
     ),
     benchmark_list_(SearchData, BaseData).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
 % counters and timer initialization
 benchmark_begin :-

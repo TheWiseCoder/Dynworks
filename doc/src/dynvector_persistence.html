@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>dynvector_persistence.pl -- Persistence for dynvector objects, using Berkeley DB</title>
+
+<link rel="stylesheet" type="text/css" href="../pldoc.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+
+
+<h1 class="file"><span style="float:right"></span>dynvector_persistence.pl -- Persistence for dynvector objects, using Berkeley DB</h1>
+
+<p>
+This module provides persistence for dynvector objects, using the Berkeley DB
+utility package. Please, refer to <code class="nofile">bdb_rapper.pl</code> for details on the SWI-Prolog
+interface to Berkeley DB.</p>
+
+<dl class="tags">
+<dt class="keyword-author">author</dt><dd class="keyword-author">- GT Nunes</dd>
+<dt class="keyword-version">version</dt><dd class="keyword-version">- 1.0</dd>
+<dt class="keyword-copyright">copyright</dt><dd class="keyword-copyright">- (c) 2020 GT Nunes</dd>
+<dt class="keyword-license">license</dt><dd class="keyword-license">- BSD-3-Clause License</dd>
+</dl>
+
+<dl>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_clone/2"><b class="pred">dynvector_clone</b><var class="arglist">(+IdSource, +IdTarget)</var></a> is <b class="det">det</b></dt><dd class="defbody">Clone a dynvector.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>IdSource</var></td><td class="argdescr">- Atom identifying the source dynvector</td></tr>
+<tr><td><var>IdTarget</var></td><td class="argdescr">- Atom identifying the target dynvector</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_serialize/2"><b class="pred">dynvector_serialize</b><var class="arglist">(+Id, ?Serialized)</var></a> is <b class="det">det</b></dt><dd class="defbody">A serialization mechanism, for backup/restore purposes. For a given
+dynvector containing <var>Nv</var> values and <var>Nb</var> labels, its serialization
+structure will be<br>
+`&lt;Nb&gt;`,<br>
+`[&lt;key-label-1&gt;,&lt;value-label-1&gt;],...,[&lt;key-label-Nb&gt;,&lt;value-label-Nb&gt;]`,<br>
+`[&lt;index-1&gt;,&lt;value-1&gt;],...,[&lt;index-Nv&gt;,&lt;value-Nv&gt;]`
+
+<p>
+The serialized list will thus contain <code>Np + Nv + 1</code> elements:<br>
+`&lt;num-labels&gt;` - the total number of key-value label pairs<br>
+`&lt;key-label-j&gt;` - the key in the key-value label pair j<br>
+`&lt;value-label-j&gt;` - the value in the key-value label pair<br>
+`&lt;index-j&gt;` - the index position of value j within the dynvector<br>
+`&lt;value-j&gt;` - the value j within the dynvector</p>
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynvector</td></tr>
+<tr><td><var>Serialized</var></td><td class="argdescr">- Serialization list containing the dynvector data</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_persist/2"><b class="pred">dynvector_persist</b><var class="arglist">(+Id:atom, +DataSet:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Persist the dynvector data to a Berkeley DB external storage.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynvector</td></tr>
+<tr><td><var>DataSet</var></td><td class="argdescr">- Atom identifying the data set</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_restore/2"><b class="pred">dynvector_restore</b><var class="arglist">(+Id, +DataSet)</var></a> is <b class="det">det</b></dt><dd class="defbody">Restore the dynvector data from a Berkeley DB external storage
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynvector</td></tr>
+<tr><td><var>DataSet</var></td><td class="argdescr">- Atom identifying the data set</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_erase/2"><b class="pred">dynvector_erase</b><var class="arglist">(+Id:atom, +DataSet:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Erase the dynvector persisted data.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynvector</td></tr>
+<tr><td><var>DataSet</var></td><td class="argdescr">- Atom identifying the data set</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+</body>
+</html>

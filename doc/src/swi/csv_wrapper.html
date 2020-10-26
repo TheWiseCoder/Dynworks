@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>csv_wrapper.pl -- CSV Wrapper</title>
+
+<link rel="stylesheet" type="text/css" href="../../pldoc.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+
+
+<h1 class="file"><span style="float:right"></span>csv_wrapper.pl -- CSV Wrapper</h1>
+
+<p>
+This is an attempt to define a standard interface for csv file operations,
+to be used in different Prolog environments. This module implements this
+standard for the SWI-Prolog platform.</p>
+
+<dl class="tags">
+<dt class="keyword-author">author</dt><dd class="keyword-author">- GT Nunes</dd>
+<dt class="keyword-version">version</dt><dd class="keyword-version">- 1.0</dd>
+<dt class="keyword-copyright">copyright</dt><dd class="keyword-copyright">- (c) 2020 GT Nunes</dd>
+<dt class="keyword-license">license</dt><dd class="keyword-license">- BSD-3-Clause License</dd>
+</dl>
+
+<dl>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="csv_input_record/2"><b class="pred">csv_input_record</b><var class="arglist">(+Stream:ref, +Records:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Retrieve the next CSV record from <var>Stream</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Stream</var></td><td class="argdescr">- The input stream</td></tr>
+<tr><td><var>Record</var></td><td class="argdescr">- List of fields</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="csv_input_record/3"><b class="pred">csv_input_record</b><var class="arglist">(+Stream:ref, +Records:list, +CompiledOptions:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Retrieve the next CSV record from <var>Stream</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Stream</var></td><td class="argdescr">- The input stream</td></tr>
+<tr><td><var>Record</var></td><td class="argdescr">- List of fields</td></tr>
+<tr><td><var>CompiledOptions</var></td><td class="argdescr">- Compiled input options</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="csv_input_records/2"><b class="pred">csv_input_records</b><var class="arglist">(+Stream:ref, +Records:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Retrieve all CSV records from <var>Stream</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Stream</var></td><td class="argdescr">- The input stream</td></tr>
+<tr><td><var>Records</var></td><td class="argdescr">- List of lists of fields</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="csv_input_records/3"><b class="pred">csv_input_records</b><var class="arglist">(+Stream:ref, +Records:list, +Options:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Retrieve all CSV records from <var>Stream</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Stream</var></td><td class="argdescr">- The input stream</td></tr>
+<tr><td><var>Records</var></td><td class="argdescr">- List of lists of fields</td></tr>
+<tr><td><var>Options</var></td><td class="argdescr">- Input options</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="csv_output_record/2"><b class="pred">csv_output_record</b><var class="arglist">(+Stream:ref, +Record:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Write the given CSV record to <var>Stream</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Stream</var></td><td class="argdescr">- The output stream</td></tr>
+<tr><td><var>Record</var></td><td class="argdescr">- List of fields</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="csv_output_record/3"><b class="pred">csv_output_record</b><var class="arglist">(+Stream:ref, +Record:list, +Options:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Write the given CSV record to <var>Stream</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Stream</var></td><td class="argdescr">- The output stream</td></tr>
+<tr><td><var>Record</var></td><td class="argdescr">- List of fields</td></tr>
+<tr><td><var>Options</var></td><td class="argdescr">- The output options</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="csv_output_records/2"><b class="pred">csv_output_records</b><var class="arglist">(+Stream:ref, +Records:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Write the given CSV records to <var>Stream</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Stream</var></td><td class="argdescr">- The output stream</td></tr>
+<tr><td><var>Records</var></td><td class="argdescr">- List of lists of fields</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="csv_output_records/3"><b class="pred">csv_output_records</b><var class="arglist">(+Stream:ref, +Records:list, +Options:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Write the given CSV records to <var>Stream</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Stream</var></td><td class="argdescr">- The output stream</td></tr>
+<tr><td><var>Records</var></td><td class="argdescr">- List of lists of fields</td></tr>
+<tr><td><var>Options</var></td><td class="argdescr">- The output options</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="csv_is_header/1"><b class="pred">csv_is_header</b><var class="arglist">(+Record:list)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Assert whether all fields in <var>Record</var> may be column names.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Record</var></td><td class="argdescr">- List of fields</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+</body>
+</html>

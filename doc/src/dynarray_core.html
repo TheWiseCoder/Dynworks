@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>dynarray_core.pl -- Dynamic, multi-dimensional arrays</title>
+
+<link rel="stylesheet" type="text/css" href="../pldoc.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+
+
+<h1 class="file"><span style="float:right"></span>dynarray_core.pl -- Dynamic, multi-dimensional arrays</h1>
+
+<p>
+This module provides an implementation of dynamic multi-dimensional arrays.</p>
+
+<p>
+These are some of their noteworthy characteristics:</p>
+
+<p>
+a. dynarrays are powerful, flexible, high-performance, hash-based
+multi-dimensional arrays;</p>
+
+<p>
+b. dynarrays have O(1) read/insert/update/delete times, and this
+holds true up to sizes in the order of millions of cells;</p>
+
+<p>
+c. dynarrays are not immutable objects, or more specifically,
+they are not recreated upon modification;</p>
+
+<p>
+d. dynarrays have no limitation on the number of dimensions, nor
+any restriction on dimension sizes, apart from the running
+platform's resource limitations;</p>
+
+<p>
+e. dynarrays have a maximum number of cells, defined at creation
+time and kept constant thereafter;</p>
+
+<p>
+f. dynarrays demand no storage space reservation previous to the
+actual cell-by-cell space allocation requests;</p>
+
+<p>
+g. dynarrays are resource-minded; their cells are not required to
+have values assigned to, in any particular sequence or fashion;</p>
+
+<p>
+h. in order to avoid resource wastage, dynarrays should be
+explicitly destroyed, upon ceasing to be of any further use;</p>
+
+<p>
+i. elements may be freely inserted, updated, or deleted, as long as their
+indices are within the dynarray's dimension bounds.</p>
+
+<dl class="tags">
+<dt class="keyword-author">author</dt><dd class="keyword-author">- GT Nunes</dd>
+<dt class="keyword-version">version</dt><dd class="keyword-version">- 1.0</dd>
+<dt class="keyword-copyright">copyright</dt><dd class="keyword-copyright">- (c) 2020 GT Nunes</dd>
+<dt class="keyword-license">license</dt><dd class="keyword-license">- BSD-3-Clause License</dd>
+</dl>
+
+<dl>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_create/2"><b class="pred">dynarray_create</b><var class="arglist">(+Id:atom, +DimRanges:list)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Create a dynarray.
+
+<p>
+Multi-dimensional dynarrays must be constructed with dimension sizes as
+integers &gt; 0, and in this case their indices are 0-based positive integers,
+smaller then the corresponding dimension size (0 &lt;= IndexI &lt; DimSizeI).</p>
+
+<p>
+Alternatively, a range of indices may be specified for any of its
+dimensions, in the form of an integer pair <code>Ii:If</code>. These pairs may
+contain negative values, and, within a single pair, the interval
+markers may be expressed in any order. Internally, offsets compensate
+for the fact that linear positions of cells start at 0 (zero).
+These are examples of valid dynarray creation requests:<br>
+<code>dynarray_create(a, [9,5,8])</code> - indices ranges: [0 : 8,0 : 4,0 : 7]<br>
+<code>dynarray_create(a, [3,5,3 : -8])</code> - indices ranges: [0 : 2,-8 : 3]<br>
+<code>dynarray_create(a, [3,19 : 4])</code> - indices ranges: [0 : 2,4 : 19]<br>
+<code>dynarray_create(a, [-4 : -3,7])</code> - indices ranges: [-4 : -3,0 : 6]</p>
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>DimRanges</var></td><td class="argdescr">- List of dimension ranges in ascending dimension order</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_destroy/1"><b class="pred">dynarray_destroy</b><var class="arglist">(+Id:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Destroy dynarray <var>Id</var>, and release all of its resources. No action if
+it does not exist.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- atom identifying the dynarray</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="is_dynarray/1"><b class="pred">is_dynarray</b><var class="arglist">(+Id:atom)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Fail if <var>Id</var> does not identify a dynarray.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_top/3"><b class="pred">dynarray_top</b><var class="arglist">(+Id:atom, +Dim:int, -Top:int)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Top</var> with the highest inserted index value on the dimension <var>Dim</var>,
+even if it has subsequently been deleted. Upon dynarray's creation, this
+value is set to -1 for all dimensions.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>Dim</var></td><td class="argdescr">- 1-based dimension ordinal, or 0 for all top indices</td></tr>
+<tr><td><var>Top</var></td><td class="argdescr">- Value of the highest index</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_cells/2"><b class="pred">dynarray_cells</b><var class="arglist">(+Id:atom, -CellCount:int)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify <var>CellCount</var> with the number of cells in the dynarray.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>CellCount</var></td><td class="argdescr">- The number of cells in the dynarray</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_cells/3"><b class="pred">dynarray_cells</b><var class="arglist">(+Id:atom, +Dim:int, -CellCount:int)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>CellCount</var> with the number of cells in the dimension <var>Dim</var>. These
+are stored in the dynamic predicate <code>dynarr_dims(Id, DimI, DimSizeI)</code>.
+For the special instance <var>Dim0</var>, this list of lists is stored:
+<code>[[DimSizeI,I],...,[DimSizeK,K]]</code> (in ascending order by DimSizeI).
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>Dim</var></td><td class="argdescr">- The 1-based dynarray dimension</td></tr>
+<tr><td><var>CellCount</var></td><td class="argdescr">- The number of cells in the given dimension</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_dims/2"><b class="pred">dynarray_dims</b><var class="arglist">(+Id:atom, -DimCount:int)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify <var>DimCount</var> with the number of dimensions in the dynarray.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>DimCount</var></td><td class="argdescr">- The number of dimensions in the dynarray</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_value/3"><b class="pred">dynarray_value</b><var class="arglist">(+Id:atom, +Indices:list, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value of the dynarray cell at <var>Indices</var>. Dynarrays
+may be sparsed, i.e., they may have cells not holding values, but attempts to
+retrieve the value of an empty cell will fail. Dynarray values are stored in
+the dynamic predicate <code>dynarr_vaLues(Position, Id, Value)</code>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>Indices</var></td><td class="argdescr">- <var>Indices</var> identifying the element</td></tr>
+<tr><td><var>Value</var></td><td class="argdescr">- The dynarray cell value</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_position_value/3"><b class="pred">dynarray_position_value</b><var class="arglist">(+Id:atom, +Position:int, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value of the cell at <var>Position</var>. The dynarray may be
+sparsed, i.e., it may have cell not holding values, but attempts to retrieve
+value of an empty cell will fail.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>Position</var></td><td class="argdescr">- Linear position identifying the cell</td></tr>
+<tr><td><var>Value</var></td><td class="argdescr">- The dynarray cell value</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_label/3"><b class="pred">dynarray_label</b><var class="arglist">(+Id:atom, ?Label:atom, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value associated with <var>Label</var>. This allows atoms
+to stand for indices. <var>Label</var> values are stored in the dynamic predicate
+<code>dynarr_labels(Id, Label, Value)</code>. The following are the read-only private
+labels in use:<br>
+da_cells - number of cells in the dynarray<br>
+da_dims - number of dimensions in the dynarray<br>
+da_ranges - dimension ranges data used at the dynarray's creation
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>Label</var></td><td class="argdescr">- Atom standing for the named attribute</td></tr>
+<tr><td><var>Value</var></td><td class="argdescr">- <var>Value</var> associated with the named attribute</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_find/3"><b class="pred">dynarray_find</b><var class="arglist">(+Id:atom, ?Indices:list, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Indices</var> or <var>Value</var> with an occurrence of <var>Indices</var> or <var>Value</var> in the
+dynarray, respectively. Fail if no such value or indices exist.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>Indices</var></td><td class="argdescr">- The reference indices</td></tr>
+<tr><td><var>Value</var></td><td class="argdescr">- The reference value</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_position_find/3"><b class="pred">dynarray_position_find</b><var class="arglist">(+Id:atom, ?Position:int, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Position</var> or <var>Value</var> with an occurrence of <var>Position</var> or <var>Value</var> in the
+dynarray, respectively. Fail if no such value or position exists.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- atom identifying the dynarray</td></tr>
+<tr><td><var>Position</var></td><td class="argdescr">- the reference linear position</td></tr>
+<tr><td><var>Value</var></td><td class="argdescr">- the reference value</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_delete/2"><b class="pred">dynarray_delete</b><var class="arglist">(+Id:atom, +Indices:list)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Erase the dynarray cell at <var>Indices</var>, releasing the storage space taken.
+Fail if no such cell exists.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>Indices</var></td><td class="argdescr">- <var>Indices</var> identifying the cell</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_position_delete/2"><b class="pred">dynarray_position_delete</b><var class="arglist">(+Id:atom, +Position:int)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Erase the dynarray cell at the given <var>Position</var>, releasing the storage
+space taken. Fail if no such cell exists.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>Position</var></td><td class="argdescr">- Linear position identifying the cell</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_list/2"><b class="pred">dynarray_list</b><var class="arglist">(+Id:atom, ?List:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify the cells of the dynarray with the values in <var>List</var>. A 1-dimension
+dynarray sized to hold all the list elements may be created. Note that this
+is not a serialization mechanism, and as such it should not be used for
+backup/restore purposes.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>List</var></td><td class="argdescr">- <var>List</var> of values to unify the dynarray cells with</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_fill/2"><b class="pred">dynarray_fill</b><var class="arglist">(+Id:atom, +Value:data)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify all of the cells of the dynarray with <var>Value</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>Value</var></td><td class="argdescr">- <var>Value</var> to unify the dynarray cells with</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_position_indices/3"><b class="pred">dynarray_position_indices</b><var class="arglist">(+Id:atom, ?Position:int, ?Indices:list)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Position</var> or <var>Indices</var> with the corresponding <var>Position</var> or <var>Indices</var>,
+respectively.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>Position</var></td><td class="argdescr">- The final 0-based linear position of the element</td></tr>
+<tr><td><var>Indices</var></td><td class="argdescr">- The element's indices (offset-corrected, if applicable)</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+</body>
+</html>

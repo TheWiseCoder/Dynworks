@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>dynworks</title>
+
+<link rel="stylesheet" type="text/css" href="pldoc.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+
+
+<h2 class="wiki">Dynworks in Prolog</h2>
+
+<p>
+<b>Dynworks</b> bring to the Prolog world high-performance implementations of <b>dynamic multi-dimensional arrays</b> and <b>dynamic vectors</b>. The package has been fully tested under the SISCtus 4.6.0 and the SWI-Prolog 8.2.1 platforms, on both Windows 10 and Ubuntu 20.04 environments.</p>
+
+<p>
+Please, find a comprehensive tutorial on using dynarrays in the folder <b>dynarray-tutorial</b>. Additionally, in the folder <b>dynvector-benchmark</b> we present a beginner's tutorial on using <b>dynvectors</b>, and demonstrate the enormous performance gains they provide when used as replacements for standard Prolog lists.</p>
+
+<p>
+The implementation includes modules providing persistence for instances of both <b>dynarrays</b> and <b>dynvectors</b>, using the Berkeley DB library. The tutorial in the folder <b>dynarray_tutorial</b> illustrates persisting and restoring <b>dynarrays</b>.</p>
+
+<p>
+To use the persistence features on Microsoft Windows, Berkeley DB for Windows version 6.2.38 must be installed. The installers <b>db-6.2.28_86.msi</b> (32 bits) and <b>db-6.2.28_64.msi</b> (64 bits) may be obtained directly from the Oracle Berkeley DB site. Most Linux distributions already carry the Berkeley DB library by default. Additionally, on Linux environments SWI-Prolog requires that the package <b>swi-prolog-bdb</b> be installed.</p>
+
+<p>
+A pack is available for the SWI-Prolog platform, in the folder <b>swi_pack</b>. To install it, execute</p>
+
+<pre class="code" ext="">
+pack_install(dynworks).</pre>
+
+<p>
+Finally, an extensive documentation can be found in the <b>doc</b> folder, accessible by browser directly from <b>index.html</b>. It was produced with the help of SWI-Prolog's <b>PlDoc Source Documentation System</b>, which extracts and organizes the documentation added to the source code.</p>
+
+<h2 class="wiki subdirs">Sub directories</h2>
+
+<table class="subdirs">
+<tr><td><a class="subdir" href="dynarray_tutorial/index.html">[dir] dynarray_tutorial</a></td></tr>
+<tr><td><a class="subdir" href="dynvector_benchmark/index.html">[dir] dynvector_benchmark</a></td></tr>
+<tr><td><a class="subdir" href="src/index.html">[dir] src</a></td></tr>
+</table>
+
+<h2 class="wiki plfiles">Prolog files</h2>
+
+<table class="summary">
+</table>
+
+</body>
+</html>

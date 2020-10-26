@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>dynarray_persistence.pl -- Persistence for dynarray objects, using Berkeley DB</title>
+
+<link rel="stylesheet" type="text/css" href="../pldoc.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+
+
+<h1 class="file"><span style="float:right"></span>dynarray_persistence.pl -- Persistence for dynarray objects, using Berkeley DB</h1>
+
+<p>
+This module provides persistence for dynarray objects, using the Berkeley DB
+utility package. Please, refer to <code class="nofile">bdb_wrapper.pl</code> for details on the SWI-Prolog
+interface to Berkeley DB.</p>
+
+<p>
+Additionally, persisting and restoring from `.csv` files is also implemented.
+Please, refer to the <code class="nofile">csv_wrapper.pl</code> for details.</p>
+
+<p>
+The following considerations apply for CSV operations:</p>
+
+<p>
+a. the dynarray involved must be 2-dimensional, and will be handled as having
+rows (dimension 1) and columns (dimension 2);</p>
+
+<p>
+b. the stream involved must be of type 'text', and will be read or written from
+its current position;</p>
+
+<p>
+c. persisting to, or restoring from, the given stream will be attempted,
+depending on whether or not the dynarray exists;</p>
+
+<p>
+d. input and output are performed through the Prolog platform's built-in CSV
+library;</p>
+
+<p>
+e. when persisting, the atoms associated with the dynarray's columns, if they
+exist, will be used as field names in the CSV file's header record;</p>
+
+<p>
+f. when persisting, the data registered as labels, apart from the column names,
+will not be included;</p>
+
+<p>
+g. when persisting, missing cells will be recorded on the CSV file as empty fields
+(containing the null char '\000\');</p>
+
+<p>
+h. when restoring, an attempt will be made to extract field names from the CSV
+file's first record and use them as labels; if not possible, the record will be
+treated as regular data.</p>
+
+<dl class="tags">
+<dt class="keyword-author">author</dt><dd class="keyword-author">- GT Nunes</dd>
+<dt class="keyword-version">version</dt><dd class="keyword-version">- 1.0</dd>
+<dt class="keyword-copyright">copyright</dt><dd class="keyword-copyright">- (c) 2020 GT Nunes</dd>
+<dt class="keyword-license">license</dt><dd class="keyword-license">- BSD-3-Clause License</dd>
+</dl>
+
+<dl>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_clone/2"><b class="pred">dynarray_clone</b><var class="arglist">(+Id:atomSource:atom, +Id:atomTarget:atom)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Clone a dynarray.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>IdSource</var></td><td class="argdescr">- Atom identifying the source dynarray</td></tr>
+<tr><td><var>IdTarget</var></td><td class="argdescr">- Atom identifying the target dynarray</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_csv/2"><b class="pred">dynarray_csv</b><var class="arglist">(+Id:atom, +Stream:ref)</var></a> is <b class="det">det</b></dt><dd class="defbody">Persist or restore a dynarray into/from a CSV file.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>Stream</var></td><td class="argdescr">- <var>Stream</var> to read from/write to</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_serialize/2"><b class="pred">dynarray_serialize</b><var class="arglist">(+Id:atom, ?Serialized:data)</var></a> is <b class="det">det</b></dt><dd class="defbody">A serialization mechanism, for backup/restore purposes. For a given dynarray
+containing <var>Nv</var> values and <var>Nb</var> labels, its serialization structure will
+be<br>
+`[&lt;dims-ranges&gt;],&lt;Nb&gt;`,<br>
+`[&lt;key-label-1&gt;,&lt;value-label-1&gt;],...,[&lt;key-label-Nb&gt;,&lt;value-label-Nb&gt;]`,<br>
+`[&lt;pos-value-1&gt;,&lt;value-1&gt;],...,[&lt;pos-value-Nv&gt;,&lt;value-Nv&gt;]`
+
+<p>
+The serialized list will thus contain <code>Np + Nv + 2</code> elements:<br>
+`&lt;dims-ranges&gt;` - the dimensions ranges used for the dynarray creation<br>
+`&lt;num-labels&gt;` - the total number of key-value label pairs<br>
+`&lt;key-label-j&gt;` - the key in the key-value label pair <code>j</code><br>
+`&lt;value-label-j&gt;` - the value in the key-value label pair <code>j</code><br>
+`&lt;pos-value-j&gt;` - the linear position of value <code>j</code> within the dynarray<br>
+`&lt;value-j&gt;` - the value <code>j</code> within the dynarray&lt;br&gt;</p>
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>Serialized</var></td><td class="argdescr">- Serialization list containing the dynarray data</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_persist/2"><b class="pred">dynarray_persist</b><var class="arglist">(+Id:atom, +DataSet:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Persist the dynarray data to a Berkeley DB external storage.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>DataSet</var></td><td class="argdescr">- Atom identifyingt the data set</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_restore/2"><b class="pred">dynarray_restore</b><var class="arglist">(+Id:atom, +DataSet:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Restore the dynarray data from a Berkeley DB external storage.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>DataSet</var></td><td class="argdescr">- Atom identifyingt the data set</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_erase/2"><b class="pred">dynarray_erase</b><var class="arglist">(+Id:atom, +DataSet:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Erase the dynarray persisted data.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>DataSet</var></td><td class="argdescr">- Atom identifyingt the data set</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+</body>
+</html>

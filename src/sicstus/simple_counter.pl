@@ -24,7 +24,7 @@
 * NOTES :
 *       None yet.
 *
-*       Copyright TheWiseCoder 2020.  All rights reserved.
+*       Copyright GT Nunes 2020.  All rights reserved.
 *
 * REVISION HISTORY :
 *

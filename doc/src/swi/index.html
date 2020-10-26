@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>swi</title>
+
+<link rel="stylesheet" type="text/css" href="../../pldoc.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+
+
+<h3 class="wiki">1. Berkeley DB Wrapper</h3>
+
+<p>
+The code in <b><a class="file" href="bdb_wrapper.html">bdb_wrapper.pl</a></b> provides a simple, minimalistic approach to implementing persistence for Prolog data in the SWI-Prolog platform, by means of the Berkeley DB utility package. The code has been fully tested with SWI-Prolog 8.2.1, under Windows 10 Enterpise and Ubuntu 20.04 operating systems. It might perform equally well in other releases, but this has not been tested.</p>
+
+<p>
+On Microsoft Windows, Berkeley DB for Windows version 6.2.38 must be installed. The installers <b>db-6.2.28_86.msi</b> (32 bits) and <b>db-6.2.28_4.msi</b> (64 bits) may be obtained directly from the Oracle Berkeley DB site. Most Linux distributions already carry the Berkeley DB library by default. Additionally, on Linux environments SWI-Prolog requires that the package <b>swi-prolog-bdb</b> be installed.</p>
+
+<p>
+SWI-Prolog generates a distinct database structure, which can be fully manipulated with packages like Linux's <b>db-util</b> (see manpages at <a href="https://manpages.debian.org/jessie/db-util/index.html).">https://manpages.debian.org/jessie/db-util/index.html).</a> There are many freely-available tutorials on Berkeley DB, and thus there is no need to digress on this subject here.</p>
+
+<p>
+The environment variable <b>SWI_BDB_DIR</b> must be set(regardless of the host OS, always use Linux path syntax). This indicates the starting path for the database files. These files are organized in <b>datasets</b> containing <b>tagsets</b>. Assuming that the environment variable has been set to <b>c:/Users/my_user/bdb/</b>, this is how the database files would be laid out:</p>
+
+<pre class="code" ext="">
+c:/Users/my_user/bdb/data_set_1/tag_set_a.bdb
+. . .
+c:/Users/my_user/bdb/data_set_1/tag_set_n.bdb</pre>
+
+<h3 class="wiki">2. CSV Wrapper</h3>
+
+<p>
+These modules are an attempt to define a standard interface for '.csv' file operations, to be used in different Prolog environments. The code has been fully tested with SWI-Prolog 8.2.1, under Windows 10 Enterpise and Ubuntu 20.04 operating systems. It might perform equally well in other releases, but this has not been tested.</p>
+
+<p>
+The code is a wrapper for the built-in library primitives in the SWI-Prolog platform. The input/output fields are plain scalar values, such as atoms standing for strings, integers, or floats. No attempt is made here to describe, document or explain the <b>CSV</b> standard, as appropriate documentation for that is widely available. Please, refer to the source code documentation, and to <a href="https://www.swi-prolog.org/pldoc/man?section=csv">https://www.swi-prolog.org/pldoc/man?section=csv</a> .</p>
+
+<h3 class="wiki">3. A global, stack-independent, simple counter</h3>
+
+<p>
+An implementation of a global, stack-independent, simple counter. It is intended for use with integer values. There are no limits on the number of counters that can be simultaneously active. Please, refer to the source code documentation.</p>
+
+<h2 class="wiki plfiles">Prolog files</h2>
+
+<table class="summary">
+<tr><th colspan="3" class="file"><span style="float:left"><a href="bdb_wrapper.html">bdb_wrapper.pl</a></span>&nbsp; -- Berkeley DB Wrapper<span style="float:right"></span></th></tr>
+<tr class="public"><td><a href="bdb_wrapper.html#bdb_base/1">bdb_base/1</a></td><td class="summary">Make sure that the given dataset's base path for Berkeley DB exists.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="bdb_wrapper.html#bdb_erase/1">bdb_erase/1</a></td><td class="summary">Erase the specified external storage location.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="bdb_wrapper.html#bdb_erase/2">bdb_erase/2</a></td><td class="summary">Erase the specified dataset from external storage.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="bdb_wrapper.html#bdb_retrieve/3">bdb_retrieve/3</a></td><td class="summary">Retrieve Data from external storage.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="bdb_wrapper.html#bdb_store/3">bdb_store/3</a></td><td class="summary">Persist Data to external storage.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr><th colspan="3" class="file"><span style="float:left"><a href="csv_wrapper.html">csv_wrapper.pl</a></span>&nbsp; -- CSV Wrapper<span style="float:right"></span></th></tr>
+<tr class="public"><td><a href="csv_wrapper.html#csv_input_record/2">csv_input_record/2</a></td><td class="summary">Retrieve the next CSV record from Stream.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="csv_wrapper.html#csv_input_record/3">csv_input_record/3</a></td><td class="summary">Retrieve the next CSV record from Stream.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="csv_wrapper.html#csv_input_records/2">csv_input_records/2</a></td><td class="summary">Retrieve all CSV records from Stream.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="csv_wrapper.html#csv_input_records/3">csv_input_records/3</a></td><td class="summary">Retrieve all CSV records from Stream.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="csv_wrapper.html#csv_is_header/1">csv_is_header/1</a></td><td class="summary">Assert whether all fields in Record may be column names.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="csv_wrapper.html#csv_output_record/2">csv_output_record/2</a></td><td class="summary">Write the given CSV record to Stream.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="csv_wrapper.html#csv_output_record/3">csv_output_record/3</a></td><td class="summary">Write the given CSV record to Stream.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="csv_wrapper.html#csv_output_records/2">csv_output_records/2</a></td><td class="summary">Write the given CSV records to Stream.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="csv_wrapper.html#csv_output_records/3">csv_output_records/3</a></td><td class="summary">Write the given CSV records to Stream.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr><th colspan="3" class="file"><span style="float:left"><a href="simple_counter.html">simple_counter.pl</a></span>&nbsp; -- A global, stack-independent, simple counter<span style="float:right"></span></th></tr>
+<tr class="public"><td><a href="simple_counter.html#counter_add/2">counter_add/2</a></td><td class="summary">Sum Add to counter Key.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="simple_counter.html#counter_add/3">counter_add/3</a></td><td class="summary">Sum Add to counter Key, and unify Value with its final value.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="simple_counter.html#counter_create/1">counter_create/1</a></td><td class="summary">Create counter Key, with 0 as its initial value.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="simple_counter.html#counter_create/2">counter_create/2</a></td><td class="summary">Create counter Key, with Value as its initial value.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="simple_counter.html#counter_dec/1">counter_dec/1</a></td><td class="summary">Decrement counter Key.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="simple_counter.html#counter_dec/2">counter_dec/2</a></td><td class="summary">Decrement counter Key, and unify Value with its final value.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="simple_counter.html#counter_destroy/1">counter_destroy/1</a></td><td class="summary">Destroy counter Key.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="simple_counter.html#counter_inc/1">counter_inc/1</a></td><td class="summary">Increment counter Key.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="simple_counter.html#counter_inc/2">counter_inc/2</a></td><td class="summary">Increment counter Key, and unify Value with its final value.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="simple_counter.html#counter_value/2">counter_value/2</a></td><td class="summary">Unify Value with the current value of counter Key.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+</table>
+
+</body>
+</html>

@@ -1,2 +1,5 @@
 .project
-swi_pack-save/
+docs_debug.pl
+docs_save.cmd
+swi_pack/pack.pl
+swi_pack/prolog/

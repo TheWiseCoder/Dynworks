@@ -1,63 +1,48 @@
-/*******************************************************************************
-* FILENAME / MODULE : bdb_wrapper.pl / bdb_wrapper
-*
-* DESCRIPTION :
-*       This module provides a simple, minimalistic approach to implementing
-*       persistence for Prolog data on the SICStus platform, by means of the
-*       Berkeley DB utility package. Berkeley DB is an open-source software
-*       library intended to provide a high-performance embedded database for
-*       key/value data. Please, refer to 
-*       https://www.swi-prolog.org/pldoc/doc/_SWI_/library/bdb.pl
-*       for detailed instructions on how to use Berkeley DB.
-*
-*       Being an embedded database implies that the library provides access
-*       to files containing one or more database tables. These tables are
-*       always binary, mapping keys to values. The SICStus Prolog interface
-*       to Berkeley DB allows for fast storage of arbitrary Prolog terms,
-*       including cycles and constraints.
-*
-*       On Windows, the package Berkeley DB for Windows version 6.2.38 must
-*       have been installed. The installers db-6.2.28_86.msi (32 bits) and
-*       db-6.2.28_64.msi (64 bits) may be obtained directly from the
-*       Oracle Berkeley DB site.
-*
-*       Most Linux distributions already carry the Berkeley DB library
-*       by default. Additionally, on Linux environments SWI-Prolog requires
-*       that the package swi-prolog-bdb be installed.
-*
-*       The Linux db-util package is fully compatible with the database
-*       structure created by SWI-Prolog through Berkeley DB. For the db-util
-*       manpages, please refer to 
-*       https://manpages.debian.org/jessie/db-util/index.html .
-*
-* PUBLIC PREDICATES :
-*       bdb_base(+DataSet)
-*       bdb_erase(+DataSet)
-*       bdb_erase(+TagSet, +DataSet)
-*       bdb_retrieve(+TagSet, +DataSet, -Data)
-*       bdb_store(+TagSet, +DataSet, +Data)
-*
-* NOTES :
-*       None yet.
-*
-*       Copyright TheWiseCoder 2020.  All rights reserved.
-*
-* REVISION HISTORY :
-*
-* DATE        AUTHOR            REVISION
-* ----------  ----------------  ------------------------------------------------
-* 2020-08-28  GT Nunes          Module creation
-*
-*******************************************************************************/
-
 :- module(bdb_wrapper,
     [
-        bdb_base/1,
-        bdb_erase/1,
-        bdb_erase/2,
-        bdb_retrieve/3,
-        bdb_store/3
+        bdb_base/1,         % bdb_base(+DataSet)
+        bdb_erase/1,        % bdb_erase(+DataSet)
+        bdb_erase/2,        % bdb_erase(+TagSet, +DataSet)
+        bdb_retrieve/3,     % bdb_retrieve(+TagSet, +DataSet, -Data)
+        bdb_store/3         % bdb_store(+TagSet, +DataSet, +Data)
     ]).
+
+/** <module> Berkeley DB Wrapper
+
+This module provides a simple, minimalistic approach to implementing
+persistence for Prolog data on the SWI-Prolog platform, by means of the
+Berkeley DB utility package. Berkeley DB is an open-source software
+library intended to provide a high-performance embedded database for
+key/value data. Please, refer to 
+https://www.swi-prolog.org/pldoc/doc/_SWI_/library/bdb.pl
+for detailed instructions on how to use Berkeley DB.
+
+Being an embedded database implies that the library provides access
+to files containing one or more database tables. These tables are
+always binary, mapping keys to values. The SICStus Prolog interface
+to Berkeley DB allows for fast storage of arbitrary Prolog terms,
+including cycles and constraints.
+
+On Windows, the package Berkeley DB for Windows version 6.2.38 must
+have been installed. The installers *|db-6.2.28_86.msi|* (32 bits) and
+*|db-6.2.28_64.msi|* (64 bits) may be obtained directly from the
+Oracle Berkeley DB site.
+
+Most Linux distributions already carry the Berkeley DB library
+by default. Additionally, on Linux environments SWI-Prolog requires
+that the package *|swi-prolog-bdb|* be installed.
+
+The Linux *|db-util|* package is fully compatible with the database structure
+created by SWI-Prolog through Berkeley DB. For the db-util manpages, please
+refer to https://manpages.debian.org/jessie/db-util/index.html .
+
+@author GT Nunes
+@version 1.0
+@copyright (c) 2020 GT Nunes
+@license BSD-3-Clause License
+*/
+
+%-------------------------------------------------------------------------------------
 
 :- use_module(library(codesio),
     [
@@ -69,11 +54,14 @@
         delete_directory_and_contents/1
     ]).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
-% make sure the given dataset's base path for Berkeley DB exists
-% bdb_base(+DataSet)
-% DataSet   atom identifying Berkeley DB's dataset
+%! bdb_base(+DataSet:atom) is det.
+%
+%  Make sure that the given dataset's base path for Berkeley DB exists.
+%
+%  @param DataSet Atom identifying Berkeley DB's dataset
+
 bdb_base(DataSet) :-
 
     % obtain the storage location for Berkeley DB
@@ -82,11 +70,16 @@ bdb_base(DataSet) :-
     % create directory, if necessary
     (exists_directory(BaseDir) ; make_directory(BaseDir)).
 
-% persist the given data to external storage
-% bdb_store(+TagSet, +DataSet, +Data)
-% TagSet    atom identifying the tagset to store
-% DataSet   atom identifying the dataset storage location fragment
-% Data      the data to store
+%-------------------------------------------------------------------------------------
+
+%! bdb_store(+TagSet:atom, +DataSet:atom, +Data:data) is det.
+%
+%  Persist Data to external storage.
+%
+%  @param TagSet  Atom identifying the tagset to store
+%  @param DataSet Atom identifying the dataset storage location fragment
+%  @param Data    The data to store
+
 bdb_store(TagSet, DataSet, Data) :-
 
     % obtain the storage filepath for this dataset 
@@ -108,11 +101,16 @@ bdb_store(TagSet, DataSet, Data) :-
     % fail point (close the database)
     catch(bdb_close(DbRef), _, fail).
 
-% retrieve the specified data from external storage
-% bdb_retrieve(+TagSet, +DataSet, -Data)
-% TagSet    atom identifying the tagset to store
-% DataSet   atom identifying the dataset storage location fragment
-% Data      the data to retrieve
+%-------------------------------------------------------------------------------------
+
+%! bdb_retrieve(+TagSet:atom, +DataSet:atom, -Data:data) is det.
+%
+%  Retrieve Data from external storage.
+%
+%  @param TagSet  Atom identifying the tagset to store
+%  @param DataSet Atom identifying the dataset storage location fragment
+%  @param Data    The data to retrieve
+
 bdb_retrieve(TagSet, DataSet, Data) :-
 
     % obtain the storage filepath for this dataset 
@@ -130,9 +128,14 @@ bdb_retrieve(TagSet, DataSet, Data) :-
     % fail point (close the database)
     catch(bdb_close(DbRef), _, fail).
 
-% erase the specified external storage location
-% bdb_erase(+BaseDir)
-% DataSet   atom identifying the dataset storage location fragment
+%-------------------------------------------------------------------------------------
+
+%! bdb_erase(+DataSet:atom) is det.
+%
+%  Erase the specified external storage location.
+%
+%  @param DataSet Atom identifying the dataset storage path fragment
+
 bdb_erase(DataSet) :-
 
     % obtain the base storage location
@@ -142,10 +145,13 @@ bdb_erase(DataSet) :-
     % delete storage directory, if necessary
     (\+ exists_directory(BaseDir) ; (delete_directory_and_contents(BaseDir))).
 
-% erase the specified dataset from external storage
-% bdb_erase(+DsId, +BaseDir)
-% TagSet    atom identifying the dataset to erase
-% DataSet   atom identifying the dataset storage location fragment
+%! bdb_erase(+TagSet:atom, +DataSet:atom) is det.
+%
+%  Erase the specified dataset from external storage.
+%
+%  @param TagSet  Atom identifying the dataset to erase
+%  @param DataSet Atom identifying the dataset storage location fragment
+
 bdb_erase(TagSet, DataSet) :-
 
     % obtain the storage filepath for this dataset 
@@ -154,14 +160,15 @@ bdb_erase(TagSet, DataSet) :-
     % delete it, if necessary
     (\+ exists_file(DsPath) ; (delete_file(DsPath))).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
-% Unify BaseDir with the base directory for Berkeley DB persistence.
-% The repositories for SICStus and SWI-Prolog should not be mixed,
-% as they use different schemes for Prolog term persistence.
-% storage_dir(+DataSet, -BaseDir)
-% DataSet   atom identifying the dataset storage location fragment
-% BaseDir   the BDB base storage directory: <SWI_BDB_DIR>/<DataSet>/
+%! storage_dir(+DataSet:atom, -BaseDir:path) is det.
+%
+%   Unify BaseDir with the base directory for Berkeley DB persistence.
+%
+%  @param DataSet Atom identifying the dataset storage location fragment
+%  @param BaseDir The BDB base storage directory: `<SWI_BDB_DIR>/<DataSet>/`
+
 storage_dir(DataSet, BaseDir) :-
 
     % obtain the BDB base path from the environment
@@ -175,11 +182,16 @@ storage_dir(DataSet, BaseDir) :-
     ),
     atom_codes(BaseDir, Codes).
 
-% build the BDB storage filepath
-% storage_path(+TagSet, +DataSet, -DsPath)
-% TagSet    atom identifying the dataset
-% DataSet   atom identifying the dataset storage location fragment
-% DsPath    the BDB storage path: <SWI_BDB_DIR>/<DataSet>/<TagSet>.bdb
+%-------------------------------------------------------------------------------------
+
+% storage_path(+TagSet:atom, +DataSet:atom, -DsPath:path) is det.
+%
+%  Build the BDB storage filepath.
+%
+%  @param TagSet  Atom identifying the dataset
+%  @param DataSet Atom identifying the dataset storage location fragment
+%  @param DsPath  The BDB storage path: <SWI_BDB_DIR>/<DataSet>/<TagSet>.bdb
+
 storage_path(TagSet, DataSet, DsPath) :-
 
     storage_dir(DataSet, BaseDir),
