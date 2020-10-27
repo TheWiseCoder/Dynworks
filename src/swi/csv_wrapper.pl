@@ -12,9 +12,9 @@
         csv_output_records/3    % csv_output_records(+Stream, +Records, Options)
     ]).
 
-/** <module> CSV Wrapper
+/** <module> An Interface for CSV file operations
 
-This is an attempt to define a standard interface for csv file operations,
+This is an attempt to define a standard interface for CSV file operations,
 to be used in different Prolog environments. This module implements this
 standard for the SWI-Prolog platform.
 

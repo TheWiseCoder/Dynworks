@@ -24,23 +24,23 @@
 This module provides an implementation of dynamic multi-dimensional arrays.
 
 These are some of their noteworthy characteristics:<br/>
-  1. dynarrays are powerful, flexible, high-performance, hash-based
+a. dynarrays are powerful, flexible, high-performance, hash-based
 multi-dimensional arrays;<br/>
-  2. dynarrays have O(1) read/insert/update/delete times, and this holds true
+b. dynarrays have O(1) read/insert/update/delete times, and this holds true
 up to sizes in the order of millions of cells;<br/>
-  3. dynarrays are not immutable objects, or more specifically, they are not
+c. dynarrays are not immutable objects, or more specifically, they are not
 recreated upon modification;<br/>
-  4. dynarrays have no limitation on the number of dimensions, nor any restriction
+d. dynarrays have no limitation on the number of dimensions, nor any restriction
 on dimension sizes, apart from the running platform's resource limitations;<br/>
-  5 dynarrays have a maximum number of cells, defined at creation time and
+e. dynarrays have a maximum number of cells, defined at creation time and
 kept constant thereafter;<br/>
-  6. dynarrays demand no storage space reservation previous to the actual
+f. dynarrays demand no storage space reservation previous to the actual
 cell-by-cell space allocation requests;<br/>
-  7. dynarrays are resource-minded; their cells are not required to have values
+g. dynarrays are resource-minded; their cells are not required to have values
 assigned to, in any particular sequence or fashion;<br/>
-  8. in order to avoid resource wastage, dynarrays should be explicitly destroyed,
+h. in order to avoid resource wastage, dynarrays should be explicitly destroyed,
 upon ceasing to be of any further use;<br/>
-  9. elements may be freely inserted, updated, or deleted, as long as their
+i. elements may be freely inserted, updated, or deleted, as long as their
 indices are within the dynarray's dimension bounds.
 
 @author GT Nunes
