@@ -16,64 +16,24 @@
 This module provides an implementation of dynamic multi-dimensional arrays.</p>
 
 <p>
-These are some of their noteworthy characteristics:&lt;br/&gt;</p>
-
-<ol>
-<li>dynarrays are powerful, flexible, high-performance, hash-based</li>
-</ol>
-
-<p>
-multi-dimensional arrays;&lt;br/&gt;</p>
-
-<ol>
-<li>dynarrays have O(1) read/insert/update/delete times, and this holds true</li>
-</ol>
-
-<p>
-up to sizes in the order of millions of cells;&lt;br/&gt;</p>
-
-<ol>
-<li>dynarrays are not immutable objects, or more specifically, they are not</li>
-</ol>
-
-<p>
-recreated upon modification;&lt;br/&gt;</p>
-
-<ol>
-<li>dynarrays have no limitation on the number of dimensions, nor any restriction</li>
-</ol>
-
-<p>
+These are some of their noteworthy characteristics:<br>
+a. dynarrays are powerful, flexible, high-performance, hash-based
+multi-dimensional arrays;<br>
+b. dynarrays have O(1) read/insert/update/delete times, and this holds true
+up to sizes in the order of millions of cells;<br>
+c. dynarrays are not immutable objects, or more specifically, they are not
+recreated upon modification;<br>
+d. dynarrays have no limitation on the number of dimensions, nor any restriction
 on dimension sizes, apart from the running platform's resource limitations;<br>
-5 dynarrays have a maximum number of cells, defined at creation time and
-kept constant thereafter;&lt;br/&gt;</p>
-
-<ol>
-<li>dynarrays demand no storage space reservation previous to the actual</li>
-</ol>
-
-<p>
-cell-by-cell space allocation requests;&lt;br/&gt;</p>
-
-<ol>
-<li>dynarrays are resource-minded; their cells are not required to have values</li>
-</ol>
-
-<p>
-assigned to, in any particular sequence or fashion;&lt;br/&gt;</p>
-
-<ol>
-<li>in order to avoid resource wastage, dynarrays should be explicitly destroyed,</li>
-</ol>
-
-<p>
-upon ceasing to be of any further use;&lt;br/&gt;</p>
-
-<ol>
-<li>elements may be freely inserted, updated, or deleted, as long as their</li>
-</ol>
-
-<p>
+e. dynarrays have a maximum number of cells, defined at creation time and
+kept constant thereafter;<br>
+f. dynarrays demand no storage space reservation previous to the actual
+cell-by-cell space allocation requests;<br>
+g. dynarrays are resource-minded; their cells are not required to have values
+assigned to, in any particular sequence or fashion;<br>
+h. in order to avoid resource wastage, dynarrays should be explicitly destroyed,
+upon ceasing to be of any further use;<br>
+i. elements may be freely inserted, updated, or deleted, as long as their
 indices are within the dynarray's dimension bounds.</p>
 
 <dl class="tags">

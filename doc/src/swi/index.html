@@ -45,13 +45,13 @@ An implementation of a global, stack-independent, simple counter. It is intended
 <h2 class="wiki plfiles">Prolog files</h2>
 
 <table class="summary">
-<tr><th colspan="3" class="file"><span style="float:left"><a href="bdb_wrapper.html">bdb_wrapper.pl</a></span>&nbsp; -- Berkeley DB Wrapper<span style="float:right"></span></th></tr>
-<tr class="public"><td><a href="bdb_wrapper.html#bdb_base/1">bdb_base/1</a></td><td class="summary">Make sure that the given dataset's base path for Berkeley DB exists.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
-<tr class="public"><td><a href="bdb_wrapper.html#bdb_erase/1">bdb_erase/1</a></td><td class="summary">Erase the specified external storage location.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
-<tr class="public"><td><a href="bdb_wrapper.html#bdb_erase/2">bdb_erase/2</a></td><td class="summary">Erase the specified dataset from external storage.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr><th colspan="3" class="file"><span style="float:left"><a href="bdb_wrapper.html">bdb_wrapper.pl</a></span>&nbsp; -- Persistence using Berkeley DB<span style="float:right"></span></th></tr>
+<tr class="public"><td><a href="bdb_wrapper.html#bdb_base/1">bdb_base/1</a></td><td class="summary">Make sure the given DataSet's base path for Berkeley DB exists.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="bdb_wrapper.html#bdb_erase/1">bdb_erase/1</a></td><td class="summary">Remove all the data associated with DataSet from external storage.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+<tr class="public"><td><a href="bdb_wrapper.html#bdb_erase/2">bdb_erase/2</a></td><td class="summary">Erase the data associated with the TagSet within DataSet from external storage.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
 <tr class="public"><td><a href="bdb_wrapper.html#bdb_retrieve/3">bdb_retrieve/3</a></td><td class="summary">Retrieve Data from external storage.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
 <tr class="public"><td><a href="bdb_wrapper.html#bdb_store/3">bdb_store/3</a></td><td class="summary">Persist Data to external storage.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
-<tr><th colspan="3" class="file"><span style="float:left"><a href="csv_wrapper.html">csv_wrapper.pl</a></span>&nbsp; -- CSV Wrapper<span style="float:right"></span></th></tr>
+<tr><th colspan="3" class="file"><span style="float:left"><a href="csv_wrapper.html">csv_wrapper.pl</a></span>&nbsp; -- An Interface for CSV file operations<span style="float:right"></span></th></tr>
 <tr class="public"><td><a href="csv_wrapper.html#csv_input_record/2">csv_input_record/2</a></td><td class="summary">Retrieve the next CSV record from Stream.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
 <tr class="public"><td><a href="csv_wrapper.html#csv_input_record/3">csv_input_record/3</a></td><td class="summary">Retrieve the next CSV record from Stream.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
 <tr class="public"><td><a href="csv_wrapper.html#csv_input_records/2">csv_input_records/2</a></td><td class="summary">Retrieve all CSV records from Stream.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
