@@ -1,15 +1,15 @@
 
 :- module(csv_wrapper,
     [
-        csv_input_record/2,     % csv_input_record(+Stream, +Record)
-        csv_input_record/3,     % csv_input_record(+Stream, +Record, +CompiledOptions)
-        csv_input_records/2,    % csv_input_records(+Stream, +Records)
-        csv_input_records/3,    % csv_input_records(+Stream, +Records, +Options)
-        csv_is_header/1,        % csv_is_header(+Record)
-        csv_output_record/2,    % csv_output_record(+Stream, +Record)
-        csv_output_record/3,    % csv_output_record(+Stream, +Record, Options)
-        csv_output_records/2,   % csv_output_records(+Stream, +Records)
-        csv_output_records/3    % csv_output_records(+Stream, +Records, Options)
+        csv_input_record/2,
+        csv_input_record/3,
+        csv_input_records/2,
+        csv_input_records/3,
+        csv_is_header/1,
+        csv_output_record/2,
+        csv_output_record/3,
+        csv_output_records/2,
+        csv_output_records/3
     ]).
 
 /** <module> An Interface for CSV file operations

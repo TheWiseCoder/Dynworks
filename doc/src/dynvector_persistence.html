@@ -39,22 +39,21 @@ please refer to the documentation for <code class="nofile">bdb_rapper.pl</code> 
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_serialize/2"><b class="pred">dynvector_serialize</b><var class="arglist">(+Id, ?Serialized)</var></a> is <b class="det">det</b></dt><dd class="defbody">A serialization mechanism, for backup/restore purposes.
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_serialize/2"><b class="pred">dynvector_serialize</b><var class="arglist">(+Id, ?Serialized)</var></a> is <b class="det">det</b></dt><dd class="defbody">A serialization mechanism, for backup/restore purposes. The description below
+applies for a given dynvector containing <var>Nv</var> values and <var>Nb</var> labels.
 
-<p>
-For a given dynvector containing <var>Nv</var> values and <var>Nb</var> labels,
-its serialization structure will be<br>
-&lt;Nb&gt;,<br>
-[&lt;key-label-1&gt;,&lt;value-label-1&gt;],...,[&lt;key-label-Nb&gt;,&lt;value-label-Nb&gt;],<br>
-[&lt;index-1&gt;,&lt;value-1&gt;],...,[&lt;index-Nv&gt;,&lt;value-Nv&gt;]</p>
+<pre class="code" ext="">
+Its serialization structure will be:
+  &lt;Nb&gt;,&lt;br/&gt;
+  [&lt;key-label-1&gt;,&lt;value-label-1&gt;],...,[&lt;key-label-Nb&gt;,&lt;value-label-Nb&gt;],&lt;br/&gt;
+  [&lt;index-1&gt;,&lt;value-1&gt;],...,[&lt;index-Nv&gt;,&lt;value-Nv&gt;]
 
-<p>
-The serialized list will thus contain <code>Np + Nv + 1</code> elements:<br>
-&lt;num-labels&gt; - the total number of key-value label pairs<br>
-&lt;key-label-j&gt; - the key in the key-value label pair <code>j</code><br>
-&lt;value-label-j&gt; - the value in the key-value label pair<br>
-&lt;index-j&gt; - the index position of value <code>j</code> within the dynvector<br>
-&lt;value-j&gt; - the value <code>j</code> within the dynvector</p>
+The serialized list will thus contain `Np + Nv + 1` elements:&lt;br/&gt;
+  &lt;num-labels&gt;    - the total number of key-value label pairs&lt;br/&gt;
+  &lt;key-label-j&gt;   - the key in the key-value label pair `j`&lt;br/&gt;
+  &lt;value-label-j&gt; - the value in the key-value label pair&lt;br/&gt;
+  &lt;index-j&gt;       - the index position of value `j` within the dynvector&lt;br/&gt;
+  &lt;value-j&gt;       - the value `j` within the dynvector</pre>
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>

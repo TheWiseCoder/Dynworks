@@ -1,8 +1,8 @@
 :- module(benchmark,
     [
         benchmark/0,
-        benchmark/1,            % benchmark(+Benchmarks)
-        benchmark/3             %  benchmark(+Benchmarks, +SearchCount, +RangeCount)
+        benchmark/1,
+        benchmark/3
     ]).
 
 /** <module> Dynvector Benchmark

@@ -80,20 +80,21 @@ dynvector_clone(IdSource, IdTarget) :-
 
 %! dynvector_serialize(+Id, ?Serialized) is det.
 %
-%  A serialization mechanism, for backup/restore purposes.
+%  A serialization mechanism, for backup/restore purposes. The description below
+%  applies for a given dynvector containing `Nv` values and `Nb` labels.
+%  ~~~
+%  Its serialization structure will be:
+%    <Nb>,<br/>
+%    [<key-label-1>,<value-label-1>],...,[<key-label-Nb>,<value-label-Nb>],<br/>
+%    [<index-1>,<value-1>],...,[<index-Nv>,<value-Nv>]
 %
-%  For a given dynvector containing `Nv` values and `Nb` labels,
-%  its serialization structure will be<br/>
-%     <Nb>,<br/>
-%     [<key-label-1>,<value-label-1>],...,[<key-label-Nb>,<value-label-Nb>],<br/>
-%     [<index-1>,<value-1>],...,[<index-Nv>,<value-Nv>]
-%
-% The serialized list will thus contain `Np + Nv + 1` elements:<br/>
-%   <num-labels>    - the total number of key-value label pairs<br/>
-%   <key-label-j>   - the key in the key-value label pair `j`<br/>
-%   <value-label-j> - the value in the key-value label pair<br/>
-%   <index-j>       - the index position of value `j` within the dynvector<br/>
-%   <value-j>       - the value `j` within the dynvector
+%  The serialized list will thus contain `Np + Nv + 1` elements:<br/>
+%    <num-labels>    - the total number of key-value label pairs<br/>
+%    <key-label-j>   - the key in the key-value label pair `j`<br/>
+%    <value-label-j> - the value in the key-value label pair<br/>
+%    <index-j>       - the index position of value `j` within the dynvector<br/>
+%    <value-j>       - the value `j` within the dynvector
+%  ~~~
 %
 %  @param Id         Atom identifying the dynvector
 %  @param Serialized Serialization list containing the dynvector data
@@ -159,13 +160,12 @@ serialized_to_dynvector(Id, Serialized) :-
     length(Serialized, ValuesFinal),
     serialized_to_values_(Id, Serialized, LabelsFinal, ValuesFinal).
 
-% serialized_to_labels_(+Id:atom, +Labels:list,
-%                       +PosCurr:int, +PosFinal:int) is det.
+%! serialized_to_labels_(+Id:atom, +Labels:list, +PosCurr:int, +PosFinal:int) is det.
 %
-% @param Id        atom identifying the dynvector
-% @param Labels    the labels (key-value pairs) to load to the dynvector
-% @param PosCurr   the current label position
-% @param PosLast   the last label position
+%  @param Id      Atom identifying the dynvector
+%  @param Labels  The labels (key-value pairs) to load to the dynvector
+%  @param PosCurr The current label position
+%  @param PosLast The last label position
 
 % (done)
 serialized_to_labels_(_Id, _Labels, PosFinal, PosFinal).
@@ -181,7 +181,7 @@ serialized_to_labels_(Id, Labels, PosCurr, PosFinal) :-
     PosNext is PosCurr + 1,
     serialized_to_labels_(Id, Labels, PosNext, PosFinal).
 
-% serialized_to_values_(+Id:atom, +Values:data) is det.
+%! serialized_to_values_(+Id:atom, +Values:data) is det.
 %
 %  @param Id     Atom identifying the dynvector
 %  @param Values The values to load to the dynvector

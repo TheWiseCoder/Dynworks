@@ -13,27 +13,27 @@
 <h1 class="file"><span style="float:right"></span>dynvector_core.pl -- Dynamic vectors</h1>
 
 <p>
-This module provides an implementation of dynvectors.</p>
+This module provides an implementation of dynvectors.
+These are their noteworthy characteristics:</p>
 
-<p>
-These are their noteworthy characteristics:<br>
-a. dynvectors are powerful, flexible, extendable, high-performance,
-hash-based vectors;<br>
-b. dynvectors have O(1) read/insert/update/delete times, and this holds
-true up to sizes in the order of millions of cells;<br>
-c. dynvectors are not immutable objects, or more specifically, they are not
-recreated upon modification;<br>
-d. dynvectors have no limitation on the number of cells, apart from the
-running platform's resource limitations;<br>
-e. dynvectors do not have a maximum number of cells specified at creation time -
-elements may be freely inserted, updated, or deleted, as the dynvector
-dynamically adjusts its upper bound as needed;<br>
-f. dynvectors demand no storage space reservation previous to the actual
-cell-by-cell space allocation requests;<br>
-g. dynvectors are resource-minded; their cells are not required to have
-values assigned to, in any particular sequence or fashion;<br>
-h. in order to avoid resource wastage, dynvectors should be explicitly
-destroyed, upon ceasing to be of any further use.</p>
+<pre class="code" ext="">
+1. dynvectors are powerful, flexible, extendable, high-performance,
+   hash-based vectors;
+2. dynvectors have O(1) read/insert/update/delete times, and this holds
+   true up to sizes in the order of millions of cells;&lt;
+3. dynvectors are not immutable objects, or more specifically, they are not
+   recreated upon modification;
+4. dynvectors have no limitation on the number of cells, apart from the
+   running platform's resource limitations;
+5. dynvectors do not have a maximum number of cells specified at creation time -
+   elements may be freely inserted, updated, or deleted, as the dynvector
+   dynamically adjusts its upper bound as needed;
+6. dynvectors demand no storage space reservation previous to the actual
+   cell-by-cell space allocation requests;
+7. dynvectors are resource-minded; their cells are not required to have values
+   assigned to, in any particular sequence or fashion;
+8. in order to avoid resource wastage, dynvectors should be explicitly
+   destroyed, upon ceasing to be of any further use.</pre>
 
 <dl class="tags">
 <dt class="keyword-author">author</dt><dd class="keyword-author">- GT Nunes</dd>
@@ -99,14 +99,10 @@ subsequently been deleted. Upon dynvector's creation, this value is set to -1.
 
 </dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_value/3"><b class="pred">dynvector_value</b><var class="arglist">(+Id:atom, +Index:int, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value of the dynvector cell at <var>Index</var>.
-
-<p>
 Dynvectors may be sparsed, i.e., they may have cells not holding values,
-but attempts to retrieve the value of an empty cell will fail.</p>
-
-<p>
+but attempts to retrieve the value of an empty cell will fail.
 Dynvector values are stored in the dynamic predicate
-<code>dynvect_vaLues(Position, Id, Value)</code>.</p>
+<code>dynvect_vaLues(Position, Id, Value)</code>.
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -122,17 +118,17 @@ Dynvector values are stored in the dynamic predicate
 
 </dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_label/3"><b class="pred">dynvector_label</b><var class="arglist">(+Id:atom, +Label:atom, ?Value:Data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value associated with <var>Label</var>.
-
-<p>
 This allows atoms to stand for indices. <var>Label</var> values are stored in the
-dynamic predicate <code>dynvect_labels(Id, Label, Value)</code>.</p>
+dynamic predicate <code>dynvect_labels(Id, Label, Value)</code>.
 
 <p>
-The following are the read-only private labels in use:<br>
-dv_top - maximum index value in the dynvector<br>
-dv_first - begin index for iterator<br>
-dv_last - end index for iterator<br>
-dv_curr - current index for iterator&lt;br/&gt;</p>
+The following are the read-only private labels in use:</p>
+
+<pre class="code" ext="">
+dv_top   - maximum index value in the dynvector
+dv_first - begin index for iterator
+dv_last  - end index for iterator
+dv_curr  - current index for iterator</pre>
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -211,11 +207,9 @@ Fail if no such cell exists.
 
 </dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_list/2"><b class="pred">dynvector_list</b><var class="arglist">(+Id:atom, ?List:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify the cells of the dynvector with the values in <var>List</var>.
-
-<p>
 A dynvector to hold all the list elements may be created. Note that this is
 not a serialization a mechanism, and as such it should not be used for
-backup/restore purposes.</p>
+backup/restore purposes.
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -272,7 +266,21 @@ backup/restore purposes.</p>
 </dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_iterator_create/3"><b class="pred">dynvector_iterator_create</b><var class="arglist">(+Id:atom, +From:int, +To:int)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Create iterator with range from <var>From</var> to <var>To</var>. Initial and final range
 positions must be consistent with the dynvector state. Fail if the dynvector
-already has an active iterator.</dd>
+already has an active iterator.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynvector</td></tr>
+<tr><td><var>From</var></td><td class="argdescr">- The iterator's first index</td></tr>
+<tr><td><var>To</var></td><td class="argdescr">- The iterator's last index</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_iterator_destroy/1"><b class="pred">dynvector_iterator_destroy</b><var class="arglist">(+Id:atom)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Destroy the dynvector's iterator. Fail if dynvector <var>Id</var> does not exist.
 No action if dynvector does not have an active iterator.
 
@@ -320,9 +328,35 @@ position is not possible.
 
 </dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_iterator_first/2"><b class="pred">dynvector_iterator_first</b><var class="arglist">(+Id:atom, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Move the iterator to the first position, and unify <var>Value</var> with the value
-therein. Fail if dynvector does not have an active iterator.</dd>
+therein. Fail if dynvector does not have an active iterator.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynvector</td></tr>
+<tr><td><var>Value</var></td><td class="argdescr">- <var>Value</var> to unify the iterator's first position with</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_iterator_last/2"><b class="pred">dynvector_iterator_last</b><var class="arglist">(+Id:atom, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Move the iterator to the last position, and unify <var>Value</var> with the value
-therein. Fail if dynvector does not have an active iterator.</dd>
+therein. Fail if dynvector does not have an active iterator.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynvector</td></tr>
+<tr><td><var>Value</var></td><td class="argdescr">- <var>Value</var> to unify the iterator's last position with</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_iterator_current/2"><b class="pred">dynvector_iterator_current</b><var class="arglist">(+Id:atom, ?Value)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value at iterator's current position. Fail if
 dynvector does not have an active iterator.
 

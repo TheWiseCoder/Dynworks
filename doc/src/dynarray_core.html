@@ -13,28 +13,28 @@
 <h1 class="file"><span style="float:right"></span>dynarray_core.pl -- Dynamic, multi-dimensional arrays</h1>
 
 <p>
-This module provides an implementation of dynamic multi-dimensional arrays.</p>
+This module provides an implementation of dynamic multi-dimensional arrays.
+These are some of their noteworthy characteristics:</p>
 
-<p>
-These are some of their noteworthy characteristics:<br>
-a. dynarrays are powerful, flexible, high-performance, hash-based
-multi-dimensional arrays;<br>
-b. dynarrays have O(1) read/insert/update/delete times, and this holds true
-up to sizes in the order of millions of cells;<br>
-c. dynarrays are not immutable objects, or more specifically, they are not
-recreated upon modification;<br>
-d. dynarrays have no limitation on the number of dimensions, nor any restriction
-on dimension sizes, apart from the running platform's resource limitations;<br>
-e. dynarrays have a maximum number of cells, defined at creation time and
-kept constant thereafter;<br>
-f. dynarrays demand no storage space reservation previous to the actual
-cell-by-cell space allocation requests;<br>
-g. dynarrays are resource-minded; their cells are not required to have values
-assigned to, in any particular sequence or fashion;<br>
-h. in order to avoid resource wastage, dynarrays should be explicitly destroyed,
-upon ceasing to be of any further use;<br>
-i. elements may be freely inserted, updated, or deleted, as long as their
-indices are within the dynarray's dimension bounds.</p>
+<pre class="code" ext="">
+1. dynarrays are powerful, flexible, high-performance, hash-based
+   multi-dimensional arrays;
+2. dynarrays have O(1) read/insert/update/delete times, and this holds true
+   up to sizes in the order of millions of cells;
+3. dynarrays are not immutable objects, or more specifically, they are not
+   recreated upon modification;
+4. dynarrays have no limitation on the number of dimensions, nor any restriction
+   on dimension sizes, apart from the running platform's resource limitations;
+5. dynarrays have a maximum number of cells, defined at creation time and
+   kept constant thereafter;
+6. dynarrays demand no storage space reservation previous to the actual
+   cell-by-cell space allocation requests;
+7. dynarrays are resource-minded; their cells are not required to have values
+   assigned to, in any particular sequence or fashion;
+8. in order to avoid resource wastage, dynarrays should be explicitly destroyed,
+   upon ceasing to be of any further use;
+9. elements may be freely inserted, updated, or deleted, as long as their
+   indices are within the dynarray's dimension bounds.</pre>
 
 <dl class="tags">
 <dt class="keyword-author">author</dt><dd class="keyword-author">- GT Nunes</dd>
@@ -44,12 +44,10 @@ indices are within the dynarray's dimension bounds.</p>
 </dl>
 
 <dl>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_create/2"><b class="pred">dynarray_create</b><var class="arglist">(+Id:atom, +DimRanges:list)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Create a dynarray.
-
-<p>
-Multi-dimensional dynarrays must be constructed with dimension sizes as
-integers &gt; 0, and in this case their indices are 0-based positive integers,
-smaller then the corresponding dimension size (0 &lt;= IndexI &lt; DimSizeI).</p>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_create/2"><b class="pred">dynarray_create</b><var class="arglist">(+Id:atom, +DimRanges:list)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Create a dynarray. Multi-dimensional dynarrays must be constructed with
+dimension sizes as integers &gt; 0, and in this case their indices are
+0-based positive integers, smaller then the corresponding dimension size
+(0 &lt;= IndexI &lt; DimSizeI).
 
 <p>
 Alternatively, a range of indices may be specified for any of its
@@ -59,11 +57,13 @@ markers may be expressed in any order. Internally, offsets compensate
 for the fact that linear positions of cells start at 0 (zero).</p>
 
 <p>
-These are examples of valid dynarray creation requests:<br>
-<code>dynarray_create(a, [9,5,8])</code> - indices ranges: [0 : 8,0 : 4,0 : 7]<br>
-<code>dynarray_create(a, [3,5,3 : -8])</code> - indices ranges: [0 : 2,-8 : 3]<br>
-<code>dynarray_create(a, [3,19 : 4])</code> - indices ranges: [0 : 2,4 : 19]<br>
-<code>dynarray_create(a, [-4 : -3,7])</code> - indices ranges: [-4 : -3,0 : 6]</p>
+These are examples of valid dynarray creation requests:</p>
+
+<pre class="code" ext="">
+  dynarray_create(a, [9,5,8])      - indices ranges: [0 : 8,0 : 4,0 : 7]&lt;br/&gt;
+  dynarray_create(a, [3,5,3 : -8]) - indices ranges: [0 : 2,-8 : 3]&lt;br/&gt;
+  dynarray_create(a, [3,19 : 4])   - indices ranges: [0 : 2,4 : 19]&lt;br/&gt;
+  dynarray_create(a, [-4 : -3,7])  - indices ranges: [-4 : -3,0 : 6]</pre>
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -106,9 +106,7 @@ it does not exist.
 </dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_top/3"><b class="pred">dynarray_top</b><var class="arglist">(+Id:atom, +Dim:int, -Top:int)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Top</var> with the highest inserted index value on the dimension <var>Dim</var>,
 even if it has subsequently been deleted.
-
-<p>
-Upon dynarray's creation, this value is set to -1 for all dimensions.</p>
+Upon dynarray's creation, this value is set to -1 for all dimensions.
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -138,12 +136,10 @@ Upon dynarray's creation, this value is set to -1 for all dimensions.</p>
 
 </dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_cells/3"><b class="pred">dynarray_cells</b><var class="arglist">(+Id:atom, +Dim:int, -CellCount:int)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>CellCount</var> with the number of cells in the dimension <var>Dim</var>.
-
-<p>
 The cell values are stored in the dynamic predicate
 <code>dynarr_dims(Id, DimI, DimSizeI)</code>. For the special instance <var>Dim0</var>,
 this list of lists is stored:<br>
-[[DimSizeI,I],...,[DimSizeK,K]] (in ascending order by <var>DimSizeI</var>).</p>
+[[DimSizeI,I],...,[DimSizeK,K]] (in ascending order by <var>DimSizeI</var>).
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -176,9 +172,7 @@ this list of lists is stored:<br>
 
 <p>
 Dynarrays may be sparsed, i.e., they may have cells not holding values,
-but attempts to retrieve the value of an empty cell will fail.</p>
-
-<p>
+but attempts to retrieve the value of an empty cell will fail.
 Dynarray values are stored in the dynamic predicate
 <code>dynarr_vaLues(Position, Id, Value)</code>.</p>
 
@@ -214,17 +208,17 @@ but attempts to retrieve value of an empty cell will fail.</p>
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_label/3"><b class="pred">dynarray_label</b><var class="arglist">(+Id:atom, ?Label:atom, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value associated with <var>Label</var>.
-
-<p>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_label/3"><b class="pred">dynarray_label</b><var class="arglist">(+Id:atom, +Label:atom, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Value</var> with the value associated with <var>Label</var>.
 This allows atoms to stand for indices. <var>Label</var> values are stored in the
-dynamic predicate <code>dynarr_labels(Id, Label, Value)</code>.</p>
+dynamic predicate <code>dynarr_labels(Id, Label, Value)</code>.
 
 <p>
-The following are the read-only private labels in use:<br>
-da_cells - number of cells in the dynarray<br>
-da_dims - number of dimensions in the dynarray<br>
-da_ranges - dimension ranges data used at the dynarray's creation&lt;br/&gt;</p>
+The following are the read-only private labels in use:</p>
+
+<pre class="code" ext="">
+  da_cells  - number of cells in the dynarray
+  da_dims   - number of dimensions in the dynarray
+  da_ranges - dimension ranges data used at the dynarray's creation</pre>
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -239,7 +233,8 @@ da_ranges - dimension ranges data used at the dynarray's creation&lt;br/&gt;</p>
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_find/3"><b class="pred">dynarray_find</b><var class="arglist">(+Id:atom, ?Indices:list, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Indices</var> or <var>Value</var> with an occurrence of <var>Indices</var> or <var>Value</var> in the
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_find/3"><b class="pred">dynarray_find</b><var class="arglist">(+Id:atom, +Indices:list, -Value:data)</var></a> is <b class="det">semidet</b></dt>
+<dt class="pubdef"><b class="pred">dynarray_find</b><var class="arglist">(+Id:atom, -Indices:list, +Value:data)</var> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Indices</var> or <var>Value</var> with an occurrence of <var>Indices</var> or <var>Value</var> in the
 dynarray, respectively. Fail if no such value or indices exist.
 
 <dl class="tags">
@@ -255,7 +250,8 @@ dynarray, respectively. Fail if no such value or indices exist.
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_position_find/3"><b class="pred">dynarray_position_find</b><var class="arglist">(+Id:atom, ?Position:int, ?Value:data)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Position</var> or <var>Value</var> with an occurrence of <var>Position</var> or <var>Value</var> in the
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_position_find/3"><b class="pred">dynarray_position_find</b><var class="arglist">(+Id:atom, +Position:int, -Value:data)</var></a> is <b class="det">semidet</b></dt>
+<dt class="pubdef"><b class="pred">dynarray_position_find</b><var class="arglist">(+Id:atom, -Position:int, +Value:data)</var> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Position</var> or <var>Value</var> with an occurrence of <var>Position</var> or <var>Value</var> in the
 dynarray, respectively. Fail if no such value or position exists.
 
 <dl class="tags">
@@ -302,13 +298,9 @@ space taken. Fail if no such cell exists.
 
 </dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_list/2"><b class="pred">dynarray_list</b><var class="arglist">(+Id:atom, ?List:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify the cells of the dynarray with the values in <var>List</var>.
-
-<p>
-A 1-dimension dynarray sized to hold all the list elements may be created.</p>
-
-<p>
+A 1-dimension dynarray sized to hold all the list elements may be created.
 Note that this is not a serialization mechanism, and as such it should not
-be used for backup/restore purposes.</p>
+be used for backup/restore purposes.
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -322,7 +314,7 @@ be used for backup/restore purposes.</p>
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_fill/2"><b class="pred">dynarray_fill</b><var class="arglist">(+Id:atom, +Value:data)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify all of the cells of the dynarray with <var>Value</var>.
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_fill/2"><b class="pred">dynarray_fill</b><var class="arglist">(+Id:atom, +Value:data)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify all the cells of the dynarray with <var>Value</var>.
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
@@ -336,7 +328,8 @@ be used for backup/restore purposes.</p>
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_position_indices/3"><b class="pred">dynarray_position_indices</b><var class="arglist">(+Id:atom, ?Position:int, ?Indices:list)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Position</var> or <var>Indices</var> with the corresponding <var>Position</var> or <var>Indices</var>,
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_position_indices/3"><b class="pred">dynarray_position_indices</b><var class="arglist">(+Id:atom, +Position:int, -Indices:list)</var></a> is <b class="det">semidet</b></dt>
+<dt class="pubdef"><b class="pred">dynarray_position_indices</b><var class="arglist">(+Id:atom, -Position:int, +Indices:list)</var> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Position</var> or <var>Indices</var> with the corresponding <var>Position</var> or <var>Indices</var>,
 respectively.
 
 <dl class="tags">

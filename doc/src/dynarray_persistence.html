@@ -22,24 +22,26 @@ Additionally, persisting and restoring from `.csv` files is also implemented.
 Please, refer to the <code class="nofile">csv_wrapper.pl</code> for details.</p>
 
 <p>
-The following considerations apply for CSV operations:<br>
-a. the dynarray involved must be 2-dimensional, and will be handled as having
-rows (dimension 1) and columns (dimension 2);<br>
-b. the stream involved must be of type 'text', and will be read or written from
-its current position;<br>
-c. persisting to, or restoring from, the given stream will be attempted,
-depending on whether or not the dynarray exists;<br>
-d. input and output are performed through the Prolog platform's built-in CSV
-library;<br>
-e. when persisting, the atoms associated with the dynarray's columns, if they
-exist, will be used as field names in the CSV file's header record;<br>
-f. when persisting, the data registered as labels, apart from the column names,
-will not be included;<br>
-g. when persisting, missing cells will be recorded on the CSV file as empty fields
-(containing the null char '\000\');<br>
-h. when restoring, an attempt will be made to extract field names from the CSV
-file's first record and use them as labels; if not possible, the record will be
-treated as regular data.</p>
+The following considerations apply for CSV operations:</p>
+
+<pre class="code" ext="">
+1. the dynarray involved must be 2-dimensional, and will be handled as having
+   rows (dimension 1) and columns (dimension 2);
+2. the stream involved must be of type 'text', and will be read or written from
+   its current position;
+3. persisting to, or restoring from, the given stream will be attempted,
+   depending on whether or not the dynarray exists;
+4. input and output are performed through the Prolog platform's built-in CSV
+   library;
+5. when persisting, the atoms associated with the dynarray's columns, if they
+   exist, will be used as field names in the CSV file's header record;
+6. when persisting, the data registered as labels, apart from the column names,
+   will not be included;
+7. when persisting, missing cells will be recorded on the CSV file as empty fields
+   (containing the null char '\000\');
+8. when restoring, an attempt will be made to extract field names from the CSV
+   file's first record and use them as labels; if not possible, the record will be
+   treated as regular data.</pre>
 
 <dl class="tags">
 <dt class="keyword-author">author</dt><dd class="keyword-author">- GT Nunes</dd>
@@ -78,13 +80,13 @@ treated as regular data.</p>
 
 </dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_serialize/2"><b class="pred">dynarray_serialize</b><var class="arglist">(+Id:atom, ?Serialized:data)</var></a> is <b class="det">det</b></dt><dd class="defbody">A serialization mechanism, for backup/restore purposes.
-
-<p>
 For a given dynarray containing <var>Nv</var> values and <var>Nb</var> labels, its serialization
-structure will be<br>
-[&lt;dims-ranges&gt;],&lt;Nb&gt;,<br>
-[&lt;key-label-1&gt;,&lt;value-label-1&gt;],...,[&lt;key-label-Nb&gt;,&lt;value-label-Nb&gt;],<br>
-[&lt;pos-value-1&gt;,&lt;value-1&gt;],...,[&lt;pos-value-Nv&gt;,&lt;value-Nv&gt;]</p>
+structure will be:
+
+<pre class="code" ext="">
+  [&lt;dims-ranges&gt;],&lt;Nb&gt;,
+  [&lt;key-label-1&gt;,&lt;value-label-1&gt;],...,[&lt;key-label-Nb&gt;,&lt;value-label-Nb&gt;],
+  [&lt;pos-value-1&gt;,&lt;value-1&gt;],...,[&lt;pos-value-Nv&gt;,&lt;value-Nv&gt;]</pre>
 
 <p>
 The serialized list will thus contain <code>Np + Nv + 2</code> elements:<br>

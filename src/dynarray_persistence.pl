@@ -1,11 +1,11 @@
 :- module(dynarray_persistence,
     [
-        dynarray_clone/2,       % dynarray_clone(+Id:atomSource, +Id:atomTarget)
-        dynarray_csv/2,         % dynarray_csv(+Id:atom, +Stream)
-        dynarray_erase/2,       % dynarray_erase(+Id:atom, +DataSet)
-        dynarray_persist/2,     % dynarray_persist(+Id:atom, +DataSet)
-        dynarray_restore/2,     % dynarray_restore(+Id:atom, +DataSet)
-        dynarray_serialize/2    % dynarray_serialize(+Id:atom, ?Serialized)
+        dynarray_clone/2,
+        dynarray_csv/2,
+        dynarray_erase/2,
+        dynarray_persist/2,
+        dynarray_restore/2,
+        dynarray_serialize/2
     ]).
 
 /** <module> Persistence for dynarray objects, using Berkeley DB
@@ -17,24 +17,26 @@ interface to Berkeley DB.
 Additionally, persisting and restoring from `.csv` files is also implemented.
 Please, refer to the csv_wrapper.pl for details.
 
-The following  considerations apply for CSV operations:<br/>
-a. the dynarray involved must be 2-dimensional, and will be handled as having
-rows (dimension 1) and columns (dimension 2);<br/>
-b. the stream involved must be of type 'text', and will be read or written from
-its current position;<br/>
-c. persisting to, or restoring from, the given stream will be attempted,
-depending on whether or not the dynarray exists;<br/>
-d. input and output are performed through the Prolog platform's built-in CSV
-library;<br/>
-e. when persisting, the atoms associated with the dynarray's columns, if they
-exist, will be used as field names in the CSV file's header record;<br/>
-f. when persisting, the data registered as labels, apart from the column names,
-will not be included;<br/>
-g. when persisting, missing cells will be recorded on the CSV file as empty fields
-(containing the null char '\000\');<br/>
-h. when restoring, an attempt will be made to extract field names from the CSV
-file's first record and use them as labels; if not possible, the record will be
-treated as regular data.
+The following  considerations apply for CSV operations:
+~~~
+1. the dynarray involved must be 2-dimensional, and will be handled as having
+   rows (dimension 1) and columns (dimension 2);
+2. the stream involved must be of type 'text', and will be read or written from
+   its current position;
+3. persisting to, or restoring from, the given stream will be attempted,
+   depending on whether or not the dynarray exists;
+4. input and output are performed through the Prolog platform's built-in CSV
+   library;
+5. when persisting, the atoms associated with the dynarray's columns, if they
+   exist, will be used as field names in the CSV file's header record;
+6. when persisting, the data registered as labels, apart from the column names,
+   will not be included;
+7. when persisting, missing cells will be recorded on the CSV file as empty fields
+   (containing the null char '\000\');
+8. when restoring, an attempt will be made to extract field names from the CSV
+   file's first record and use them as labels; if not possible, the record will be
+   treated as regular data.
+~~~
 
 @author GT Nunes
 @version 1.1.1
@@ -44,7 +46,7 @@ treated as regular data.
 
 %-------------------------------------------------------------------------------------
 
-:- if(current_prolog_flag(dialect, sicstus)).   % SICStus ----------------------------
+:- if(current_prolog_flag(dialect, sicstus)).
 
 :- use_module(library(between),
     [
@@ -73,7 +75,7 @@ treated as regular data.
         csv_output_record/2
     ]).
 
-:- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------------
+:- elif(current_prolog_flag(dialect, swi)).
 
 :- use_module(library(apply),
     [
@@ -102,7 +104,7 @@ treated as regular data.
         csv_output_record/2
     ]).
 
-:- endif.                                       % ------------------------------------
+:- endif.
 
 :- use_module('dynarray_core',
     [
@@ -268,12 +270,13 @@ load_field(Id, RowOrdinal, ColOrdinal, Field) :-
 %! dynarray_serialize(+Id:atom, ?Serialized:data) is det.
 %
 %  A serialization mechanism, for backup/restore purposes.
-%
 %  For a given dynarray containing `Nv` values and `Nb` labels, its serialization
-%  structure will be<br/>
-%    [<dims-ranges>],<Nb>,<br/>
-%    [<key-label-1>,<value-label-1>],...,[<key-label-Nb>,<value-label-Nb>],<br/>
+%  structure will be:
+%  ~~~
+%    [<dims-ranges>],<Nb>,
+%    [<key-label-1>,<value-label-1>],...,[<key-label-Nb>,<value-label-Nb>],
 %    [<pos-value-1>,<value-1>],...,[<pos-value-Nv>,<value-Nv>]
+%  ~~~
 %
 % The serialized list will thus contain `Np + Nv + 2` elements:<br/>
 %    <dims-ranges>   - the dimensions ranges used for the dynarray creation<br/>
@@ -348,12 +351,12 @@ serialized_to_dynarray(Id, Serialized) :-
     length(Serialized, ValuesFinal),
     serialized_to_values_(Id, Serialized, LabelsFinal, ValuesFinal).
 
-% serialized_to_labels_(+Id:atom, +Labels, +PosCurr, +PosFinal) is det.
+%! serialized_to_labels_(+Id:atom, +Labels, +PosCurr, +PosFinal) is det.
 %
-% @param Id      Atom identifying the dynarray
-% @param Labels  The labels (key-value pairs) to load to the dynarray
-% @param PosCurr The current label position
-% @param PosLast The last label position
+%  @param Id      Atom identifying the dynarray
+%  @param Labels  The labels (key-value pairs) to load to the dynarray
+%  @param PosCurr The current label position
+%  @param PosLast The last label position
 
 % (done)
 serialized_to_labels_(_Id, _Labels, PosFinal, PosFinal).
@@ -369,12 +372,12 @@ serialized_to_labels_(Id, Labels, PosCurr, PosFinal) :-
     PosNext is PosCurr + 1,
     serialized_to_labels_(Id, Labels, PosNext, PosFinal).
 
-% serialized_to_values_(+Id:atom, +Values, +PosCurr, +PosFinal) is det.
+%! serialized_to_values_(+Id:atom, +Values, +PosCurr, +PosFinal) is det.
 %
-% @param Id      Atom identifying the dynarray
-% @param Value   The value to load to the dynarray
-% @param PosCurr The current value position
-% @param PosLast The last value position
+%  @param Id      Atom identifying the dynarray
+%  @param Value   The value to load to the dynarray
+%  @param PosCurr The current value position
+%  @param PosLast The last value position
 
 % (done)
 serialized_to_values_(_Id, _Values, PosFinal, PosFinal).
