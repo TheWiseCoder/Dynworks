@@ -148,8 +148,10 @@ is_dynarray(Id) :-
 
 %! dynarray_top(+Id:atom, +Dim:int, -Top:int) is semidet.
 %
-%  Unify Top with the highest inserted index value on the dimension Dim, 
-%  even if it has subsequently been deleted.
+%  Unify Top with the highest inserted index value on the dimension Dim. 
+%  This holds true even if this highest index value has subsequently been deleted.
+%  Dimensions are 1-based integers, thus if Dim is specified as 0 (zero), unify
+%  Top with the list of highest indices for all dimensions, instead.
 %  Upon dynarray's creation, this value is set to -1 for all dimensions.
 %
 %  @param Id  Atom identifying the dynarray
