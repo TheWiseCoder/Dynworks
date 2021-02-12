@@ -172,31 +172,22 @@ bdb_erase(TagSet, DataSet) :-
 
 %-------------------------------------------------------------------------------------
 
-%! storage_base(+DataSet:atom, -BaseDir:atom) is det.
-%
-%  Unify BasePath with the base path for Berkeley DB's persistence files.
-%
-%  @param DataSet Atom identifying the dataset storage location fragment
-%  @param BasPath The BDB base storage directory
-
-storage_base(DataSet, BaseDir) :-
-
-    % obtain the registered base path
-    (sicstus_bdb_base(BasePath) ; BasePath = ''),
-
-    % build the base directory
-    atom_concat(BasePath, DataSet, BaseDir).
-
 %! storage_path(+TagSet:atom, +DataSet:atom, -DsPath:atom) is det.
 %
 %  Unify DsPath with the directory pointing to the DataSet / TagSet repository.
 %
 %  @param TagSet  Atom identifying the dataset
 %  @param DataSet Atom identifying the dataset storage location fragment
-%  @param DsPath  The BDB storage path: `<SWI_BDB_DIR>/<DataSet>/<TagSet>.bdb`
+%  @param DsPath  The BDB storage path
 
 storage_path(TagSet, DataSet, DsPath) :-
 
-    storage_base(DataSet, BaseDir),
-    format_to_codes('~a~a.dbd', [BaseDir,TagSet], Codes),
+    % obtain the registered base path
+    (swi_bdb_base(BasePath) ; BasePath = ''),
+
+    % build the base directory
+    atom_concat(BasePath, DataSet, BaseDir),
+
+    % build the storage path
+    format_to_codes('~a/~a.dbd', [BaseDir,TagSet], Codes),
     atom_codes(DsPath, Codes).
