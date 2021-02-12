@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*************************************************************************************
 * FILENAME / MODULE : simple_counter.pl / simple_counter
 *
 * DESCRIPTION :
@@ -22,17 +22,12 @@
 *       counter_value(+Key, ?Value)
 *
 * NOTES :
-*       None yet.
+*       Author:    GT Nunes
+*       Version:   1.2
+*       Copyright: (c) TheWiseCoder 2020-2021
+*       License:   BSD-3-Clause License
 *
-*       Copyright GT Nunes 2020.  All rights reserved.
-*
-* REVISION HISTORY :
-*
-* DATE        AUTHOR            REVISION
-* ----------  ----------------  ------------------------------------------------
-* 2020-09-26  GT Nunes          Module creation
-*
-*******************************************************************************/
+*************************************************************************************/
 
 :- module(simple_counter,
     [

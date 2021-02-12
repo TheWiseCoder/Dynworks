@@ -21,8 +21,8 @@ or more <b>TagSets</b>, and a <b>TagSet</b> is a named collection of Prolog data
 <p>
 Berkeley DB is an open-source software library intended to provide a
 high-performance embedded database for key/value data. The database storage
-is organized as a directory tree, starting with a root path apecified by the
-environment variable <b>SWI_BDB_DIR</b>, which must have been appropriately set.</p>
+is organized as a directory tree, starting with a root path specified with
+<b><a class="extmanual" href="http://www.swi-prolog.org/pldoc/man?predicate=bdb_path/1">bdb_path/1</a></b>.</p>
 
 <p>
 Being an embedded database implies that the library provides access to files
@@ -51,25 +51,17 @@ for additional instructions on how to use Berkeley DB.</p>
 
 <dl class="tags">
 <dt class="keyword-author">author</dt><dd class="keyword-author">- GT Nunes</dd>
-<dt class="keyword-version">version</dt><dd class="keyword-version">- 1.1.1</dd>
-<dt class="keyword-copyright">copyright</dt><dd class="keyword-copyright">- (c) 2020 GT Nunes</dd>
+<dt class="keyword-version">version</dt><dd class="keyword-version">- 1.2</dd>
+<dt class="keyword-copyright">copyright</dt><dd class="keyword-copyright">- (c) TheWiseCoder 2020-2021</dd>
 <dt class="keyword-license">license</dt><dd class="keyword-license">- BSD-3-Clause License</dd>
 </dl>
 
 <dl>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="bdb_base/1"><b class="pred">bdb_base</b><var class="arglist">(+DataSet:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Make sure the given <var>DataSet</var>'s base path for Berkeley DB exists.
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="bdb_base/1"><b class="pred">bdb_base</b><var class="arglist">(+BasePath:atom)</var></a> is <b class="det">det</b></dt>
+<dt class="pubdef"><b class="pred">bdb_base</b><var class="arglist">(-BasePath:atom)</var> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>BasePath</var> with the base path for Berkeley DB's persistence files.
 
-<dl class="tags">
-<dt class="tag">Arguments:</dt><dd>
-
-<table class="arglist">
-<tr><td><var>DataSet</var></td><td class="argdescr">- Atom identifying Berkeley DB's dataset</td></tr>
-</table>
-
-</dd>
-</dl>
-
-</dd>
+<p>
+<var>BasePath</var> Atom identifying the base path for Berkeley DB's persistence files</p></dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="bdb_store/3"><b class="pred">bdb_store</b><var class="arglist">(+TagSet:atom, +DataSet:atom, +Data:data)</var></a> is <b class="det">det</b></dt><dd class="defbody">Persist <var>Data</var> to external storage.
 
 <dl class="tags">

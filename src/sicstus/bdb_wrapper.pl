@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*************************************************************************************
 * FILENAME / MODULE : bdb_wrapper.pl / bdb_wrapper
 *
 * DESCRIPTION :
@@ -27,24 +27,19 @@
 *       https://manpages.debian.org/jessie/db-util/index.html .
 *
 * PUBLIC PREDICATES :
-*       bdb_base(+DataSet)
+*       bdb_base(?BasePath)
 *       bdb_erase(+DataSet)
 *       bdb_erase(+TagSet, +DataSet)
 *       bdb_retrieve(+TagSet, +DataSet, -Data)
 *       bdb_store(+TagSet, +DataSet, +Data)
 *
 * NOTES :
-*       None yet.
+*       Author:    GT Nunes
+*       Version:   1.2
+*       Copyright: (c) TheWiseCoder 2020-2021
+*       License:   BSD-3-Clause License
 *
-*       Copyright GT Nunes 2020.  All rights reserved.
-*
-* REVISION HISTORY :
-*
-* DATE        AUTHOR            REVISION
-* ----------  ----------------  ------------------------------------------------
-* 2020-08-28  GT Nunes          Module creation
-*
-*******************************************************************************/
+*************************************************************************************/
 
 :- module(bdb_wrapper,
     [
@@ -63,11 +58,6 @@
         db_store/3
     ]).
 
-:- use_module(library(codesio),
-    [
-        format_to_codes/3
-    ]).
-
 :- use_module(library(file_systems),
     [
         current_directory/2,
@@ -76,24 +66,31 @@
         make_directory/1
     ]).
 
-:- use_module(library(system),
-    [
-        environ/2
-    ]).
+:- dynamic  sicstus_bdb_base/1.
+:- volatile sicstus_bdb_base/1.
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
-% make sure the given dataset's base path for Berkeley DB exists
-% bdb_base(+DataSet)
-% DataSet   atom identifying Berkeley DB's base path fragment
-bdb_base(DataSet) :-
+% unify BasePath with the base path for Berkeley DB's persistence files
+% bdb_base(?BasePath)
+% BasePath  atom identifying the base path for Berkeley DB's persistence files
+bdb_base(BasePath) :-
 
-    % obtain the storage location for Berkeley DB
-    storage_dir(DataSet, BaseDir),
+    (var(BasePath) ->
+        sicstus_bdb_base(BasePath)
+    ;
+        % register the base path for Berkeley DB (make sure it is '/'-terminated)
+        (retract(sicstus_bdb_base(_)) ; true),
+        (sub_atom(BasePath, _, 1, 0, '/') ->
+            BdbPath = BasePath
+        ;
+            atom_concat(BasePath, '/', BdbPath)
+        ),
+        assertz(sicstus_bdb_base(BdbPath))
+    ),
 
-    % create directory, if necessary
-    (directory_exists(BaseDir) ; make_directory(BaseDir)).
-    
+    % make sure path exists
+    (directory_exists(BasePath) ; make_directory(BasePath)).
 
 % persist the given data to external storage
 % bdb_store(+TagSet, +DataSet, +Data)
@@ -190,7 +187,7 @@ bdb_erase(TagSet, DataSet) :-
     ( \+ directory_exists(BdbDir)
     ; catch(delete_directory(BdbDir, [if_nonempty(delete)]), _, fail) ).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
 % bdb_fail(+SaveDir)
 % SaveDir   the saved working directory
@@ -202,22 +199,17 @@ bdb_fail(SaveDir) :-
     % fail the Berkeley DB action
     !, fail.
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
-% Unify BaseDir with the base directory for Berkeley DB persistence.
+% Unify BaseDir with the base directory for Berkeley DB persistence files.
 
 % storage_dir(+DataSet, -BaseDir)
 % DataSet   atom identifying the dataset storage location fragment
-% BaseDir   the BDB base storage directory: <SICSTUS_BDB_DIR>/sicstus/<DataSet>/
+% BaseDir   the BDB base storage directory
 storage_dir(DataSet, BaseDir) :-
 
-    % obtain the BDB base path from the environment
-    environ('SICSTUS_BDB_DIR', BdbDir),
+    % obtain the registered base path
+    (sicstus_bdb_base(BasePath) ; BasePath = ''),
 
-    % SANITY POINT: SICSTUS_BDB_DIR may or may not be '/'-terminated
-    (sub_atom(BdbDir, _, 1, 0, '/') ->
-        format_to_codes('~a~a/', [BdbDir,DataSet], Codes)
-    ;
-        format_to_codes('~a/~a/', [BdbDir,DataSet], Codes)
-    ),
-    atom_codes(BaseDir, Codes).
+    % build the base directory
+    atom_concat(BasePath, DataSet, BaseDir).

@@ -53,28 +53,27 @@ These are their noteworthy characteristics:
 ~~~
 
 @author GT Nunes
-@version 1.1.1
-@copyright (c) 2020 GT Nunes
+@version 1.2
+@copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
 
 %-------------------------------------------------------------------------------------
 
-:- if(current_prolog_flag(dialect, sicstus)).   % SICStus ----------------------
-
+:- if(current_prolog_flag(dialect, sicstus)).
 :- use_module(library(lists),
     [
         is_list/1
     ]).
 
-:- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------
+:- elif(current_prolog_flag(dialect, swi)).
 
 :- use_module(library(apply),
     [
         maplist/2
     ]).
 
-:- endif.                                       % ------------------------------
+:- endif.
 
 :- dynamic  dynvect_labels/3,
             dynvect_values/3.

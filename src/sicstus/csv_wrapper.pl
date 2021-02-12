@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*************************************************************************************
 * FILENAME / MODULE : csv_wrapper.pl / csv_wrapper
 *
 * DESCRIPTION :
@@ -14,17 +14,12 @@
 *       csv_output_records(+Stream, +Records)
 *
 * NOTES :
-*       None yet.
+*       Author:    GT Nunes
+*       Version:   1.2
+*       Copyright: (c) TheWiseCoder 2020-2021
+*       License:   BSD-3-Clause License
 *
-*       Copyright GT Nunes 2020.  All rights reserved.
-*
-* REVISION HISTORY :
-*
-* DATE        AUTHOR            REVISION
-* ----------  ----------------  ------------------------------------------------
-* 2020-10-12  GT Nunes          Module creation
-*
-*******************************************************************************/
+*************************************************************************************/
 
 :- module(csv_wrapper,
     [
@@ -48,7 +43,7 @@
         maplist/2
     ]).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 % csv file input
 
 % retrieve all csv records from Stream
@@ -80,7 +75,7 @@ unwrap_field(Field, Value) :-
     ; float(Value, _) = Field
     ; (string(Codes) = Field , atom_codes(Value, Codes)) ).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 % csv file output
 
 % write the given csv records to Stream
@@ -116,7 +111,7 @@ wrap_field(Field, Value) :-
         Value = '\000\'
     ).
 
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
 % assert whether all fields in Record may be column names
 % csv_is_header(+Record)

@@ -11,14 +11,14 @@ a high-performance implementation of *dynamic arrays*. Make sure to complement
 it by reviewing the documentation.
 
 @author GT Nunes
-@version 1.1.1
+@version 1.2
 @copyright (c) 2020 GT Nunes
 @license BSD-3-Clause License
 */
 
 %-------------------------------------------------------------------------------------
 
-:- if(current_prolog_flag(dialect, sicstus)).   % SICStus ----------------------------
+:- if(current_prolog_flag(dialect, sicstus)).
 
 :- use_module(library(between),
     [
@@ -39,7 +39,7 @@ it by reviewing the documentation.
 read_stream(File, Records) :-
     read_records(File, Records).
 
-:- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------------
+:- elif(current_prolog_flag(dialect, swi)).
 
 :- use_module(library(apply),
     [
@@ -60,7 +60,7 @@ read_stream(File, Records) :-
 read_stream(File, Records) :-
     csv_read_stream(File, Records, []).
 
-:- endif.                                       % ------------------------------------
+:- endif.
 
 :- use_module('../src/dynarray_core',
     [

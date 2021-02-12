@@ -45,8 +45,8 @@ These are some of their noteworthy characteristics:
 ~~~
 
 @author GT Nunes
-@version 1.1.1
-@copyright (c) 2020 GT Nunes
+@version 1.2
+@copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
 

@@ -1,10 +1,10 @@
 :- module(dynvector_persistence,
     [
-        dynvector_clone/2,          % dynvector_clone(+IdSource, +IdTarget)
-        dynvector_erase/2,          % dynvector_erase(+Id, +DataSet)
-        dynvector_persist/2,        % dynvector_persist(+Id, +DataSet)
-        dynvector_restore/2,        % dynvector_restore(+Id, +DataSet)
-        dynvector_serialize/2       % dynvector_serialize(+Id, ?Serialized)
+        dynvector_clone/2,
+        dynvector_erase/2,
+        dynvector_persist/2,
+        dynvector_restore/2,
+        dynvector_serialize/2
     ]).
 
 /** <module> Persistence for dynvector objects, using Berkeley DB
@@ -14,14 +14,14 @@ utility package. For details on the SWI-Prolog interface to Berkeley DB,
 please refer to the documentation for bdb_rapper.pl .
 
 @author GT Nunes
-@version 1.1.1
-@copyright (c) 2020 GT Nunes
+@version 1.2
+@copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
 
 %-------------------------------------------------------------------------------------
 
-:- if(current_prolog_flag(dialect, sicstus)).   % SICStus ----------------------------
+:- if(current_prolog_flag(dialect, sicstus)).
 
 :- use_module('./sicstus/bdb_wrapper',
     [
@@ -30,7 +30,7 @@ please refer to the documentation for bdb_rapper.pl .
         bdb_store/3
     ]).
 
-:- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------------
+:- elif(current_prolog_flag(dialect, swi)).
 
 :- use_module('./swi/bdb_wrapper',
     [
@@ -39,7 +39,7 @@ please refer to the documentation for bdb_rapper.pl .
         bdb_store/3
     ]).
 
-:- endif.                                       % ------------------------------------
+:- endif.
 
 :- use_module(library(lists),
     [

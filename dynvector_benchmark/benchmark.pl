@@ -12,14 +12,14 @@ It will go through some significant features of the package. Make sure
 to complement it by reviewing the documentation.
 
 @author GT Nunes
-@version 1.1.1
-@copyright (c) 2020 GT Nunes
+@version 1.2
+@copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
 
 %-------------------------------------------------------------------------------------
 
-:- if(current_prolog_flag(dialect, sicstus)).   % SICStus ----------------------------
+:- if(current_prolog_flag(dialect, sicstus)).
 
 :- use_module(library(between),
     [
@@ -57,7 +57,7 @@ randseq(K, N, Set) :-
     random_numlist(P, 1, N, Ints),
     random_permutation(Ints, Set).
 
-:- elif(current_prolog_flag(dialect, swi)).     % SWI-Prolog -------------------------
+:- elif(current_prolog_flag(dialect, swi)).
 
 :- use_module(library(apply),
     [
@@ -77,11 +77,10 @@ randseq(K, N, Set) :-
         counter_value/2
     ]).
 
-:- endif.                                       % ------------------------------------
+:- endif.
 
 :- use_module('../src/dynvector_core',
     [
-        dynvector_create/1,
         dynvector_destroy/1,
         dynvector_find/3,
         dynvector_iterator_create/1,

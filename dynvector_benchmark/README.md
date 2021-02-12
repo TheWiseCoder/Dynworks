@@ -56,7 +56,7 @@ Alternatively, a counter may be used:
 % create counter 'loop', and initialize it to 0
 counter_create(loop),
 repeat,
-    % retrieve Value from counter
+    % unify Index with value from counter
     counter_value(loop, Index)
     % retrieve Value from DynvectorId at Index
     dynvector_value(DynvectorId, Index, Value),

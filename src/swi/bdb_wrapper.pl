@@ -16,8 +16,8 @@ or more *|TagSets|*, and a *|TagSet|* is a named collection of Prolog data.
 
 Berkeley DB is an open-source software library intended to provide a
 high-performance embedded database for key/value data. The database storage
-is organized as a directory tree, starting with a root path apecified by the
-environment variable *|SWI_BDB_DIR|*, which must have been appropriately set.
+is organized as a directory tree, starting with a root path specified with
+*|bdb_path/1|*.
 
 Being an embedded database implies that the library provides access to files
 containing one or more database tables. These tables are always binary,
@@ -40,8 +40,8 @@ Please, refer to https://www.swi-prolog.org/pldoc/doc/_SWI_/library/bdb.pl
 for additional instructions on how to use Berkeley DB.
 
 @author GT Nunes
-@version 1.1.1
-@copyright (c) 2020 GT Nunes
+@version 1.2
+@copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
 
@@ -57,21 +57,35 @@ for additional instructions on how to use Berkeley DB.
         delete_directory_and_contents/1
     ]).
 
+:- dynamic  swi_bdb_base/1.
+:- volatile swi_bdb_base/1.
+
 %-------------------------------------------------------------------------------------
 
-%! bdb_base(+DataSet:atom) is det.
+%! bdb_base(+BasePath:atom) is det.
+%! bdb_base(-BasePath:atom) is semidet.
 %
-%  Make sure the given DataSet's base path for Berkeley DB exists.
+%  Unify BasePath with the base path for Berkeley DB's persistence files.
 %
-%  @param DataSet Atom identifying Berkeley DB's dataset
+% BasePath Atom identifying the base path for Berkeley DB's persistence files
 
-bdb_base(DataSet) :-
+bdb_base(BasePath) :-
 
-    % obtain the storage location for Berkeley DB
-    storage_base(DataSet, BaseDir),
+    (var(BasePath) ->
+        swi_bdb_base(BasePath)
+    ;
+        % register the base path for Berkeley DB (make sure it is '/'-terminated)
+        (retract(swi_bdb_base(_)) ; true),
+        (sub_atom(BasePath, _, 1, 0, '/') ->
+            BdbPath = BasePath
+        ;
+            atom_concat(BasePath, '/', BdbPath)
+        ),
+        assertz(swi_bdb_base(BdbPath))
+    ),
 
-    % create directory, if necessary
-    (exists_directory(BaseDir) ; make_directory(BaseDir)).
+    % make sure path exists
+    (directory_exists(BasePath) ; make_directory(BasePath)).
 
 %! bdb_store(+TagSet:atom, +DataSet:atom, +Data:data) is det.
 %
@@ -160,23 +174,18 @@ bdb_erase(TagSet, DataSet) :-
 
 %! storage_base(+DataSet:atom, -BaseDir:atom) is det.
 %
-%  Unify BaseDir with the base directory pointing to the DataSet repository.
+%  Unify BasePath with the base path for Berkeley DB's persistence files.
 %
 %  @param DataSet Atom identifying the dataset storage location fragment
-%  @param BaseDir The BDB base storage directory: <SWI_BDB_DIR>/<DataSet>/
+%  @param BasPath The BDB base storage directory
 
 storage_base(DataSet, BaseDir) :-
 
-    % obtain the BDB base path from the environment
-    getenv('SWI_BDB_DIR', BdbDir),
+    % obtain the registered base path
+    (sicstus_bdb_base(BasePath) ; BasePath = ''),
 
-    % SANITY POINT: SWI_BDB_DIR may or may not be '/'-terminated
-    (sub_atom(BdbDir, _, 1, 0, '/') ->
-        format_to_codes('~a~a/', [BdbDir,DataSet], Codes)
-    ;
-        format_to_codes('~a/~a/', [BdbDir,DataSet], Codes)
-    ),
-    atom_codes(BaseDir, Codes).
+    % build the base directory
+    atom_concat(BasePath, DataSet, BaseDir).
 
 %! storage_path(+TagSet:atom, +DataSet:atom, -DsPath:atom) is det.
 %

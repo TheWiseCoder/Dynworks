@@ -19,8 +19,8 @@ to be used in different Prolog environments. This module implements this
 standard for the SWI-Prolog platform.
 
 @author GT Nunes
-@version 1.1.1
-@copyright (c) 2020 GT Nunes
+@version 1.2
+@copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
 
@@ -118,7 +118,7 @@ csv_output_record(Stream, Record, Options) :-
 
     (memberchk(functor(Functor), Options) ; Functor = row),
     Row =.. [Functor|Record],
-    csv_write_stream(Stream, Row, Options).
+    csv_write_stream(Stream, [Row], Options).
 
 %-------------------------------------------------------------------------------------
 
@@ -141,9 +141,9 @@ csv_output_records(Stream, Records) :-
 %  @param Options The output options
 
 csv_output_records(Stream, Records, Options) :-
-    maplist(csv_output_record_(Stream, Options), Records).
+    maplist(csv_output_records_(Stream, Options), Records).
 
-csv_output_record_(Stream, Options, Record) :-
+csv_output_records_(Stream, Options, Record) :-
     csv_output_record(Stream, Record, Options).
 
 %-------------------------------------------------------------------------------------
