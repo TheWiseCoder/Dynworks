@@ -201,8 +201,7 @@ bdb_fail(SaveDir) :-
 
 %-------------------------------------------------------------------------------------
 
-% Unify BaseDir with the base directory for Berkeley DB persistence files.
-
+% unify BaseDir with the '/'-terminated base directory for Berkeley DB files
 % storage_dir(+DataSet, -BaseDir)
 % DataSet   atom identifying the dataset storage location fragment
 % BaseDir   the BDB base storage directory
@@ -211,5 +210,10 @@ storage_dir(DataSet, BaseDir) :-
     % obtain the registered base path
     (sicstus_bdb_base(BasePath) ; BasePath = ''),
 
-    % build the base directory
-    atom_concat(BasePath, DataSet, BaseDir).
+    % build the '/'-terminated base directory
+    (sub_atom(DataSet, _, 1, 0, '/') ->
+       atom_concat(BasePath, DataSet, BaseDir)
+    ;
+       atom_concat(DataSet, '/', SetAdjusted),
+       atom_concat(BasePath, SetAdjusted, BaseDir)
+    ).
