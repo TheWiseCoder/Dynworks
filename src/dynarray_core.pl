@@ -6,6 +6,7 @@
         dynarray_delete/2,
         dynarray_destroy/1,
         dynarray_dims/2,
+        dynarray_elements/2,
         dynarray_fill/2,
         dynarray_find/3,
         dynarray_label/3,
@@ -146,6 +147,18 @@ is_dynarray(Id) :-
 
 %-------------------------------------------------------------------------------------
 
+%! dynarray_dims(+Id:atom, -DimCount:int) is det.
+%
+%  Unify DimCount with the number of dimensions in the dynarray.
+%
+%  @param Id       Atom identifying the dynarray
+%  @param DimCount The number of dimensions in the dynarray
+
+dynarray_dims(Id, DimCount) :-
+    dynarr_labels(Id, da_dims, DimCount).
+
+%-------------------------------------------------------------------------------------
+
 %! dynarray_top(+Id:atom, +Dim:int, -Top:int) is semidet.
 %
 %  Unify Top with the highest inserted index value on the dimension Dim. 
@@ -193,15 +206,45 @@ dynarray_cells(Id, Dim, CellCount) :-
 
 %-------------------------------------------------------------------------------------
 
-%! dynarray_dims(+Id:atom, -DimCount:int) is det.
+%! dynarray_elements(+Id:atom, -ElementsCount:int) is det.
 %
-%  Unify DimCount with the number of dimensions in the dynarray.
+%  Unify ElementsCount with the number of elements in the dynarray. This might be
+%  a very costly operation, as the elements are counted by fully traversing the
+%  dynarray space. 
 %
-%  @param Id       Atom identifying the dynarray
-%  @param DimCount The number of dimensions in the dynarray
+%  @param Id            Atom identifying the dynarray
+%  @param ElementsCount The number of elements in the dynarray
 
-dynarray_dims(Id, DimCount) :-
-    dynarr_labels(Id, da_dims, DimCount).
+dynarray_elements(Id, ElementsCount) :-
+
+    % retrieve the list of the highest 0-based indices in use
+    dynarr_tops(Id, 0, Tops),
+
+    % obtain the highest linear position for dynarray elements
+    dynarray_offset(Id, Tops, TopsOffset),
+    dynarray_position_indices(Id, LastPosition, TopsOffset),
+
+    % count the elements, by traversing the dynarray space in reverse position order
+    dynarray_elements_(Id, LastPosition, 0, ElementsCount).
+
+% (done)
+dynarray_elements_(_Id, -1, CountFinal, CountFinal).
+
+% iterate
+dynarray_elements_(Id, Position, CountProgress, CountFinal) :-
+
+    % is there an element at this position ?
+    (dynarray_position_value(Id, Position, _) ->
+        % yes, so increment the count
+        CountRevised is CountProgress + 1
+    ;
+        % no, so proceed
+        CountRevised = CountProgress
+    ),
+
+    % go for the next position
+    PositionNext is Position - 1,
+    dynarray_elements_(Id, PositionNext, CountRevised, CountFinal).
 
 %-------------------------------------------------------------------------------------
 
@@ -642,8 +685,8 @@ dynarray_factors(Id, CellCount) :-
 %  @param DimCount        Number of dynarray dimensions
 %  @param CompoundFactor  Current compound factor
 %  @param DimsSizes       List of dimensions and its sizes
-%  param CountProgress    Working number of dynarray elements
-%  @param CountFinal      Final number of dynarray elements
+%  param CountProgress    Working number of dynarray cells
+%  @param CountFinal      Final number of dynarray cells
 %  @param FactorsProgress The working dimension factors
 %  @param FactorsFinal    The final dimension factors
 

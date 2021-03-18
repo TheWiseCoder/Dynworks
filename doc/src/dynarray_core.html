@@ -104,6 +104,20 @@ it does not exist.
 </dl>
 
 </dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_dims/2"><b class="pred">dynarray_dims</b><var class="arglist">(+Id:atom, -DimCount:int)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify <var>DimCount</var> with the number of dimensions in the dynarray.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>DimCount</var></td><td class="argdescr">- The number of dimensions in the dynarray</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_top/3"><b class="pred">dynarray_top</b><var class="arglist">(+Id:atom, +Dim:int, -Top:int)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Top</var> with the highest inserted index value on the dimension <var>Dim</var>.
 This holds true even if this highest index value has subsequently been deleted.
 Dimensions are 1-based integers, thus if <var>Dim</var> is specified as 0 (zero), unify
@@ -156,14 +170,16 @@ this list of lists is stored:<br>
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_dims/2"><b class="pred">dynarray_dims</b><var class="arglist">(+Id:atom, -DimCount:int)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify <var>DimCount</var> with the number of dimensions in the dynarray.
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_elements/2"><b class="pred">dynarray_elements</b><var class="arglist">(+Id:atom, -ElementsCount:int)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify <var>ElementsCount</var> with the number of elements in the dynarray. This might be
+a very costly operation, as the elements are counted by fully traversing the
+dynarray space.
 
 <dl class="tags">
 <dt class="tag">Arguments:</dt><dd>
 
 <table class="arglist">
 <tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
-<tr><td><var>DimCount</var></td><td class="argdescr">- The number of dimensions in the dynarray</td></tr>
+<tr><td><var>ElementsCount</var></td><td class="argdescr">- The number of elements in the dynarray</td></tr>
 </table>
 
 </dd>
