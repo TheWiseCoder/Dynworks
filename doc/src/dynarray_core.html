@@ -118,10 +118,10 @@ it does not exist.
 </dl>
 
 </dd>
-<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_top/3"><b class="pred">dynarray_top</b><var class="arglist">(+Id:atom, +Dim:int, -Top:int)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Top</var> with the highest inserted index value on the dimension <var>Dim</var>.
-This holds true even if this highest index value has subsequently been deleted.
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_top/3"><b class="pred">dynarray_top</b><var class="arglist">(+Id:atom, +Dim:int, -Top:int)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Top</var> with the highest inserted index on the dimension <var>Dim</var>.
+This holds true even if this highest index has subsequently been deleted.
 Dimensions are 1-based integers, thus if <var>Dim</var> is specified as 0 (zero), unify
-<var>Top</var> with the list of highest indices for all dimensions, instead.
+<var>Top</var> with the list of the highest indices for all dimensions, instead.
 Upon dynarray's creation, this value is set to -1 for all dimensions.
 
 <dl class="tags">
@@ -131,6 +131,22 @@ Upon dynarray's creation, this value is set to -1 for all dimensions.
 <tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
 <tr><td><var>Dim</var></td><td class="argdescr">- 1-based dimension ordinal, or 0 for all top indices</td></tr>
 <tr><td><var>Top</var></td><td class="argdescr">- Value of the highest index</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynarray_position_top/2"><b class="pred">dynarray_position_top</b><var class="arglist">(+Id:atom, -Top:int)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify <var>Top</var> with the highest inserted 0-based linear position. This holds true
+even if the element at this highest linear position has subsequently been deleted.
+Unify <var>Top</var> with -1 If no element has been inserted.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+<tr><td><var>Top</var></td><td class="argdescr">- Value of the highest linear position</td></tr>
 </table>
 
 </dd>

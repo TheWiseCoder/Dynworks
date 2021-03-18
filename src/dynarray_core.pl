@@ -16,6 +16,7 @@
         dynarray_position_delete/2,
         dynarray_position_find/3,
         dynarray_position_indices/3,
+        dynarray_position_top/2,
         dynarray_position_value/3,
         is_dynarray/1
     ]).
@@ -161,10 +162,10 @@ dynarray_dims(Id, DimCount) :-
 
 %! dynarray_top(+Id:atom, +Dim:int, -Top:int) is semidet.
 %
-%  Unify Top with the highest inserted index value on the dimension Dim. 
-%  This holds true even if this highest index value has subsequently been deleted.
+%  Unify Top with the highest inserted index on the dimension Dim. 
+%  This holds true even if this highest index has subsequently been deleted.
 %  Dimensions are 1-based integers, thus if Dim is specified as 0 (zero), unify
-%  Top with the list of highest indices for all dimensions, instead.
+%  Top with the list of the highest indices for all dimensions, instead.
 %  Upon dynarray's creation, this value is set to -1 for all dimensions.
 %
 %  @param Id  Atom identifying the dynarray
@@ -176,6 +177,24 @@ dynarray_top(Id, Dim, Top) :-
     % fail points
     Dim >= 0,
     dynarr_tops(Id, Dim, Top).
+
+%! dynarray_position_top(+Id:atom, -Top:int) is det.
+%
+%  Unify Top with the highest inserted 0-based linear position. This holds true
+%  even if the element at this highest linear position has subsequently been deleted.
+%  Unify Top with -1 If no element has been inserted.
+%
+%  @param Id  Atom identifying the dynarray
+%  @param Top Value of the highest linear position
+
+dynarray_position_top(Id, Top) :-
+
+    % obtain the offset-adjusted list of the highest 0-based indices used
+    dynarr_tops(Id, 0, Tops),
+    dynarray_offset(Id, Tops, TopsOffset),
+
+    % obtain the corresponding linear position
+    dynarray_position_indices(Id, Top, TopsOffset).
 
 %-------------------------------------------------------------------------------------
 
@@ -217,12 +236,8 @@ dynarray_cells(Id, Dim, CellCount) :-
 
 dynarray_elements(Id, ElementsCount) :-
 
-    % retrieve the list of the highest 0-based indices in use
-    dynarr_tops(Id, 0, Tops),
-
-    % obtain the highest linear position for dynarray elements
-    dynarray_offset(Id, Tops, TopsOffset),
-    dynarray_position_indices(Id, LastPosition, TopsOffset),
+    % obtain the highest 0-based linear position in use
+    dynarray_position_top(Id, LastPosition),
 
     % count the elements, by traversing the dynarray space in reverse position order
     dynarray_elements_(Id, LastPosition, 0, ElementsCount).
