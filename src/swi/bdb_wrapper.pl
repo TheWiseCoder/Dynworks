@@ -85,7 +85,7 @@ bdb_base(BasePath) :-
     ),
 
     % make sure path exists
-    (directory_exists(BasePath) ; make_directory(BasePath)).
+    (exists_directory(BasePath) ; make_directory(BasePath)).
 
 %! bdb_store(+TagSet:atom, +DataSet:atom, +Data:data) is det.
 %
