@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>quicksort.pl -- Binary search on sorted lists</title>
+
+<link rel="stylesheet" type="text/css" href="../pldoc.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+
+
+<h1 class="file"><span style="float:right"></span>quicksort.pl -- Binary search on sorted lists</h1>
+
+<p>
+An implementation of the classic <var>Quicksort</var> sorting algorithm on generic lists.
+<var>Quicksort</var> works by selecting a 'pivot' element from the list to be sorted and
+partitioning the other elements into two sublists, according to whether they are
+less than or greater than the pivot.The sublists are then sorted recursively.
+For a description of the quicksort algorithm, see
+<a href="https://en.wikipedia.org/wiki/Quicksort">https://en.wikipedia.org/wiki/Quicksort</a> .<br>
+This implementation takes as input a <code>comparator</code>. This is a predicate able to
+perform a comparison between any two elements of the input list as parameters,
+and return a negative number, zero, or a positive number, to indicate whether the
+first parameter is smaller than, equal to, or greater than the second parameter,
+respectively.</p>
+
+<dl class="tags">
+<dt class="keyword-author">author</dt><dd class="keyword-author">- GT Nunes</dd>
+<dt class="keyword-version">version</dt><dd class="keyword-version">- 1.2</dd>
+<dt class="keyword-copyright">copyright</dt><dd class="keyword-copyright">- (c) TheWiseCoder 2020-2021</dd>
+<dt class="keyword-license">license</dt><dd class="keyword-license">- BSD-3-Clause License</dd>
+</dl>
+
+<dl>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="quicksort/3"><b class="pred">quicksort</b><var class="arglist">(+List:list, :Comparator:pred, -SortedList:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Sort the contents of <var>List</var> according to the given comparison predicate,
+and unify the result with <var>SortedList</var>.&lt;/br&gt;
+The comparison predicate must accept two parameters, <var>ValueX</var> and <var>ValueY</var>,
+which might be any two elements in <var>List</var>, and have the following behavior:
+
+<pre class="code" ext="">
+&lt;Comparator&gt;(+ValueX, +ValueY, -Result:number) is det
+where Result is unified with
+  a) 0 (zero)          - ValueX is equal to ValueY
+  b) a negative number - ValueX is less than ValueY
+  c) a positive number - ValueX is greater than ValueY</pre>
+
+<p>
+The criteria that will determine the results of the comparisons are entirely up
+to <var>Comparator</var>, and as such it must be able to handle the values it will receive.
+Nothing is done if <var>List</var> has less than 2 elements.</p>
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>List</var></td><td class="argdescr">- The list to be sorted</td></tr>
+<tr><td><var>Comparator</var></td><td class="argdescr">- Predicate to perform comparisons between any two elements in <var>List</var></td></tr>
+<tr><td><var>SortedList</var></td><td class="argdescr">- The resulting sorted list</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+</body>
+</html>

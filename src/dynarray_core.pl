@@ -11,8 +11,11 @@
         dynarray_find/3,
         dynarray_label/3,
         dynarray_list/2,
+        dynarray_sort/1,
+        dynarray_sort/2,
         dynarray_top/3,
         dynarray_value/3,
+        dynarray_version/1,
         dynarray_position_delete/2,
         dynarray_position_find/3,
         dynarray_position_indices/3,
@@ -54,10 +57,17 @@ These are some of their noteworthy characteristics:
 
 %-------------------------------------------------------------------------------------
 
+:- meta_predicate dynarray_sort(+, 3).
+
 :- use_module(library(lists),
     [
         nth1/3,
         reverse/2
+    ]).
+
+:- use_module('quicksort',
+    [
+        quicksort/3
     ]).
 
 :- dynamic  dynarr_dims/3,
@@ -145,6 +155,15 @@ dynarray_destroy(Id) :-
 
 is_dynarray(Id) :-
     dynarr_dims(Id, 0, _).
+
+%! dynarray_version(-Version:number) is det.
+%
+%  Unify Version with the current version of the dynarray implementation.
+%
+%  @param Version Dynarray implementation's current version
+
+dynarray_version(Version) :-
+    Version = 1.3.
 
 %-------------------------------------------------------------------------------------
 
@@ -307,16 +326,16 @@ dynarray_value(Id, Indices, Value) :-
 dynarray_position_value(Id, Position, Value) :-
 
     % has Value been grounded ?
-    (ground(Value) ->
-       % yes, so register value and top indices
-       dynarray_position_indices(Id, Position, Indices),
-       dynarray_value_(Id, Indices, Position, Value)
-    ;
+    (var(Value) ->
        % no, so retrieve value
        !,
        % fail point (cell might been empty)
        dynarr_values(Position, Id, Value)
-   ).
+    ;
+       % yes, so register value and top indices
+       dynarray_position_indices(Id, Position, Indices),
+       dynarray_value_(Id, Indices, Position, Value)
+    ).
 
 %! dynarray_value_(+Id:atom, +Indices:list, +Position:int, +Value:data) is semidet.
 %
@@ -482,7 +501,9 @@ dynarray_position_delete(Id, Position) :-
 
 %! dynarray_list(+Id:atom, ?List:list) is det.
 %
-%  Unify the cells of the dynarray with the values in List.
+%  Unify List with the contents of the dynarray, or the cells of the dynarray
+%  with the values in List. The dynarray may be empty. If List is grounded,
+%  the dynarray is created or erased prior to the load operation.<br/>
 %  A 1-dimension dynarray sized to hold all the list elements may be created.
 %  Note that this is not a serialization mechanism, and as such it should not
 %  be used for backup/restore purposes.
@@ -497,8 +518,17 @@ dynarray_list(Id, List) :-
         % load all values in dynarray into List
         findall(Value, dynarr_values(_Position, Id, Value), List)
     ;
-        ( (is_dynarray(Id) , retractall(dynarr_values(_, Id, _)))
-        ; (length(List, Length) , dynarray_create(Id, [Length])) ),
+        % does the dynarrays exist ?
+        (is_dynarray(Id) ->
+            % yes, so clear it
+            retractall(dynarr_values(_, Id, _))
+        ;
+            % no, so create it
+            length(List, Length),
+            dynarray_create(Id, [Length])
+        ),
+
+        % load the values in list
         list_to_dynarray_(List, Id, 0)
     ).
 
@@ -536,6 +566,96 @@ list_repeat(Count, [Elem|ListProgress], ListFinal) :-
 
     CountNext is Count - 1,
     list_repeat(CountNext, [Elem|[Elem|[ListProgress]]], ListFinal).
+
+%-------------------------------------------------------------------------------------
+
+%! dynarray_sort(+Id:atom) is det.
+%
+%  Numerically sort the contents of the dynarray, in ascending order. It must
+%  be possible to numerically compare any two elements stored in the dynarray.
+%  The dynarray indices are retrieved in dimension order, from the first dimension
+%  (left-most) to the last (right-most).<br/>
+%  In the case of a sparse dynarray, the empty cells are ignored. Nothing is done
+%  if the dynarray contains less than two elements. Depending on the volume and
+%  nature of the data stored, this may be a very expensive operation, in terms of
+%  memory and/or time consumed.<br/>
+%
+%  @param Id Atom identifying the dynarray
+
+dynarray_sort(Id) :-
+    dynarray_sort(Id, number_comparator).
+
+number_comparator(ValueX, ValueY, Cmp) :-
+
+    (ValueX < ValueY ->
+        Cmp = -1
+    ; ValueX > ValueY ->
+        Cmp = 1
+    ; otherwise ->
+        Cmp = 0
+    ).
+
+%! dynarray_sort(+Id:atom, :Comparator:pred) is det.
+%
+%  Sort the contents of the dynarray according to the given comparison predicate.
+%  The dynarray indices are retrieved in dimension order, from the first dimension
+%  (left-most) to the last (right-most).<br/>
+%  The comparison predicate must accept two parameters, `ValueX` and `ValueY`,
+%  and have the following behavior:
+%  ~~~
+%  <Comparator>(+ValueX, +ValueY, -Result:number) is det
+%  where Result is unified with
+%    a) 0 (zero)          - ValueX is equal to ValueY
+%    b) a negative number - ValueX is less than ValueY
+%    c) a positive number - ValueX is greater than ValueY
+%  ~~~
+%
+%  The criteria that will determine the results of the comparisons are entirely
+%  up to `Comparator`, and as such it must be able to handle all the values
+%  it receives.<br/>
+%  In the case of a sparse dynarray, the empty cells are ignored. Nothing is done
+%  if the dynarray contains less than two elements. Depending on the volume and
+%  nature of the data stored, this may be a very expensive operation, in terms of
+%  memory and/or time consumed.<br/>
+%
+%  @param Id         Atom identifying the dynarray
+%  @param Comparator Predicate to perform comparisons between two values
+
+dynarray_sort(Id, Comparator) :-
+
+    % retrieve all values (position-value pairs) in dynarray
+    findall([Posx,Val], dynarr_values(Posx, Id, Val), PositionsValues),
+
+    % does the dynarray contain more than one element ?
+    length(PositionsValues, Count),
+    (Count > 1 ->
+        % yes, so sort its values using the given comparator
+        pairs_to_lists(PositionsValues, [], Positions, [], Values),
+        quicksort(Values, Comparator, SortedValues),
+
+        % backtrack until Positions is exausted
+        nth1(Pos, Positions, Position),
+        nth1(Pos, SortedValues, Value),
+
+        % replace the value at the cell
+        retract(dynarr_values(Position, Id, _)),
+        assertz(dynarr_values(Position, Id, Value)),
+
+        % fail point
+        Pos = Count
+    ;
+        % no, so just exit
+        true
+    ).
+
+% (done)
+pairs_to_lists([], Final1st, Final1st, Final2nd, Final2nd).
+
+% (iterate)
+pairs_to_lists([[Element1st,Element2nd]|Pairs],
+              Progress1st, Final1st, Progress2nd, Final2nd) :-
+    pairs_to_lists(Pairs, [Element1st|Progress1st], Final1st,
+                   [Element2nd|Progress2nd], Final2nd).
 
 %-------------------------------------------------------------------------------------
 

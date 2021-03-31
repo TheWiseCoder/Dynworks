@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>common</title>
+
+<link rel="stylesheet" type="text/css" href="../../pldoc.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+<body>
+
+
+<h1 class="dir">common</h1>
+
+<h2 class="wiki plfiles">Prolog files</h2>
+
+<table class="summary">
+<tr><th colspan="3" class="file"><span style="float:left"><a href="quicksort.html">quicksort.pl</a></span>&nbsp; -- Binary search on sorted lists<span style="float:right"></span></th></tr>
+<tr class="public"><td><a href="quicksort.html#quicksort/3">quicksort/3</a></td><td class="summary">Sort the contents of List according to the given comparison predicate, and unify the result with SortedList.&lt;/br&gt; The comparison predicate must accept two parameters, <var>ValueX</var> and <var>ValueY</var>, which might be any two elements in List, and have the following behavior: ~~~ &lt;Comparator&gt;(+ValueX, +ValueY, -Result:number) is det where Result is unified with a) 0 (zero) - ValueX is equal to ValueY b) a negative number - ValueX is less than ValueY c) a positive number - ValueX is greater than ValueY ~~~ The criteria that will determine the results of the comparisons are entirely up to Comparator, and as such it must be able to handle the values it will receive.</td><td align="right"><span style="white-space: nowrap"></span></td></tr>
+</table>
+
+</body>
+</html>

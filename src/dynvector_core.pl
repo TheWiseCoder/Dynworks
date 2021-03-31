@@ -9,8 +9,11 @@
         dynvector_insert/3,
         dynvector_label/3,
         dynvector_list/2,
+        dynvector_sort/1,
+        dynvector_sort/2,
         dynvector_top/2,
         dynvector_value/3,
+        dynvector_version/1,
         is_dynvector/1,
 
         dynvector_iterator_append/2,
@@ -60,9 +63,13 @@ These are their noteworthy characteristics:
 
 %-------------------------------------------------------------------------------------
 
+:- meta_predicate dynvector_sort(+, 3).
+
 :- if(current_prolog_flag(dialect, sicstus)).
+
 :- use_module(library(lists),
     [
+        nth1/3,
         is_list/1
     ]).
 
@@ -73,7 +80,17 @@ These are their noteworthy characteristics:
         maplist/2
     ]).
 
+:- use_module(library(lists),
+    [
+        nth1/3
+    ]).
+
 :- endif.
+
+:- use_module('quicksort',
+    [
+        quicksort/3
+    ]).
 
 :- dynamic  dynvect_labels/3,
             dynvect_values/3.
@@ -127,6 +144,15 @@ dynvector_destroy(Id) :-
 
 is_dynvector(Id) :-
     dynvect_labels(Id, dv_top, _).
+
+%! dynvector_version(-Version:number) is det.
+%
+%  Unify Version with the current version of the dynvector implementation.
+%
+%  @param Version Dynvector implementation's current version
+
+dynvector_version(Version) :-
+    Version = 1.3.
 
 %-------------------------------------------------------------------------------------
 
@@ -451,6 +477,93 @@ dynvector_fill_(Id, Value, Index, Count) :-
     % go for thew next index
     IndexNext is Index + 1,
     dynvector_fill_(Id, Value, IndexNext, Count).
+
+%-------------------------------------------------------------------------------------
+
+%! dynvector_sort(+Id:atom) is det.
+%
+%  Numerically sort the contents of the dynvector, in ascending order. It must
+%  be possible to numerically compare any two elements stored in the dynvector.
+%  In the case of a sparse dynvector, the empty cells are ignored. Nothing is done
+%  if the dynvector contains less than two elements. Depending on the volume and
+%  nature of the data stored, this may be a very expensive operation, in terms of
+%  memory and/or time consumed.<br/>
+%
+%  @param Id Atom identifying the dynarray
+
+dynvector_sort(Id) :-
+    dynvector_sort(Id, number_comparator).
+
+number_comparator(ValueX, ValueY, Result) :-
+
+    (ValueX < ValueY ->
+        Result = -1
+    ; ValueX > ValueY ->
+        Result = 1
+    ; otherwise ->
+        Result = 0
+    ).
+
+%! dynvector_sort(+Id:atom, :Comparator:pred) is det.
+%
+%  Sort the contents of the dynvector according to the given comparison predicate.
+%  The comparison predicate must accept two parameters, `ValueX` and `ValueY`,
+%  and have the following behavior:
+%  ~~~
+%  <Comparator>(+ValueX, +ValueY, -Result:number) is det
+%  where Result is unified with
+%    a) 0 (zero)          - ValueX is equal to ValueY
+%    b) a negative number - ValueX is less than ValueY
+%    c) a positive number - ValueX is greater than ValueY
+%  ~~~
+%
+%  The criteria that will determine the results of the comparisons are entirely
+%  up to `Comparator`, and as such it must be able to handle all the values
+%  it receives.<br/>
+%  In the case of a sparse dynvector, the empty cells are ignored. Nothing is done
+%  if the dynvector contains less than two elements. Depending on the volume and
+%  nature of the data stored, this may be a very expensive operation, in terms of
+%  memory and/or time consumed.<br/>
+%
+%  @param Id         Atom identifying the dynvector
+%  @param Comparator Predicate to perform comparisons between two values
+
+dynvector_sort(Id, Comparator) :-
+
+    % retrieve all values (index-value pairs) in dynvector
+    findall([Inx,Val], dynvect_values(Inx, Id, Val), IndicesValues),
+
+    % does the dynvector contain more than one element ?
+    length(IndicesValues, Count),
+    (Count > 1 ->
+        % yes, so sort its values using the given comparator
+        pairs_to_lists(IndicesValues, [], Indices, [], Values),
+        quicksort(Values, Comparator, SortedValues),
+
+%>>> backtrack until Indices is exausted
+        nth1(Pos, Indices, Index),
+        nth1(Pos, SortedValues, Value),
+
+        % replace the value at the cell
+        retract(dynvect_values(Index, Id, _)),
+        assertz(dynvect_values(Index, Id, Value)),
+
+        % fail point
+        Pos = Count
+%<<<
+    ;
+        % no, so just exit
+        true
+    ).
+
+% (done)
+pairs_to_lists([], Final1st, Final1st, Final2nd, Final2nd).
+
+% (iterate)
+pairs_to_lists([[Element1st,Element2nd]|Pairs],
+              Progress1st, Final1st, Progress2nd, Final2nd) :-
+    pairs_to_lists(Pairs, [Element1st|Progress1st], Final1st,
+                   [Element2nd|Progress2nd], Final2nd).
 
 %-------------------------------------------------------------------------------------
 

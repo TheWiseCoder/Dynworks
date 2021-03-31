@@ -83,6 +83,19 @@ it does not exist.
 </dl>
 
 </dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_version/1"><b class="pred">dynvector_version</b><var class="arglist">(-Version:number)</var></a> is <b class="det">det</b></dt><dd class="defbody">Unify <var>Version</var> with the current version of the dynvector implementation.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Version</var></td><td class="argdescr">- Dynvector implementation's current version</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_top/2"><b class="pred">dynvector_top</b><var class="arglist">(+Id:atom, -Top:int)</var></a> is <b class="det">semidet</b></dt><dd class="defbody">Unify <var>Top</var> with the highest inserted index value in the dynvector, even if it has
 subsequently been deleted. Upon dynvector's creation, this value is set to -1.
 
@@ -231,6 +244,56 @@ backup/restore purposes.
 <table class="arglist">
 <tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynvector</td></tr>
 <tr><td><var>Value</var></td><td class="argdescr">- <var>Value</var> to unify the dynvector cells with</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_sort/1"><b class="pred">dynvector_sort</b><var class="arglist">(+Id:atom)</var></a> is <b class="det">det</b></dt><dd class="defbody">Numerically sort the contents of the dynvector, in ascending order. It must
+be possible to numerically compare any two elements stored in the dynvector.
+In the case of a sparse dynvector, the empty cells are ignored. Nothing is done
+if the dynvector contains less than two elements. Depending on the volume and
+nature of the data stored, this may be a very expensive operation, in terms of
+memory and/or time consumed.&lt;br/&gt;
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynarray</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="dynvector_sort/2"><b class="pred">dynvector_sort</b><var class="arglist">(+Id:atom, :Comparator:pred)</var></a> is <b class="det">det</b></dt><dd class="defbody">Sort the contents of the dynvector according to the given comparison predicate.
+The comparison predicate must accept two parameters, <var>ValueX</var> and <var>ValueY</var>,
+and have the following behavior:
+
+<pre class="code" ext="">
+&lt;Comparator&gt;(+ValueX, +ValueY, -Result:number) is det
+where Result is unified with
+  a) 0 (zero)          - ValueX is equal to ValueY
+  b) a negative number - ValueX is less than ValueY
+  c) a positive number - ValueX is greater than ValueY</pre>
+
+<p>
+The criteria that will determine the results of the comparisons are entirely
+up to <var>Comparator</var>, and as such it must be able to handle all the values
+it receives.<br>
+In the case of a sparse dynvector, the empty cells are ignored. Nothing is done
+if the dynvector contains less than two elements. Depending on the volume and
+nature of the data stored, this may be a very expensive operation, in terms of
+memory and/or time consumed.&lt;br/&gt;</p>
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>Id</var></td><td class="argdescr">- Atom identifying the dynvector</td></tr>
+<tr><td><var>Comparator</var></td><td class="argdescr">- Predicate to perform comparisons between two values</td></tr>
 </table>
 
 </dd>
