@@ -50,7 +50,7 @@ These are some of their noteworthy characteristics:
 ~~~
 
 @author GT Nunes
-@version 1.2
+@version 1.3.1
 @copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
@@ -163,7 +163,7 @@ is_dynarray(Id) :-
 %  @param Version Dynarray implementation's current version
 
 dynarray_version(Version) :-
-    Version = 1.3.
+    Version = 1.31.
 
 %-------------------------------------------------------------------------------------
 

@@ -1,6 +1,8 @@
 :- module(quicksort,
     [
-        quicksort/3
+        quicksort/3,
+        quicksort_number_asc/3,
+        quicksort_number_desc/3
     ]).
 
 /** <module> Binary search on sorted lists
@@ -18,19 +20,20 @@ first parameter is smaller than, equal to, or greater than the second parameter,
 respectively.  
 
 @author GT Nunes
-@version 1.2
+@version 1.3.1
 @copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
 
 %-------------------------------------------------------------------------------------
 
+:- meta_predicate quicksort(+, 3, -).
 :- meta_predicate quicksort_partition(3, +, +, +, +).
 
 %! quicksort(+List:list, :Comparator:pred, -SortedList:list) is det.
 %
 %  Sort the contents of List according to the given comparison predicate,
-% and unify the result with SortedList.</br>
+% and unify the result with SortedList. <br/>
 %  The comparison predicate must accept two parameters, `ValueX` and `ValueY`,
 %  which might be any two elements in List, and have the following behavior:
 %  ~~~
@@ -89,3 +92,47 @@ quicksort_append([], ValuesY, ValuesY).
 
 quicksort_append([ValueX|ValuesX], ValuesY, [ValueX|ValuesZ]) :-
     quicksort_append(ValuesX, ValuesY, ValuesZ).
+
+%-------------------------------------------------------------------------------------
+
+%! quicksort_number_asc(+ValueX:number, +ValueY:number, -Cmp:int) is det.
+%
+%  Compare the numbers ValueX and ValueY ascendingly. <br/>
+%  Unify Cmp with -1, 0, or 1, depending on whether ValueX is smaller than,
+%  equal to, or greater than, ValueY.
+%
+%  @param ValueX The first value to compare
+%  @param ValueY The second value to compare
+%  @param Cmp    The result of the comparison
+%
+
+quicksort_number_asc(ValueX, ValueY, Cmp) :-
+
+    (ValueX < ValueY ->
+        Cmp = -1
+    ; ValueX > ValueY ->
+        Cmp = 1
+    ; otherwise ->
+        Cmp = 0
+    ).
+
+%! quicksort_number_desc(+ValueX:number, +ValueY:number, -Cmp:int) is det.
+%
+%  Compare the numbers ValueX and ValueY descendingly. <br/>
+%  Unify Cmp with -1, 0, or 1, depending on whether ValueX is greater than,
+%  equal to, or smaller than, ValueY.
+%
+%  @param ValueX The first value to compare
+%  @param ValueY The second value to compare
+%  @param Cmp    The result of the comparison
+%
+
+quicksort_number_desc(ValueX, ValueY, Cmp) :-
+
+    (ValueX > ValueY ->
+        Cmp = -1
+    ; ValueX < ValueY ->
+        Cmp = 1
+    ; otherwise ->
+        Cmp = 0
+    ).

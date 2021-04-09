@@ -27,14 +27,14 @@ respectively.</p>
 
 <dl class="tags">
 <dt class="keyword-author">author</dt><dd class="keyword-author">- GT Nunes</dd>
-<dt class="keyword-version">version</dt><dd class="keyword-version">- 1.2</dd>
+<dt class="keyword-version">version</dt><dd class="keyword-version">- 1.3.1</dd>
 <dt class="keyword-copyright">copyright</dt><dd class="keyword-copyright">- (c) TheWiseCoder 2020-2021</dd>
 <dt class="keyword-license">license</dt><dd class="keyword-license">- BSD-3-Clause License</dd>
 </dl>
 
 <dl>
 <dt class="pubdef"><span style="float:right">&nbsp;</span><a name="quicksort/3"><b class="pred">quicksort</b><var class="arglist">(+List:list, :Comparator:pred, -SortedList:list)</var></a> is <b class="det">det</b></dt><dd class="defbody">Sort the contents of <var>List</var> according to the given comparison predicate,
-and unify the result with <var>SortedList</var>.&lt;/br&gt;
+and unify the result with <var>SortedList</var>. <br>
 The comparison predicate must accept two parameters, <var>ValueX</var> and <var>ValueY</var>,
 which might be any two elements in <var>List</var>, and have the following behavior:
 
@@ -57,6 +57,40 @@ Nothing is done if <var>List</var> has less than 2 elements.</p>
 <tr><td><var>List</var></td><td class="argdescr">- The list to be sorted</td></tr>
 <tr><td><var>Comparator</var></td><td class="argdescr">- Predicate to perform comparisons between any two elements in <var>List</var></td></tr>
 <tr><td><var>SortedList</var></td><td class="argdescr">- The resulting sorted list</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="quicksort_number_asc/3"><b class="pred">quicksort_number_asc</b><var class="arglist">(+ValueX:number, +ValueY:number, -Cmp:int)</var></a> is <b class="det">det</b></dt><dd class="defbody">Compare the numbers <var>ValueX</var> and <var>ValueY</var> ascendingly. <br>
+Unify <var>Cmp</var> with -1, 0, or 1, depending on whether <var>ValueX</var> is smaller than,
+equal to, or greater than, <var>ValueY</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>ValueX</var></td><td class="argdescr">- The first value to compare</td></tr>
+<tr><td><var>ValueY</var></td><td class="argdescr">- The second value to compare</td></tr>
+<tr><td><var>Cmp</var></td><td class="argdescr">- The result of the comparison</td></tr>
+</table>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span style="float:right">&nbsp;</span><a name="quicksort_number_desc/3"><b class="pred">quicksort_number_desc</b><var class="arglist">(+ValueX:number, +ValueY:number, -Cmp:int)</var></a> is <b class="det">det</b></dt><dd class="defbody">Compare the numbers <var>ValueX</var> and <var>ValueY</var> descendingly. <br>
+Unify <var>Cmp</var> with -1, 0, or 1, depending on whether <var>ValueX</var> is greater than,
+equal to, or smaller than, <var>ValueY</var>.
+
+<dl class="tags">
+<dt class="tag">Arguments:</dt><dd>
+
+<table class="arglist">
+<tr><td><var>ValueX</var></td><td class="argdescr">- The first value to compare</td></tr>
+<tr><td><var>ValueY</var></td><td class="argdescr">- The second value to compare</td></tr>
+<tr><td><var>Cmp</var></td><td class="argdescr">- The result of the comparison</td></tr>
 </table>
 
 </dd>

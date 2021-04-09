@@ -39,7 +39,7 @@ The following  considerations apply for CSV operations:
 ~~~
 
 @author GT Nunes
-@version 1.2
+@version 1.3.1
 @copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */

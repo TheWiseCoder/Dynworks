@@ -40,7 +40,7 @@ Please, refer to https://www.swi-prolog.org/pldoc/doc/_SWI_/library/bdb.pl
 for additional instructions on how to use Berkeley DB.
 
 @author GT Nunes
-@version 1.2
+@version 1.3.1
 @copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
