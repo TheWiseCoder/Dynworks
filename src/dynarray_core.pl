@@ -50,7 +50,7 @@ These are some of their noteworthy characteristics:
 ~~~
 
 @author GT Nunes
-@version 1.3.1
+@version 1.3.2
 @copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
@@ -163,7 +163,7 @@ is_dynarray(Id) :-
 %  @param Version Dynarray implementation's current version
 
 dynarray_version(Version) :-
-    Version = 1.31.
+    Version = 1.32.
 
 %-------------------------------------------------------------------------------------
 
@@ -262,7 +262,7 @@ dynarray_elements(Id, ElementsCount) :-
     dynarray_elements_(Id, LastPosition, 0, ElementsCount).
 
 % (done)
-dynarray_elements_(_Id, -1, CountFinal, CountFinal).
+dynarray_elements_(_Id, -1, CountFinal, CountFinal) :- !.
 
 % iterate
 dynarray_elements_(Id, Position, CountProgress, CountFinal) :-
@@ -348,6 +348,7 @@ dynarray_value_(Id, Indices, Position, Value) :-
 
     % register value at position
     (retract(dynarr_values(Position, Id, _)) ; true),
+    !,
     assertz(dynarr_values(Position, Id, Value)),
 
     % register top indices
@@ -378,6 +379,7 @@ dynarray_label(Id, Label, Value) :-
         % fail point (must be an atom, and must not start with 'da_')
         \+ sub_atom(Label, 0, 3, _, da_),
         (retract(dynarr_labels(Id, Label, _)) ; true),
+        !,
         assertz(dynarr_labels(Id, Label, Value))
     ;
         % fail point
@@ -445,7 +447,8 @@ dynarray_tops_register_(Id, _Dim, [], AllTops) :-
     % register top indices for all dimensions
     reverse(AllTops, DimsTops),
     retract(dynarr_tops(Id, 0, _)),
-    assertz(dynarr_tops(Id, 0, DimsTops)).
+    assertz(dynarr_tops(Id, 0, DimsTops)),
+    !.
     
 
 % (iterate)
@@ -458,6 +461,7 @@ dynarray_tops_register_(Id, Dim, [Index|Indices], AllTops) :-
     ( Top >= Index
     ; ( retract(dynarr_tops(Id, Dim, _))
       , assertz(dynarr_tops(Id, Dim, Index)) ) ),
+    !,
 
     % go for the next index
     DimNext is Dim + 1,
@@ -549,7 +553,8 @@ list_to_dynarray_([], Id, Position) :-
        Pos is Position - 1,
        dynarray_position_indices(Id, Pos, Indices)
     ),
-    dynarray_tops_register(Id, Indices).
+    dynarray_tops_register(Id, Indices),
+    !.
 
 % (iterate)
 list_to_dynarray_([Value|List], Id, Position) :-
@@ -559,7 +564,7 @@ list_to_dynarray_([Value|List], Id, Position) :-
     list_to_dynarray_(List, Id, PosNext).
 
 % (done)
-list_repeat(1, ListFinal, ListFinal).
+list_repeat(1, ListFinal, ListFinal) :- !.
 
 % (iterate)
 list_repeat(Count, [Elem|ListProgress], ListFinal) :-
@@ -680,7 +685,7 @@ dynarray_fill(Id, Value) :-
 %  @param CellCount Number of cells in dynarray
 
 % (done)
-dynarray_fill_(_Id, _Value, CellCount, CellCount).
+dynarray_fill_(_Id, _Value, CellCount, CellCount) :- !.
 
 % (iterate)
 dynarray_fill_(Id, Value, Position, CellCount) :-
@@ -728,7 +733,8 @@ dynarray_dimensions_(Id, _Dim, [], DimOffsets, DimTops, DimsSizes) :-
     % the dynarr_dims 0 position will hold the dimension sizes list of lists:
     %   [[DimSizeI,I],...,[DimSizeK,K]] - ordered by dim_size
     sort(DimsSizes, DimsSorted),
-    assertz(dynarr_dims(Id, 0, DimsSorted)).
+    assertz(dynarr_dims(Id, 0, DimsSorted)),
+    !.
 
 % (iterate)
 dynarray_dimensions_(Id, Dim, [DimRange|DimRanges],
@@ -828,7 +834,7 @@ dynarray_factors(Id, CellCount) :-
 % (done)
 dynarray_factors_(_Id, 0, _DimCount, _CompoundFactor, _DimsSizes,
                   CountFinal, CountFinal, FactorsProgress, FactorsFinal) :-
-    sort(FactorsProgress, FactorsFinal).
+    sort(FactorsProgress, FactorsFinal), !.
 
 % (iterate)
 dynarray_factors_(Id, DimOrdinal, DimCount, CompoundFactor, DimsSizes,
@@ -895,7 +901,7 @@ dynarray_position_indices(Id, Position, Indices) :-
 %  @param PosFinal    The final linear position of the cell
 
 % (done)
-indices_position_(_Id, _Indices, 0, PosFinal, PosFinal).
+indices_position_(_Id, _Indices, 0, PosFinal, PosFinal) :- !.
 
 % (iterate)
 indices_position_(Id, Indices, Dim, PosProgress, PosFinal) :-
@@ -942,7 +948,8 @@ position_indices_1(_Id, _Pos, [], IndicesProgress, IndicesFinal) :-
     sort(IndicesProgress, IndicesSorted),
  
     % IndicesFinal has the indices in proper order: [Index1,...,IndexN]
-    position_indices_2(IndicesSorted, [], IndicesFinal).
+    position_indices_2(IndicesSorted, [], IndicesFinal),
+    !.
 
 % (iterate)
 position_indices_1(Id, Position, [[_,Dim]|DimsSizes],
@@ -961,7 +968,7 @@ position_indices_1(Id, Position, [[_,Dim]|DimsSizes],
 
 % (done)
 position_indices_2([], IndicesProgress, IndicesFinal) :-
-    reverse(IndicesProgress, IndicesFinal).
+    reverse(IndicesProgress, IndicesFinal), !.
 
 % (iterate)
 position_indices_2([[_,Index]|DimsIndices], IndicesProgress, IndicesFinal) :-
@@ -999,7 +1006,7 @@ dynarray_offset(Id, Indices, OffsetIndices) :-
 
 % (done)
 indices_offsets_(_Id, _Dim, [], OffsetsProgress, OffsetsFinal) :-
-    reverse(OffsetsProgress, OffsetsFinal).
+    reverse(OffsetsProgress, OffsetsFinal), !.
 
 % (iterate)
 indices_offsets_(Id, Dim, [Index|Indices], OffsetsProgress, OffsetsFinal) :-
@@ -1025,7 +1032,7 @@ indices_offsets_(Id, Dim, [Index|Indices], OffsetsProgress, OffsetsFinal) :-
 
 % (done)
 offsets_indices_(_Id, _Dim, [], IndicesProgress, IndicesFinal) :-
-    reverse(IndicesProgress, IndicesFinal).
+    reverse(IndicesProgress, IndicesFinal), !.
 
 % (iterate)
 offsets_indices_(Id, Dim, [OffsetIndex|OffsetIndices],
@@ -1055,7 +1062,7 @@ labels_indices(Id, Labels, Indices) :-
 
 % (done)
 labels_indices_(_Id, [], IndicesProgress, IndicesFinal) :-
-    reverse(IndicesProgress, IndicesFinal).
+    reverse(IndicesProgress, IndicesFinal), !.
 
 % (iterate)
 labels_indices_(Id, [Label|Labels], IndicesProgress, IndicesFinal) :-

@@ -39,7 +39,7 @@ The following  considerations apply for CSV operations:
 ~~~
 
 @author GT Nunes
-@version 1.3.1
+@version 1.3.2
 @copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
@@ -297,7 +297,8 @@ dynarray_serialize(Id, Serialized) :-
         dynarray_to_serialized(Id, Serialized)
     ;
         ( Serialized = []
-        ; serialized_to_dynarray(Id, Serialized) )
+        ; serialized_to_dynarray(Id, Serialized) ),
+        !
     ).
 
 %-------------------------------------------------------------------------------------
@@ -359,7 +360,7 @@ serialized_to_dynarray(Id, Serialized) :-
 %  @param PosLast The last label position
 
 % (done)
-serialized_to_labels_(_Id, _Labels, PosFinal, PosFinal).
+serialized_to_labels_(_Id, _Labels, PosFinal, PosFinal) :- !.
 
 % (iterate)
 serialized_to_labels_(Id, Labels, PosCurr, PosFinal) :-
@@ -367,6 +368,7 @@ serialized_to_labels_(Id, Labels, PosCurr, PosFinal) :-
     % register the label (da_* labels are not accepted)
     nth0(PosCurr, Labels, [Key,Value]),
     (dynarray_label(Id, Key, Value) ; true),
+    !,
 
     % go for the next label
     PosNext is PosCurr + 1,
@@ -380,7 +382,7 @@ serialized_to_labels_(Id, Labels, PosCurr, PosFinal) :-
 %  @param PosLast The last value position
 
 % (done)
-serialized_to_values_(_Id, _Values, PosFinal, PosFinal).
+serialized_to_values_(_Id, _Values, PosFinal, PosFinal) :- !.
 
 % (iterate)
 serialized_to_values_(Id, Values, PosCurr, PosFinal) :-

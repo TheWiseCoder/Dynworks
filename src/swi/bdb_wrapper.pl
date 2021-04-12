@@ -40,7 +40,7 @@ Please, refer to https://www.swi-prolog.org/pldoc/doc/_SWI_/library/bdb.pl
 for additional instructions on how to use Berkeley DB.
 
 @author GT Nunes
-@version 1.3.1
+@version 1.3.2
 @copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
@@ -76,6 +76,7 @@ bdb_base(BasePath) :-
     ;
         % register the base path for Berkeley DB (make sure it is '/'-terminated)
         (retract(swi_bdb_base(_)) ; true),
+        !,
         (sub_atom(BasePath, _, 1, 0, '/') ->
             BdbPath = BasePath
         ;
@@ -85,7 +86,11 @@ bdb_base(BasePath) :-
     ),
 
     % make sure path exists
-    (exists_directory(BasePath) ; make_directory(BasePath)).
+    (exists_directory(BasePath) ->
+       true
+    ;
+       make_directory(BasePath)
+    ).
 
 %! bdb_store(+TagSet:atom, +DataSet:atom, +Data:data) is det.
 %
@@ -102,7 +107,11 @@ bdb_store(TagSet, DataSet, Data) :-
 
     % create base directory, if necessary
     file_directory_name(DsPath, BaseDir),
-    (exists_directory(BaseDir) ; make_directory(BaseDir)),
+    (exists_directory(BaseDir) ->
+        true
+    ;
+        make_directory(BaseDir)
+    ),
 
     !,
     % fail point (create the database)
@@ -154,7 +163,11 @@ bdb_erase(DataSet) :-
     file_directory_name(DsPath, BaseDir),
 
     % delete storage directory, if necessary
-    (\+ exists_directory(BaseDir) ; (delete_directory_and_contents(BaseDir))).
+    (exists_directory(BaseDir) ->
+        delete_directory_and_contents(BaseDir)
+    ;
+        true
+    ).
 
 %! bdb_erase(+TagSet:atom, +DataSet:atom) is det.
 %
@@ -184,6 +197,7 @@ storage_path(TagSet, DataSet, DsPath) :-
 
     % obtain the registered base path
     (swi_bdb_base(BasePath) ; BasePath = ''),
+    !,
 
     % build the base directory
     atom_concat(BasePath, DataSet, BaseDir),

@@ -35,7 +35,7 @@
 *
 * NOTES :
 *       Author:    GT Nunes
-*       Version:   1.3.1
+*       Version:   1.3.2
 *       Copyright: (c) TheWiseCoder 2020-2021
 *       License:   BSD-3-Clause License
 *
@@ -81,6 +81,7 @@ bdb_base(BasePath) :-
     ;
         % register the base path for Berkeley DB (make sure it is '/'-terminated)
         (retract(sicstus_bdb_base(_)) ; true),
+        !,
         (sub_atom(BasePath, _, 1, 0, '/') ->
             BdbPath = BasePath
         ;
@@ -90,7 +91,11 @@ bdb_base(BasePath) :-
     ),
 
     % make sure path exists
-    (directory_exists(BasePath) ; make_directory(BasePath)).
+    (directory_exists(BasePath) ->
+        true
+    ;
+        make_directory(BasePath)
+    ).
 
 % persist the given data to external storage
 % bdb_store(+TagSet, +DataSet, +Data)
@@ -103,7 +108,11 @@ bdb_store(TagSet, DataSet, Data) :-
     storage_dir(DataSet, BaseDir),
 
     % create base directory, if necessary
-    (directory_exists(BaseDir) ; make_directory(BaseDir)),
+    (directory_exists(BaseDir) ->
+        true
+    ;
+        make_directory(BaseDir)
+    ),
 
     % establish the new working directory
     current_directory(SaveDir, BaseDir),
@@ -167,9 +176,12 @@ bdb_erase(DataSet) :-
     % obtain the base storage location
     storage_dir(DataSet, BaseDir),
 
-    % delete storage directory
-    ( \+ directory_exists(BaseDir)
-    ; (delete_directory(BaseDir, [if_nonempty(delete)])) ).
+    % delete storage directory, if appropriate
+    (directory_exists(BaseDir) ->
+        delete_directory(BaseDir, [if_nonempty(delete)])
+    ;
+        true
+    ).
 
 % erase the specified dataset from external storage
 % bdb_erase(+TagSet, +DataSet)
@@ -184,8 +196,11 @@ bdb_erase(TagSet, DataSet) :-
     atom_concat(BaseDir, TagSet, BdbDir),
 
     % delete storage directory for data set
-    ( \+ directory_exists(BdbDir)
-    ; catch(delete_directory(BdbDir, [if_nonempty(delete)]), _, fail) ).
+    (directory_exists(BdbDir) ->
+        catch(delete_directory(BdbDir, [if_nonempty(delete)]), _, fail)
+    ;
+        true
+    ).
 
 %-------------------------------------------------------------------------------------
 
@@ -209,6 +224,7 @@ storage_dir(DataSet, BaseDir) :-
 
     % obtain the registered base path
     (sicstus_bdb_base(BasePath) ; BasePath = ''),
+    !,
 
     % build the '/'-terminated base directory
     (sub_atom(DataSet, _, 1, 0, '/') ->

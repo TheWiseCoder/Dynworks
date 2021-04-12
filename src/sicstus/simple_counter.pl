@@ -23,7 +23,7 @@
 *
 * NOTES :
 *       Author:    GT Nunes
-*       Version:   1.3.1
+*       Version:   1.3.2
 *       Copyright: (c) TheWiseCoder 2020-2021
 *       License:   BSD-3-Clause License
 *

@@ -14,7 +14,7 @@ utility package. For details on the SWI-Prolog interface to Berkeley DB,
 please refer to the documentation for bdb_rapper.pl .
 
 @author GT Nunes
-@version 1.3.1
+@version 1.3.2
 @copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
@@ -106,8 +106,12 @@ dynvector_serialize(Id, Serialized) :-
         is_dynvector(Id),
         dynvector_to_serialized(Id, Serialized)
     ;
-        ( (Serialized = [] , dynvector_destroy(Id) , dynvector_create(Id)) 
-        ; serialized_to_dynvector(Id, Serialized) )
+        (Serialized = [] ->
+            dynvector_destroy(Id),
+            dynvector_create(Id) 
+        ;
+            serialized_to_dynvector(Id, Serialized)
+        )
     ).
 
 %-------------------------------------------------------------------------------------
@@ -168,7 +172,7 @@ serialized_to_dynvector(Id, Serialized) :-
 %  @param PosLast The last label position
 
 % (done)
-serialized_to_labels_(_Id, _Labels, PosFinal, PosFinal).
+serialized_to_labels_(_Id, _Labels, PosFinal, PosFinal) :- !.
 
 % (iterate)
 serialized_to_labels_(Id, Labels, PosCurr, PosFinal) :-
@@ -176,6 +180,7 @@ serialized_to_labels_(Id, Labels, PosCurr, PosFinal) :-
     % register the label (dv_* labels are not accepted)
     nth0(PosCurr, Labels, [Key,Value]),
     (dynvector_label(Id, Key, Value) ; true),
+    !,
 
     % go for the next label
     PosNext is PosCurr + 1,
@@ -187,7 +192,7 @@ serialized_to_labels_(Id, Labels, PosCurr, PosFinal) :-
 %  @param Values The values to load to the dynvector
 
 % (done)
-serialized_to_values_(_Id, _Values, IndexFinal, IndexFinal).
+serialized_to_values_(_Id, _Values, IndexFinal, IndexFinal) :- !.
 
 % (iterate)
 serialized_to_values_(Id, Values, IndexCurr, IndexFinal) :-

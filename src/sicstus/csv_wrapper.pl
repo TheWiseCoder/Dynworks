@@ -15,7 +15,7 @@
 *
 * NOTES :
 *       Author:    GT Nunes
-*       Version:   1.3.1
+*       Version:   1.3.2
 *       Copyright: (c) TheWiseCoder 2020-2021
 *       License:   BSD-3-Clause License
 *
@@ -73,7 +73,8 @@ unwrap_field(Field, Value) :-
 
     ( integer(Value, _) = Field
     ; float(Value, _) = Field
-    ; (string(Codes) = Field , atom_codes(Value, Codes)) ).
+    ; (string(Codes) = Field , atom_codes(Value, Codes)) ),
+    !.
 
 %-------------------------------------------------------------------------------------
 % csv file output

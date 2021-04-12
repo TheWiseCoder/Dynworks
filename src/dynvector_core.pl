@@ -56,7 +56,7 @@ These are their noteworthy characteristics:
 ~~~
 
 @author GT Nunes
-@version 1.3.1
+@version 1.3.2
 @copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
@@ -152,7 +152,7 @@ is_dynvector(Id) :-
 %  @param Version Dynvector implementation's current version
 
 dynvector_version(Version) :-
-    Version = 1.31.
+    Version = 1.32.
 
 %-------------------------------------------------------------------------------------
 
@@ -186,6 +186,7 @@ dynvector_value(Id, Index, Value) :-
     % determine the element's index from label, if necessary
     ( (integer(Index) , Inx = Index)
     ; dynvect_labels(Id, Index, Inx) ),
+    !,
 
     % has Value been grounded ?
     (ground(Value) ->
@@ -202,13 +203,15 @@ dynvector_value_(Id, Index, Value) :-
 
     % register value
     (retract(dynvect_values(Index, Id, _)) ; true),
+    !,
     assertz(dynvect_values(Index, Id, Value)),
 
     % register top index, if appropriate
     dynvect_labels(Id, dv_top, Top),
     ( Index =< Top
     ; ( retract(dynvect_labels(Id, dv_top, _))
-      , assertz(dynvect_labels(Id, dv_top, Index)) ) ).
+      , assertz(dynvect_labels(Id, dv_top, Index)) ) ),
+    !.
 
 %-------------------------------------------------------------------------------------
 
@@ -236,6 +239,7 @@ dynvector_label(Id, Label, Value) :-
         % fail point (must be an atom, and must not start with dv_)
         \+ sub_atom(Label, 0, 3, _, dv_),
         (retract(dynvect_labels(Id, Label, _)) ; true),
+        !,
         assertz(dynvect_labels(Id, Label, Value))
     ;
         dynvect_labels(Id, Label, Value)
@@ -297,7 +301,7 @@ dynvector_append(Id, Value, Index) :-
     retract(dynvect_labels(Id, dv_top, _)),
     assertz(dynvect_labels(Id, dv_top, TopNew)).
 
-dynvector_append_([], _Id, _Index).
+dynvector_append_([], _Id, _Index) :- !.
 
 dynvector_append_([Value|Values], Id, Index) :-
 
@@ -345,7 +349,7 @@ dynvector_insert(Id, Index, Value) :-
     assertz(dynvect_labels(Id, dv_top, TopNew)).
 
 % (done)
-dynvector_insert_([], _Id, _Top, _From, _To).
+dynvector_insert_([], _Id, _Top, _From, _To) :- !.
 
 % (iterate)
 dynvector_insert_([Value|Values], Id, Top, From, To) :-
@@ -410,13 +414,19 @@ dynvector_list(Id, List) :-
         findall(Value, dynvect_values(_Index, Id, Value), List)
     ;
         % clear dynvector or create it anew
-        ( (is_dynvector(Id) , retractall(dynvect_values(_, Id, _)))
-        ; dynvector_create(Id) ),
+        (is_dynvector(Id) ->
+            retractall(dynvect_values(_, Id, _))
+        ;
+            dynvector_create(Id)
+        ),
 
         % List might be a list or a dynvector
         % (in the latter case, List is an atom holding the dynvector id)
-        ( (is_list(List) , Values = List)
-        ; (findall(Value, dynvect_values(_, List, Value), Values)) ),
+        (is_list(List) ->
+            Values = List
+        ;
+            findall(Value, dynvect_values(_, List, Value), Values)
+        ),
 
         % load all values in Values into dynvector
         list_to_dynvector_(Values, Id, 0)
@@ -434,7 +444,8 @@ list_to_dynvector_([], Id, Index) :-
     % register the top index for the dynvector
     Top is Index - 1,
     retract(dynvect_labels(Id, dv_top, _)),
-    assertz(dynvect_labels(Id, dv_top, Top)).
+    assertz(dynvect_labels(Id, dv_top, Top)),
+    !.
 
 % (iterate)
 list_to_dynvector_([Value|List], Id, Index) :-
@@ -466,7 +477,7 @@ dynvector_fill(Id, Value) :-
 %  @param Count Nnumber of cells in dynvector
 
 % (done)
-dynvector_fill_(_Id, _Value, Count, Count).
+dynvector_fill_(_Id, _Value, Count, Count) :- !.
 
 % (iterate)
 dynvector_fill_(Id, Value, Index, Count) :-
@@ -557,7 +568,7 @@ dynvector_sort(Id, Comparator) :-
     ).
 
 % (done)
-pairs_to_lists([], Final1st, Final1st, Final2nd, Final2nd).
+pairs_to_lists([], Final1st, Final1st, Final2nd, Final2nd) :- !.
 
 % (iterate)
 pairs_to_lists([[Element1st,Element2nd]|Pairs],
@@ -671,7 +682,8 @@ dynvector_iterator_next_(Id, Current, Last, Value) :-
     % attempt to unify Value with the value at Next, OR
     ( dynvector_iterator_nav_(Id, Next, Value)
     % go for the next position
-    ; (!, dynvector_iterator_next_(Id, Next, Last, Value)) ).
+    ; dynvector_iterator_next_(Id, Next, Last, Value) ),
+    !.
 
 %-------------------------------------------------------------------------------------
 
@@ -705,7 +717,8 @@ dynvector_iterator_prev_(Id, Current, First, Value) :-
     % attempt to unify Value with the value at Prev, OR
     ( dynvector_iterator_nav_(Id, Prev, Value)
     % go for the previous position
-    ; (!, dynvector_iterator_prev_(Id, Prev, First, Value)) ).
+    ; dynvector_iterator_prev_(Id, Prev, First, Value) ),
+    !.
 
 %-------------------------------------------------------------------------------------
 
@@ -764,6 +777,7 @@ dynvector_iterator_nav_(Id, Index, Value) :-
     (ground(Value) ->
        % yes, so register value
        (retract(dynvect_values(Index, Id, Value)) ; true),
+       !,
        assertz(dynvect_values(Index, Id, Value))
     ;
        % no, so retrieve value
@@ -815,7 +829,8 @@ dynvector_iterator_delete(Id) :-
     Current > -1,
 
     % remove value
-    (retract(dynvect_values(Current, Id, _)) ; true).
+    (retract(dynvect_values(Current, Id, _)) ; true),
+    !.
 
 %-------------------------------------------------------------------------------------
 

@@ -19,7 +19,7 @@ to be used in different Prolog environments. This module implements this
 standard for the SWI-Prolog platform.
 
 @author GT Nunes
-@version 1.3.1
+@version 1.3.2
 @copyright (c) TheWiseCoder 2020-2021
 @license BSD-3-Clause License
 */
@@ -117,6 +117,7 @@ csv_output_record(Stream, Record) :-
 csv_output_record(Stream, Record, Options) :-
 
     (memberchk(functor(Functor), Options) ; Functor = row),
+    !,
     Row =.. [Functor|Record],
     csv_write_stream(Stream, [Row], Options).
 
